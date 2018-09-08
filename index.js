@@ -1,14 +1,12 @@
 #!/usr/bin/env node
-const listDirectories = require('./src/list-directories');
 const findFiles = require('./src/find-files');
 const processFile = require('./src/process-file');
 const log = require('./src/log-utils');
 
-let dirs = process.argv.slice(2);
 let tsFiles = [];
 
 try {
-    tsFiles = findFiles(dirs, /\.ts$/);
+    tsFiles = findFiles(getDirectories(), /\.ts$/);
 } catch (e) {
     log.error(e.message);
     process.exit(2);
@@ -29,3 +27,7 @@ tsFiles.forEach((file, index) => {
 log.newline(2);
 log.info(`Line-linting complete, ${modified} of ${total} files were modified.`);
 process.exit(0);
+
+function getDirectories() {
+    return process.argv.length > 2 ? process.argv.slice(2) : ['.'];
+}
