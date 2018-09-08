@@ -1,28 +1,31 @@
 #!/usr/bin/env node
+const listDirectories = require('./src/list-directories');
+const findFiles = require('./src/find-files');
+const processFile = require('./src/process-file');
+const log = require('./src/log-utils');
 
-let path = require('path');
-let fs = require('fs');
+let dirs = process.argv.slice(2);
+let tsFiles = [];
 
-function fromDir(startPath, filter) {
-
-    console.log('Starting from dir ' + startPath + '/');
-
-    if (!fs.existsSync(startPath)) {
-        console.log("no dir ", startPath);
-        return;
-    }
-
-    let files = fs.readdirSync(startPath);
-    for (let i = 0; i < files.length; i++) {
-        let filename = path.join(startPath, files[i]);
-        let stat = fs.lstatSync(filename);
-        if (stat.isDirectory()) {
-            fromDir(filename, filter); //recurse
-        }
-        else if (filename.indexOf(filter) >= 0) {
-            console.log('-- found: ', filename);
-        }
-    }
+try {
+    tsFiles = findFiles(dirs, /\.ts$/);
+} catch (e) {
+    log.error(e.message);
+    process.exit(2);
 }
 
-fromDir(process.argv[2], '.ts');
+const total = tsFiles.length;
+let modified = 0;
+
+log.info(`Found ${total} files to process...`);
+
+tsFiles.forEach((file, index) => {
+    log.rewriteLastLine(`Processing file ${index + 1} of ${total}...`);
+    if (processFile(file)) {
+        modified++;
+    }
+});
+
+log.newline(2);
+log.info(`Line-linting complete, ${modified} of ${total} files were modified.`);
+process.exit(0);

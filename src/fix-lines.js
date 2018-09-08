@@ -1,4 +1,4 @@
-module.exports = function(inputCode) {
+function fixLines(inputCode) {
     // search patterns
     const newlineFollowedInputOutputDecorator = /(^[ \t]+@(?:In|Out)put\(['\w]*\))\n[ \t]+(.*)/mg;
     const blankPrecededImport = /\n(\n^import {.*$)/mg;
@@ -47,4 +47,6 @@ module.exports = function(inputCode) {
         .replace(leadingBlank, removeCompletely)
         .replace(duplicateBlanks, replaceWithSingleBlank)
         .replace(excessTrailingBlanks, removeCompletely);
-};
+}
+
+module.exports = fixLines;
