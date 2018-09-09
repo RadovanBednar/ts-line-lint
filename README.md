@@ -141,7 +141,7 @@ In the second phase additional blank lines are added it these situations:
   ```
 * around any class methods with explicit access modifiers,
 * around any class property getters and setters,
-* around any `describe` block in spec files (due to the nature of regexps may not work for nested `describe`s, unfortunately),
+* around any `describe` block (including nested `describe`s up to indentation level 4) in spec files,
 * around any `before(Each)`, `after(Each)` and `it` block in spec files,
 * after the last import statement, e.g.
   ```javascript

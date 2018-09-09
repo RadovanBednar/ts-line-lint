@@ -604,7 +604,7 @@ describe('fixLines function', () => {
 
     describe('unit tests', () => {
 
-        it('should add blank lines around "describe" statements', () => {
+        it('should add blank lines around unindented "describe" statements', () => {
             inputSnippet = createMultilineString([
                 '// preceding non-blank line',
                 'describe("first test suite", () => {',
@@ -630,6 +630,81 @@ describe('fixLines function', () => {
             ]);
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+        });
+
+        it('should add blank lines around nested "describe" statements with any kind of indentation', () => {
+            for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
+                const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
+
+                inputSnippet = createMultilineString([
+                    '// preceding non-blank line',
+                    'describe("top-level test suite", () => {',
+                    ind + 'describe("first level nested test suite", () => {',
+                    ind + ind + '// something else',
+                    ind + '});',
+                    '});',
+                    '// following non-blank line',
+                ]);
+                expectedOutput = createMultilineString([
+                    '// preceding non-blank line',
+                    '',
+                    'describe("top-level test suite", () => {',
+                    '',
+                    ind + 'describe("first level nested test suite", () => {',
+                    ind + ind + '// something else',
+                    ind + '});',
+                    '',
+                    '});',
+                    '',
+                    '// following non-blank line',
+                ]);
+
+                expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
+            }
+
+        });
+
+        it('should add blank lines around nested "describe" statements with 2 or 3 levels of any kind of indentation', () => {
+            for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
+                const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
+
+                inputSnippet = createMultilineString([
+                    '// preceding non-blank line',
+                    'describe("top-level test suite", () => {',
+                    ind + 'describe("first level nested test suite", () => {',
+                    ind + ind + 'describe("second level nested test suite", () => {',
+                    ind + ind + ind + 'describe("third level nested test suite", () => {',
+                    ind + ind + ind + ind + '// something else',
+                    ind + ind + ind + '});',
+                    ind + ind + '});',
+                    ind + '});',
+                    '});',
+                    '// following non-blank line',
+                ]);
+                expectedOutput = createMultilineString([
+                    '// preceding non-blank line',
+                    '',
+                    'describe("top-level test suite", () => {',
+                    '',
+                    ind + 'describe("first level nested test suite", () => {',
+                    '',
+                    ind + ind + 'describe("second level nested test suite", () => {',
+                    '',
+                    ind + ind + ind + 'describe("third level nested test suite", () => {',
+                    ind + ind + ind + ind + '// something else',
+                    ind + ind + ind + '});',
+                    '',
+                    ind + ind + '});',
+                    '',
+                    ind + '});',
+                    '',
+                    '});',
+                    '',
+                    '// following non-blank line',
+                ]);
+
+                expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
+            }
         });
 
         it('should add blank lines around "before(Each)", "after(Each)" and "it" statements', () => {
@@ -765,11 +840,15 @@ describe('fixLines function', () => {
         return lines.join('\n');
     }
 
-    // tslint:disable-next-line:typedef
     function expectSnippet(snippet) {
+        let indentSize;
         return {
+            withIndentationSize(customIndent) {
+                indentSize = customIndent;
+                return this;
+            },
             toConvertTo(output) {
-                expect(fixLines(snippet)).to.equal(output);
+                expect(fixLines(snippet, indentSize)).to.equal(output);
             },
         };
     }

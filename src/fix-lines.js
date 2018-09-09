@@ -1,19 +1,19 @@
-function fixLines(inputCode) {
+function fixLines(inputCode, indentSize = 4) {
     // search patterns
     const newlineFollowedInputOutputDecorator = /(^[ \t]+@(?:In|Out)put\(['\w]*\))\n[ \t]+(.*)/mg;
     const blankPrecededImport = /\n(\n^import {.*$)/mg;
     const blankPrecededVariableDeclaration = /\n(\n[ \t]*(?:var|const|let|(.* )?(private|protected|public)) )/mg;
     const blankFollowedStartOfBlock = /({\n)\n+/mg;
     const blankPrecededEndOfBlock = /\n+(\n[ \t]*})/mg;
+    const blankUnfollowedLastImport = /(^import .*\n|^} from .*\n)(?!^(?:import|[ \t]+))/mg;
     const consecutiveTypeAliases = /((?:^export type .*\n)+)/mg;
     const interfaceDeclaration = /(^(?:export )?interface \w+ {\n(?:(?:[ \t]+.*)?\n)*?^})/mg;
     const functionDeclaration = /((?:^[ \t]*(?:\/\/|\/\*).*\n)?^([ \t]*)(async )?function \w+\(.*\).*{\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
     const classDeclaration = /(^([ \t]*).*?class .*(?: |\n\2[ \t]+.*?){\n(?:(?:\2[ \t]+.*)?\n)*?^\2})/mg;
     const newlineFollowedComponentDecorator = /(^([ \t]+)?@Component\({\n(?:\2[ \t]+.*\n)*?\2?}\)\n)\n/mg;
     const blockInsideClass = /(^([ \t]*)(public |protected |private |(.* )?(g|s)et |constructor\().*\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
-    const describeBlock = /(^([ \t]*)describe\(.*, \(\) => {\n(.*\n)*?\2}\);)/mg;
     const blockInsideDescribe = /(^([ \t]*)(before(Each)?\(|after(Each)?\(|it\().*\n(?:.*\n)*?\2}\);)/mg;
-    const blankUnfollowedLastImport = /(^import .*\n|^} from .*\n)(?!^(?:import|[ \t]+))/mg;
+    const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
     const leadingBlank = /^\n+/g;
     const duplicateBlanks = /(?<=\n)(\n+)/g;
     const excessTrailingBlanks = /(?<=\n)(\n+)$/g;
@@ -26,27 +26,42 @@ function fixLines(inputCode) {
     const removeCompletely = '';
     const replaceWithSingleBlank = '\n';
 
-    return inputCode
-        // blank removals
-        .replace(newlineFollowedInputOutputDecorator, inlineWithDeclaration)
-        .replace(blankPrecededImport, removePrecedingBlank)
-        .replace(blankPrecededVariableDeclaration, removePrecedingBlank)
-        .replace(blankFollowedStartOfBlock, removeFollowingBlank)
-        .replace(blankPrecededEndOfBlock, removePrecedingBlank)
-        // blank insertions
-        .replace(consecutiveTypeAliases, surroundWithBlanks)
-        .replace(interfaceDeclaration, surroundWithBlanks)
-        .replace(functionDeclaration, surroundWithBlanks)
-        .replace(classDeclaration, surroundWithBlanks)
-        .replace(blockInsideClass, surroundWithBlanks)
-        .replace(describeBlock, surroundWithBlanks)
-        .replace(blockInsideDescribe, surroundWithBlanks)
-        .replace(blankUnfollowedLastImport, addFollowingBlank)
-        // cleanup
-        .replace(newlineFollowedComponentDecorator, removeFollowingBlank)
-        .replace(leadingBlank, removeCompletely)
-        .replace(duplicateBlanks, replaceWithSingleBlank)
-        .replace(excessTrailingBlanks, removeCompletely);
+    let codeWithBlanksRemoved = inputCode
+      .replace(newlineFollowedInputOutputDecorator, inlineWithDeclaration)
+      .replace(blankPrecededImport, removePrecedingBlank)
+      .replace(blankPrecededVariableDeclaration, removePrecedingBlank)
+      .replace(blankFollowedStartOfBlock, removeFollowingBlank)
+      .replace(blankPrecededEndOfBlock, removePrecedingBlank);
+
+    let codeWithBlanksInserted = codeWithBlanksRemoved
+      .replace(blankUnfollowedLastImport, addFollowingBlank)
+      .replace(consecutiveTypeAliases, surroundWithBlanks)
+      .replace(interfaceDeclaration, surroundWithBlanks)
+      .replace(functionDeclaration, surroundWithBlanks)
+      .replace(classDeclaration, surroundWithBlanks)
+      .replace(blockInsideClass, surroundWithBlanks)
+      .replace(blockInsideDescribe, surroundWithBlanks);
+
+    variouslyIndentedDescribeBlocks.forEach((pattern) => {
+        codeWithBlanksInserted = codeWithBlanksInserted.replace(pattern, surroundWithBlanks);
+    });
+
+    //cleanup
+    return codeWithBlanksInserted
+      .replace(newlineFollowedComponentDecorator, removeFollowingBlank)
+      .replace(leadingBlank, removeCompletely)
+      .replace(duplicateBlanks, replaceWithSingleBlank)
+      .replace(excessTrailingBlanks, removeCompletely);
+}
+
+function generateNestedDescribeBlockPatterns(indentSize, maxIndentLevel = 4) {
+    const patternArray = [];
+    for (let i = 0; i <= maxIndentLevel; i++) {
+        const indentPattern = !indentSize ? '\\t' : ` {${indentSize}}`;
+        patternArray.push(new RegExp(`(^((?:${indentPattern}){${i}})describe\\(.*, \\(\\) => {\\n(.*\\n)*?\\2}\\);)`, 'mg'));
+    }
+
+    return patternArray;
 }
 
 module.exports = fixLines;
