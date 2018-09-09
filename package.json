@@ -2,16 +2,25 @@
     "name": "ts-line-lint",
     "version": "0.0.0",
     "description": "maintain consistent blank lines throughout a typescript project",
-    "main": "index.js",
+    "main": "build/index.js",
     "scripts": {
+        "build": "babel src --out-dir build --ignore '**/*.spec.js'",
         "test": "./node_modules/.bin/mocha --ui bdd ./src/**/*.spec.js",
         "start": "node index.js"
+    },
+    "babel": {
+        "presets": [
+            "latest"
+        ]
     },
     "author": "RadicalSK",
     "license": "MIT",
     "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-latest": "^6.24.1",
         "chai": "^4.1.2",
-        "mocha": "^5.2.0"
+        "mocha": "^5.2.0",
+        "np": "^3.0.4"
     },
     "dependencies": {
         "chai-spies": "^1.0.0"

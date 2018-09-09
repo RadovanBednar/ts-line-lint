@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-const findFiles = require('./src/find-files');
-const processFile = require('./src/process-file');
-const ArgvParser = require('./src/argv-parser');
-const log = require('./src/logger');
+const findFiles = require('./find-files');
+const processFile = require('./process-file');
+const ArgvParser = require('./argv-parser');
+const log = require('./logger');
 
 let dirList, tsFileList;
 
