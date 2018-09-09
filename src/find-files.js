@@ -1,45 +1,43 @@
 const path = require('path');
 const fs = require('fs');
-const log = require('./log-utils');
+const log = require('./logger');
 
 function findFiles(dirs, pattern) {
-    return arrayify(dirs).reduce((files, dir) => {
-        return files.concat(findRecursively(dir, pattern))
-    }, []);
+    return [].concat(...dirs.map((dir) => {
+        return findRecursively(dir, pattern);
+    }));
 }
 
-function findRecursively(dir, filter) {
+function findRecursively(dir, pattern) {
+    const nodeModulesPattern = /(^|\/)node_modules\/?$/;
+    const hiddenDirectoryPattern = /(^|\/)\.[^\/.]+\/?$/;
     let found = [];
 
     assertDirectoryExists(dir);
 
-    let files = fs.readdirSync(dir);
+    if (nodeModulesPattern.test(dir)) {
+        log.warn('Skipping excluded directory "node_modules".');
+    } else if (hiddenDirectoryPattern.test(dir)) {
+        log.warn(`Skipping hidden directory "${dir}".`);
+    } else {
+        for (const file of fs.readdirSync(dir)) {
+            let filename = path.join(dir, file);
 
-    for (let i = 0; i < files.length; i++) {
-        let filename = path.join(dir, files[i]);
-
-        if (fs.lstatSync(filename).isDirectory()) {
-            if (filename === 'node_modules') {
-                log.warn('Skipping directory "node_modules".');
-            } else {
-                found = found.concat(findRecursively(filename, filter));
+            if (fs.lstatSync(filename).isDirectory()) {
+                found.push(...findRecursively(filename, pattern));
             }
-        }
-        else if (filter.test(filename)) {
-            found.push(filename);
+            else if (pattern.test(filename)) {
+                found.push(filename);
+            }
         }
     }
 
     return found;
 }
 
-function arrayify(value) {
-    return [].concat(value || []);
-}
-
 function assertDirectoryExists(dirname) {
     if (!fs.existsSync(dirname)) {
-        throw Error(`Couldn't find directory "${dirname}"!`)
+        throw Error(`Couldn't find directory "${dirname}".`)
     }
 }
 
