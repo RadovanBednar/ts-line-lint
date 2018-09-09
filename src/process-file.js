@@ -7,7 +7,7 @@ function processFile(file) {
     const newContent = fixLines(content);
 
     if (content !== newContent) {
-        // fs.writeFileSync(file, newContent, 'utf-8');
+        fs.writeFileSync(file, newContent, 'utf-8');
         return true;
     }
 

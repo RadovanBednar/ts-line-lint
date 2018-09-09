@@ -1,12 +1,20 @@
 const log = require('./logger');
 
-module.exports = {
-    getDirectories: () => {
-        const dirs = process.argv.slice(2);
+module.exports = class ArgvParser {
+
+    constructor(argv) {
+        if (!Array.isArray(argv)) {
+            throw Error(`Expected an array of strings, got ${typeof argv}.`)
+        }
+        this.argv = argv;
+    }
+
+    get directories() {
+        const dirs = this.argv.slice(2);
         if (dirs.length) {
             dirs.forEach((dir) => {
                 if (dir.indexOf('..') === 0) {
-                    throw Error(`Wrong directory "${dir}". Directories outside of CWD are not allowed.`);
+                    throw Error(`Invalid directory "${dir}". Directories outside of CWD are not allowed.`);
                 }
             });
         } else {
@@ -16,4 +24,5 @@ module.exports = {
 
         return dirs;
     }
+
 };

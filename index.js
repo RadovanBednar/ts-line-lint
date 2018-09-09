@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 const findFiles = require('./src/find-files');
 const processFile = require('./src/process-file');
-const argvParser = require('./src/argv-parser');
+const ArgvParser = require('./src/argv-parser');
 const log = require('./src/logger');
 
 let dirList, tsFileList;
 
 try {
-    dirList = argvParser.getDirectories();
+    dirList = new ArgvParser(process.argv).directories;
 } catch (e) {
     log
       .error(e.message)
