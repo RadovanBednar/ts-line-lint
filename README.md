@@ -1,4 +1,5 @@
-This tool is supposed to enforce consistent use of blank lines in TypeScript files, a goal that cannot be achieved by other code style tools like `tslint` or `prettier`. `ts-line-lint` is by no means supposed to substitute any of these tools nor your IDE's "reformat code" option; it merely complements them. In fact, to use `ts-line-lint` most effectively, the code in all the *.ts files should already be properly formatted according to project code style and have any lint errors fixed before usage.
+# Introduction
+This tool is supposed to enforce consistent use of blank lines in TypeScript files, a goal that cannot be achieved by other code style tools like `tslint` or `prettier`. `ts-line-lint` is by no means supposed to substitute any of these tools nor your IDE's "reformat code" option; it merely complements them. In fact, to use `ts-line-lint` most effectively, the code in all the affected *.ts files should already be properly formatted according to project code style and have any lint errors fixed beforehand.
 
 # Installation
 ```shell
@@ -26,8 +27,9 @@ $ ts-line-lint .
 $ ts-line-lint
 Warning: No directory specified, using "." as fallback.
 ```
+Nonetheless, it's better to specify the source directories explicitly, so that the synchronous file search would be faster.
 
-`node_modules` directory as well as any hidden directories will be ignored in the process of searching for files, whether specified explicitly or implicitly via `.`. The following two commands will therefore yield exactly 0 *.ts files to process.
+`node_modules` directory as well as any hidden directories will be ignored in the file search process, whether specified explicitly or implicitly via `.`. The following two commands will therefore yield exactly 0 *.ts files to process.
 
 ```shell
 $ ts-line-lint node_modules
@@ -44,12 +46,10 @@ Accessing any directories outside of the project is forbidden, therefore any att
 ```shell
 $ ts-line-lint ../another-project
 Error: Invalid directory "../another-project". Directories outside of CWD are not allowed.
-Found 0 files to process...
-
 ```
 
 # Under the hood
- `ts-line-lint` first lists all the *.ts files in specified project subdirectories and then process them one by one via series of regular expression replacements. The sequence of replacements may be divided into three logical groups (in the order in which they take place): blank removals, blank insertions and cleanup.
+ `ts-line-lint` first lists all the *.ts files in specified project subdirectories and then processes them one by one via a sequence of regular expression replacements. The sequence may be divided into three logical groups (in the order of execution): blank removals, blank insertions and cleanup.
 
 ## Blank removals
 In the first phase, these unnecessary blanks are removed:
@@ -62,7 +62,7 @@ In the first phase, these unnecessary blanks are removed:
   ```javascript
   @Input() public foo!: Foo;
   ```
-* blank lines before any import statements preventing holes in import lists,
+* blank lines before any import statements, preventing holes in import lists,
 * blank lines before any variable or class member variable, e.g.
   ```javascript
   describe('test suite', () => {
@@ -113,7 +113,6 @@ In the second phase additional blank lines are added it these situations:
   ```javascript
   export type AliasedType = nativeType;
   let aliased: AliasedType;
-  }
   ```
   becomes
   ```javascript
@@ -124,14 +123,30 @@ In the second phase additional blank lines are added it these situations:
 * around any interface declaration,
 * around any function declaration,
 * around any class declaration,
-* around any block inside inside a class, i.e. constructors, methods, property getters and setters,
-* around any `describe` block in spec files (may not work for nested `describes`, unfortunately),
+* around any class constructor declaration, e.g.
+  ```javascript
+  class Foo {
+      constructor(private bar: type) {
+      }
+  }
+  ```
+  becomes
+  ```javascript
+  class Foo {
+
+      constructor(private bar: type) {
+      }
+
+  }
+  ```
+* around any class methods with explicit access modifiers,
+* around any class property getters and setters,
+* around any `describe` block in spec files (due to the nature of regexps may not work for nested `describe`s, unfortunately),
 * around any `before(Each)`, `after(Each)` and `it` block in spec files,
 * after the last import statement, e.g.
   ```javascript
   import {Abc} from "abc";
   const foo = 'Foo';
-  }
   ```
   becomes
   ```javascript
