@@ -5,9 +5,9 @@ describe('fixLines function', () => {
     const accessModifiers = ['public', 'protected', 'private'];
     let inputSnippet;
     let expectedOutput;
-
+    
     describe('import statements', () => {
-
+        
         it('should remove blank lines before each import statement', () => {
             inputSnippet = createMultilineString([
                 '',
@@ -30,10 +30,10 @@ describe('fixLines function', () => {
                 '} from "../ghi";',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
         it('should add an empty line after the last import statement', () => {
             inputSnippet = createMultilineString([
                 '// last import is single-line',
@@ -65,14 +65,14 @@ describe('fixLines function', () => {
                 '',
                 'const foo = 666;',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
     });
-
+    
     describe('blocks', () => {
-
+        
         it('should remove blank lines from any kind of empty block', () => {
             inputSnippet = createMultilineString([
                 'class A {',
@@ -100,10 +100,10 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
         it('should remove leading blank lines inside a block', () => {
             inputSnippet = createMultilineString([
                 'interface WithLeadingBlank {',
@@ -139,10 +139,10 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
         it('should remove trailing blank lines inside a block', () => {
             inputSnippet = createMultilineString([
                 'interface WithLeadingBlank {',
@@ -178,17 +178,17 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
     });
-
+    
     describe('variable declarations', () => {
-
+        
         it('should remove blank lines before each possibly indented var, let and const declarations', () => {
             const declarationKeywords = ['var', 'let', 'const'];
-
+            
             for (const kw of declarationKeywords) {
                 inputSnippet = createMultilineString([
                     '// preceding non-blank line',
@@ -210,15 +210,15 @@ describe('fixLines function', () => {
                     '}',
                     '',
                 ]);
-
+                
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
         });
-
+        
     });
-
+    
     describe('type aliases', () => {
-
+        
         it('should add blank lines around each group of consecutive exported type aliases', () => {
             inputSnippet = createMultilineString([
                 '// preceding non-blank line',
@@ -234,14 +234,14 @@ describe('fixLines function', () => {
                 '',
                 '// following non-blank line',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
     });
-
+    
     describe('interface declarations', () => {
-
+        
         it('should add blank lines around each interface declaration', () => {
             inputSnippet = createMultilineString([
                 '// preceding non-blank line',
@@ -272,14 +272,14 @@ describe('fixLines function', () => {
                 '',
                 '// following non-blank line',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
     });
-
+    
     describe('function declaration', () => {
-
+        
         it('should add blank lines around each function declaration', () => {
             inputSnippet = createMultilineString([
                 'const foo = 666;',
@@ -303,10 +303,10 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
         it('should NOT add blank line between comment and subsequent function declaration', () => {
             inputSnippet = createMultilineString([
                 '/* tslint:disable-next-line:typedef */',
@@ -326,14 +326,14 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
     });
-
+    
     describe('class declaration', () => {
-
+        
         it('should add blank lines around each class declaration', () => {
             inputSnippet = createMultilineString([
                 '// preceding non-blank line',
@@ -368,10 +368,10 @@ describe('fixLines function', () => {
                 '});',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
         it('should add blank lines around class declaration with newline before opening brace', () => {
             inputSnippet = createMultilineString([
                 '// preceding non-blank line',
@@ -395,34 +395,51 @@ describe('fixLines function', () => {
                 '',
                 '// following non-blank line',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
-        it('should not add blank line before @Component-decorated class declaration', () => {
+        
+        it('should should add blank line before class decorators, but not after them', () => {
             inputSnippet = createMultilineString([
+                '// preceding non-blank line',
                 '@Component({',
                 '  selector: "app-a",',
                 '})',
                 'class A implements OnInit {',
+                '  // implementation',
+                '}',
+                '// some non-blank line',
+                '@Injectable()',
+                'export class B {',
+                '  // implementation',
                 '}',
             ]);
             expectedOutput = createMultilineString([
+                '// preceding non-blank line',
+                '',
                 '@Component({',
                 '  selector: "app-a",',
                 '})',
                 'class A implements OnInit {',
+                '  // implementation',
+                '}',
+                '',
+                '// some non-blank line',
+                '',
+                '@Injectable()',
+                'export class B {',
+                '  // implementation',
                 '}',
                 '',
             ]);
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
     });
-
+    
     describe('class properties', () => {
-
+        
         it('should remove blank lines before each public, protected and private property', () => {
             for (const modifier of accessModifiers) {
                 inputSnippet = createMultilineString([
@@ -440,11 +457,11 @@ describe('fixLines function', () => {
                     '}',
                     '',
                 ]);
-
+                
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
         });
-
+        
         it('should inline @Input and @Output decorators with property names', () => {
             inputSnippet = createMultilineString([
                 'class A {',
@@ -472,10 +489,10 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
         it('should remove blank lines before each @Input and @Output property', () => {
             inputSnippet = createMultilineString([
                 'class A {',
@@ -492,10 +509,10 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
         it('should add blank lines around class property getters and setters', () => {
             inputSnippet = createMultilineString([
                 'class A {',
@@ -521,336 +538,336 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-
+            
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
-
+        
     });
-
+    
     describe('class methods', () => {
-
+        
         it('should add blank lines around public, protected and private class method declarations', () => {
             for (const modifier of accessModifiers) {
                 inputSnippet = createMultilineString([
                     'class A {',
                     `  ${modifier} static foo(): bar {`,
-                    '    // declarations',
-                    '',
-                    '    // implementation',
-                    '',
-                    '    // return statement',
-                    '  }',
-                    `  ${modifier} baz(): void {`,
-                    '    // implementation',
-                    '  }',
-                    '}',
-                ]);
-                expectedOutput = createMultilineString([
-                    'class A {',
-                    '',
-                    `  ${modifier} static foo(): bar {`,
-                    '    // declarations',
-                    '',
-                    '    // implementation',
-                    '',
-                    '    // return statement',
-                    '  }',
-                    '',
-                    `  ${modifier} baz(): void {`,
-                    '    // implementation',
-                    '  }',
-                    '',
-                    '}',
-                    '',
-                ]);
-
-                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-            }
-
-        });
-
-        it('should add blank lines around constructor declarations', () => {
-            inputSnippet = createMultilineString([
-                'class A {',
-                '  private prop: type;',
-                '  constructor() {',
-                '    // implementation',
-                '  }',
-                '  private constructor() {',
-                '    // implementation',
-                '  }',
-                '}',
-            ]);
-            expectedOutput = createMultilineString([
-                'class A {',
-                '  private prop: type;',
-                '',
-                '  constructor() {',
-                '    // implementation',
-                '  }',
-                '',
-                '  private constructor() {',
-                '    // implementation',
-                '  }',
-                '',
-                '}',
-                '',
-            ]);
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-    });
-
-    describe('unit tests', () => {
-
-        it('should add blank lines around unindented "describe" statements', () => {
-            inputSnippet = createMultilineString([
-                '// preceding non-blank line',
-                'describe("first test suite", () => {',
-                '  // something',
-                '});',
-                'describe("second test suite", () => {',
-                '  // something else',
-                '});',
-                '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
-                '// preceding non-blank line',
-                '',
-                'describe("first test suite", () => {',
-                '  // something',
-                '});',
-                '',
-                'describe("second test suite", () => {',
-                '  // something else',
-                '});',
-                '',
-                '// following non-blank line',
-            ]);
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-        it('should add blank lines around nested "describe" statements with any kind of indentation', () => {
-            for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
-                const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
-
-                inputSnippet = createMultilineString([
-                    '// preceding non-blank line',
-                    'describe("top-level test suite", () => {',
-                    ind + 'describe("first level nested test suite", () => {',
-                    ind + ind + '// something else',
-                    ind + '});',
-                    '});',
-                    '// following non-blank line',
-                ]);
-                expectedOutput = createMultilineString([
-                    '// preceding non-blank line',
-                    '',
-                    'describe("top-level test suite", () => {',
-                    '',
-                    ind + 'describe("first level nested test suite", () => {',
-                    ind + ind + '// something else',
-                    ind + '});',
-                    '',
-                    '});',
-                    '',
-                    '// following non-blank line',
-                ]);
-
-                expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
-            }
-
-        });
-
-        it('should add blank lines around nested "describe" statements with 2 or 3 levels of any kind of indentation', () => {
-            for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
-                const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
-
-                inputSnippet = createMultilineString([
-                    '// preceding non-blank line',
-                    'describe("top-level test suite", () => {',
-                    ind + 'describe("first level nested test suite", () => {',
-                    ind + ind + 'describe("second level nested test suite", () => {',
-                    ind + ind + ind + 'describe("third level nested test suite", () => {',
-                    ind + ind + ind + ind + '// something else',
-                    ind + ind + ind + '});',
-                    ind + ind + '});',
-                    ind + '});',
-                    '});',
-                    '// following non-blank line',
-                ]);
-                expectedOutput = createMultilineString([
-                    '// preceding non-blank line',
-                    '',
-                    'describe("top-level test suite", () => {',
-                    '',
-                    ind + 'describe("first level nested test suite", () => {',
-                    '',
-                    ind + ind + 'describe("second level nested test suite", () => {',
-                    '',
-                    ind + ind + ind + 'describe("third level nested test suite", () => {',
-                    ind + ind + ind + ind + '// something else',
-                    ind + ind + ind + '});',
-                    '',
-                    ind + ind + '});',
-                    '',
-                    ind + '});',
-                    '',
-                    '});',
-                    '',
-                    '// following non-blank line',
-                ]);
-
-                expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
-            }
-        });
-
-        it('should add blank lines around "before(Each)", "after(Each)" and "it" statements', () => {
-            inputSnippet = createMultilineString([
-                '// preceding non-blank line',
-                'describe("first test suite", () => {',
-                '  before(() => {',
-                '    // before',
-                '  });',
-                '  beforeEach(() => {',
-                '    // beforeEach',
-                '  });',
-                '  after(() => {',
-                '    // after',
-                '  });',
-                '  afterEach(() => {',
-                '    // afterEach',
-                '  });',
-                '  it("some test case", () => {',
-                '    // expect...',
-                '  });',
-                '  it("asynchronous test case", async () => {',
-                '    // await expect...',
-                '  });',
-                '});',
-                '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
-                '// preceding non-blank line',
-                '',
-                'describe("first test suite", () => {',
-                '',
-                '  before(() => {',
-                '    // before',
-                '  });',
-                '',
-                '  beforeEach(() => {',
-                '    // beforeEach',
-                '  });',
-                '',
-                '  after(() => {',
-                '    // after',
-                '  });',
-                '',
-                '  afterEach(() => {',
-                '    // afterEach',
-                '  });',
-                '',
-                '  it("some test case", () => {',
-                '    // expect...',
-                '  });',
-                '',
-                '  it("asynchronous test case", async () => {',
-                '    // await expect...',
-                '  });',
-                '',
-                '});',
-                '',
-                '// following non-blank line',
-            ]);
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-    });
-
-    describe('final code refinements', () => {
-
-        it('should remove empty lines from the beginning of a file', () => {
-            inputSnippet = createMultilineString([
-                '',
-                '',
-                'function bar() {',
-                '}',
-                '',
-                '',
-            ]);
-            expectedOutput = createMultilineString([
-                'function bar() {',
-                '}',
-                '',
-            ]);
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-        it('should replace multiple consecutive blank lines with a single one', () => {
-            inputSnippet = createMultilineString([
-                'const foo = 666;',
-                '',
-                '',
-                'function bar() {',
-                '}',
-                '',
-                '',
-                'function baz(param: type): type {',
-                '}',
-                '',
-            ]);
-            expectedOutput = createMultilineString([
-                'const foo = 666;',
-                '',
-                'function bar() {',
-                '}',
-                '',
-                'function baz(param: type): type {',
-                '}',
-                '',
-            ]);
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-        it('should replace multiple trailing blank lines with a single one', () => {
-            inputSnippet = createMultilineString([
-                'function baz(param: type): type {',
-                '}',
-                '',
-                '',
-            ]);
-            expectedOutput = createMultilineString([
-                'function baz(param: type): type {',
-                '}',
-                '',
-            ]);
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-    });
-
-    function createMultilineString(lines) {
-        return lines.join('\n');
-    }
-
-    function expectSnippet(snippet) {
-        let indentSize;
-        return {
-            withIndentationSize(customIndent) {
-                indentSize = customIndent;
-                return this;
-            },
-            toConvertTo(output) {
-                expect(fixLines(snippet, indentSize)).to.equal(output);
-            },
-        };
-    }
-
-});
+                        '    // declarations',
+                        '',
+                        '    // implementation',
+                        '',
+                        '    // return statement',
+                        '  }',
+                        `  ${modifier} baz(): void {`,
+                            '    // implementation',
+                            '  }',
+                            '}',
+                        ]);
+                        expectedOutput = createMultilineString([
+                            'class A {',
+                            '',
+                            `  ${modifier} static foo(): bar {`,
+                                '    // declarations',
+                                '',
+                                '    // implementation',
+                                '',
+                                '    // return statement',
+                                '  }',
+                                '',
+                                `  ${modifier} baz(): void {`,
+                                    '    // implementation',
+                                    '  }',
+                                    '',
+                                    '}',
+                                    '',
+                                ]);
+                                
+                                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                            }
+                            
+                        });
+                        
+                        it('should add blank lines around constructor declarations', () => {
+                            inputSnippet = createMultilineString([
+                                'class A {',
+                                '  private prop: type;',
+                                '  constructor() {',
+                                '    // implementation',
+                                '  }',
+                                '  private constructor() {',
+                                '    // implementation',
+                                '  }',
+                                '}',
+                            ]);
+                            expectedOutput = createMultilineString([
+                                'class A {',
+                                '  private prop: type;',
+                                '',
+                                '  constructor() {',
+                                '    // implementation',
+                                '  }',
+                                '',
+                                '  private constructor() {',
+                                '    // implementation',
+                                '  }',
+                                '',
+                                '}',
+                                '',
+                            ]);
+                            
+                            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                        });
+                        
+                    });
+                    
+                    describe('unit tests', () => {
+                        
+                        it('should add blank lines around unindented "describe" statements', () => {
+                            inputSnippet = createMultilineString([
+                                '// preceding non-blank line',
+                                'describe("first test suite", () => {',
+                                '  // something',
+                                '});',
+                                'describe("second test suite", () => {',
+                                '  // something else',
+                                '});',
+                                '// following non-blank line',
+                            ]);
+                            expectedOutput = createMultilineString([
+                                '// preceding non-blank line',
+                                '',
+                                'describe("first test suite", () => {',
+                                '  // something',
+                                '});',
+                                '',
+                                'describe("second test suite", () => {',
+                                '  // something else',
+                                '});',
+                                '',
+                                '// following non-blank line',
+                            ]);
+                            
+                            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                        });
+                        
+                        it('should add blank lines around nested "describe" statements with any kind of indentation', () => {
+                            for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
+                                const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
+                                
+                                inputSnippet = createMultilineString([
+                                    '// preceding non-blank line',
+                                    'describe("top-level test suite", () => {',
+                                    ind + 'describe("first level nested test suite", () => {',
+                                    ind + ind + '// something else',
+                                    ind + '});',
+                                    '});',
+                                    '// following non-blank line',
+                                ]);
+                                expectedOutput = createMultilineString([
+                                    '// preceding non-blank line',
+                                    '',
+                                    'describe("top-level test suite", () => {',
+                                    '',
+                                    ind + 'describe("first level nested test suite", () => {',
+                                    ind + ind + '// something else',
+                                    ind + '});',
+                                    '',
+                                    '});',
+                                    '',
+                                    '// following non-blank line',
+                                ]);
+                                
+                                expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
+                            }
+                            
+                        });
+                        
+                        it('should add blank lines around nested "describe" statements with 2 or 3 levels of any kind of indentation', () => {
+                            for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
+                                const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
+                                
+                                inputSnippet = createMultilineString([
+                                    '// preceding non-blank line',
+                                    'describe("top-level test suite", () => {',
+                                    ind + 'describe("first level nested test suite", () => {',
+                                    ind + ind + 'describe("second level nested test suite", () => {',
+                                    ind + ind + ind + 'describe("third level nested test suite", () => {',
+                                    ind + ind + ind + ind + '// something else',
+                                    ind + ind + ind + '});',
+                                    ind + ind + '});',
+                                    ind + '});',
+                                    '});',
+                                    '// following non-blank line',
+                                ]);
+                                expectedOutput = createMultilineString([
+                                    '// preceding non-blank line',
+                                    '',
+                                    'describe("top-level test suite", () => {',
+                                    '',
+                                    ind + 'describe("first level nested test suite", () => {',
+                                    '',
+                                    ind + ind + 'describe("second level nested test suite", () => {',
+                                    '',
+                                    ind + ind + ind + 'describe("third level nested test suite", () => {',
+                                    ind + ind + ind + ind + '// something else',
+                                    ind + ind + ind + '});',
+                                    '',
+                                    ind + ind + '});',
+                                    '',
+                                    ind + '});',
+                                    '',
+                                    '});',
+                                    '',
+                                    '// following non-blank line',
+                                ]);
+                                
+                                expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
+                            }
+                        });
+                        
+                        it('should add blank lines around "before(Each)", "after(Each)" and "it" statements', () => {
+                            inputSnippet = createMultilineString([
+                                '// preceding non-blank line',
+                                'describe("first test suite", () => {',
+                                '  before(() => {',
+                                '    // before',
+                                '  });',
+                                '  beforeEach(() => {',
+                                '    // beforeEach',
+                                '  });',
+                                '  after(() => {',
+                                '    // after',
+                                '  });',
+                                '  afterEach(() => {',
+                                '    // afterEach',
+                                '  });',
+                                '  it("some test case", () => {',
+                                '    // expect...',
+                                '  });',
+                                '  it("asynchronous test case", async () => {',
+                                '    // await expect...',
+                                '  });',
+                                '});',
+                                '// following non-blank line',
+                            ]);
+                            expectedOutput = createMultilineString([
+                                '// preceding non-blank line',
+                                '',
+                                'describe("first test suite", () => {',
+                                '',
+                                '  before(() => {',
+                                '    // before',
+                                '  });',
+                                '',
+                                '  beforeEach(() => {',
+                                '    // beforeEach',
+                                '  });',
+                                '',
+                                '  after(() => {',
+                                '    // after',
+                                '  });',
+                                '',
+                                '  afterEach(() => {',
+                                '    // afterEach',
+                                '  });',
+                                '',
+                                '  it("some test case", () => {',
+                                '    // expect...',
+                                '  });',
+                                '',
+                                '  it("asynchronous test case", async () => {',
+                                '    // await expect...',
+                                '  });',
+                                '',
+                                '});',
+                                '',
+                                '// following non-blank line',
+                            ]);
+                            
+                            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                        });
+                        
+                    });
+                    
+                    describe('final code refinements', () => {
+                        
+                        it('should remove empty lines from the beginning of a file', () => {
+                            inputSnippet = createMultilineString([
+                                '',
+                                '',
+                                'function bar() {',
+                                '}',
+                                '',
+                                '',
+                            ]);
+                            expectedOutput = createMultilineString([
+                                'function bar() {',
+                                '}',
+                                '',
+                            ]);
+                            
+                            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                        });
+                        
+                        it('should replace multiple consecutive blank lines with a single one', () => {
+                            inputSnippet = createMultilineString([
+                                'const foo = 666;',
+                                '',
+                                '',
+                                'function bar() {',
+                                '}',
+                                '',
+                                '',
+                                'function baz(param: type): type {',
+                                '}',
+                                '',
+                            ]);
+                            expectedOutput = createMultilineString([
+                                'const foo = 666;',
+                                '',
+                                'function bar() {',
+                                '}',
+                                '',
+                                'function baz(param: type): type {',
+                                '}',
+                                '',
+                            ]);
+                            
+                            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                        });
+                        
+                        it('should replace multiple trailing blank lines with a single one', () => {
+                            inputSnippet = createMultilineString([
+                                'function baz(param: type): type {',
+                                '}',
+                                '',
+                                '',
+                            ]);
+                            expectedOutput = createMultilineString([
+                                'function baz(param: type): type {',
+                                '}',
+                                '',
+                            ]);
+                            
+                            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                        });
+                        
+                    });
+                    
+                    function createMultilineString(lines) {
+                        return lines.join('\n');
+                    }
+                    
+                    function expectSnippet(snippet) {
+                        let indentSize;
+                        return {
+                            withIndentationSize(customIndent) {
+                                indentSize = customIndent;
+                                return this;
+                            },
+                            toConvertTo(output) {
+                                expect(fixLines(snippet, indentSize)).to.equal(output);
+                            },
+                        };
+                    }
+                    
+                });

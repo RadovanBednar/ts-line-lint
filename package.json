@@ -2,7 +2,12 @@
     "name": "ts-line-lint",
     "version": "0.0.0",
     "description": "enforce consistent use of blank lines in TypeScript files",
-    "keywords": ["lint", "typescript", "blank", "line"],
+    "keywords": [
+        "lint",
+        "typescript",
+        "blank",
+        "line"
+    ],
     "main": "build/index.js",
     "repository": {
         "type": "git",
@@ -15,7 +20,9 @@
         "test": "mocha --ui bdd ./src/**/*.spec.js"
     },
     "babel": {
-        "presets": ["latest"]
+        "presets": [
+            "latest"
+        ]
     },
     "author": "Radovan Bednár",
     "license": "ISC",

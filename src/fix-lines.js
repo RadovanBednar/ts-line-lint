@@ -9,8 +9,7 @@ function fixLines(inputCode, indentSize = 4) {
     const consecutiveTypeAliases = /((?:^export type .*\n)+)/mg;
     const interfaceDeclaration = /(^(?:export )?interface \w+ {\n(?:(?:[ \t]+.*)?\n)*?^})/mg;
     const functionDeclaration = /((?:^[ \t]*(?:\/\/|\/\*).*\n)?^([ \t]*)(async )?function \w+\(.*\).*{\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
-    const classDeclaration = /(^([ \t]*).*?class .*(?: |\n\2[ \t]+.*?){\n(?:(?:\2[ \t]+.*)?\n)*?^\2})/mg;
-    const newlineFollowedComponentDecorator = /(^([ \t]+)?@Component\({\n(?:\2[ \t]+.*\n)*?\2?}\)\n)\n/mg;
+    const classDeclarationWithOptionalDecorator = /((^([ \t]*)@\w+\((?:{\n(?:\3[ \t]+.*\n)*?\3?})?\)\n)?^([ \t]*).*?class .*(?: |\n\4[ \t]+.*?){\n(?:(?:\4[ \t]+.*)?\n)*?^\4})/mg;
     const blockInsideClass = /(^([ \t]*)(public |protected |private |(.* )?(g|s)et |constructor\().*\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
     const blockInsideDescribe = /(^([ \t]*)(before(Each)?\(|after(Each)?\(|it\().*\n(?:.*\n)*?\2}\);)/mg;
     const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
@@ -38,7 +37,7 @@ function fixLines(inputCode, indentSize = 4) {
       .replace(consecutiveTypeAliases, surroundWithBlanks)
       .replace(interfaceDeclaration, surroundWithBlanks)
       .replace(functionDeclaration, surroundWithBlanks)
-      .replace(classDeclaration, surroundWithBlanks)
+      .replace(classDeclarationWithOptionalDecorator, surroundWithBlanks)
       .replace(blockInsideClass, surroundWithBlanks)
       .replace(blockInsideDescribe, surroundWithBlanks);
 
@@ -48,7 +47,6 @@ function fixLines(inputCode, indentSize = 4) {
 
     //cleanup
     return codeWithBlanksInserted
-      .replace(newlineFollowedComponentDecorator, removeFollowingBlank)
       .replace(leadingBlank, removeCompletely)
       .replace(duplicateBlanks, replaceWithSingleBlank)
       .replace(excessTrailingBlanks, removeCompletely);

@@ -122,7 +122,30 @@ In the second phase additional blank lines are added it these situations:
   ```
 * around any interface declaration,
 * around any function declaration,
-* around any class declaration,
+* around any class declaration including decorated ones, e.g.
+  ```javascript
+  // non-blank line
+  @Component({
+    selector: "app-foo",
+  })
+  class FooComponent {
+    // implementation
+  }
+  // non-blank line
+  ```
+  becomes
+  ```javascript
+  // non-blank line
+
+  @Component({
+    selector: "app-foo",
+  })
+  class FooComponent {
+    // implementation
+  }
+
+  // non-blank line
+  ```
 * around any class constructor declaration, e.g.
   ```javascript
   class Foo {
@@ -157,20 +180,6 @@ In the second phase additional blank lines are added it these situations:
 
 ## Cleanup
 In the third phase any artifacts possibly introduced by the previous phases are fixed:
-* a blank line introduced between a `@Component` decorator and the decorated class is removed,
 * any number of blank lines at the beginning of the file is removed,
 * any number of consecutive blank lines is replaced by a single blank line,
 * any number of blank lines at the end of the file are replaced by a single blank line.
-
-
-
-
-
-
-
-
-
-
-
-
-
