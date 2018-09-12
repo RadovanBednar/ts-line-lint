@@ -6,7 +6,8 @@ function fixLines(inputCode, indentSize = 4) {
     const blankFollowedStartOfBlock = /({\n)\n+/mg;
     const blankPrecededEndOfBlock = /\n+(\n[ \t]*})/mg;
     const blankUnfollowedLastImport = /(^import .*\n|^} from .*\n)(?!^(?:import|[ \t]+))/mg;
-    const consecutiveTypeAliases = /((?:^export type .*\n)+)/mg;
+    const consecutiveTypeAliases = /((?:^(export )?type .*;\n)+)/mg;
+    const multilineTypeAlias = /(^(export )?type .*\n(?:[ \t]+.*\n)+?^.*;)/mg;
     const interfaceDeclaration = /(^(?:export )?interface \w+ {\n(?:(?:[ \t]+.*)?\n)*?^})/mg;
     const functionDeclaration = /((?:^[ \t]*(?:\/\/|\/\*).*\n)?^([ \t]*)(async )?function \w+\(.*\).*{\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
     const classDeclarationWithOptionalDecorator = /((^([ \t]*)@\w+\((?:{\n(?:\3[ \t]+.*\n)*?\3?})?\)\n)?^([ \t]*).*?class .*(?: |\n\4[ \t]+.*?){\n(?:(?:\4[ \t]+.*)?\n)*?^\4})/mg;
@@ -35,6 +36,7 @@ function fixLines(inputCode, indentSize = 4) {
     let codeWithBlanksInserted = codeWithBlanksRemoved
       .replace(blankUnfollowedLastImport, addFollowingBlank)
       .replace(consecutiveTypeAliases, surroundWithBlanks)
+      .replace(multilineTypeAlias, surroundWithBlanks)
       .replace(interfaceDeclaration, surroundWithBlanks)
       .replace(functionDeclaration, surroundWithBlanks)
       .replace(classDeclarationWithOptionalDecorator, surroundWithBlanks)

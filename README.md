@@ -53,7 +53,7 @@ Error: Invalid directory "../another-project". Directories outside of CWD are no
 
 ## Blank removals
 In the first phase, these unnecessary blanks are removed:
-* newlines after @Input() and @Output decorators, e.g.
+* newlines after @Input() and @Output() decorators, e.g.
   ```javascript
   @Input()
   public foo!: Foo;
@@ -109,7 +109,7 @@ In the first phase, these unnecessary blanks are removed:
 
 ## Blank insertions
 In the second phase additional blank lines are added it these situations:
-* around any list of type aliases, e.g.
+* around any group of single-line type aliases, e.g.
   ```javascript
   export type AliasedType = nativeType;
   let aliased: AliasedType;
@@ -120,6 +120,7 @@ In the second phase additional blank lines are added it these situations:
 
   let aliased: AliasedType;
   ```
+* around any individual multiline type alias,
 * around any interface declaration,
 * around any function declaration,
 * around any class declaration including decorated ones, e.g.
@@ -182,4 +183,4 @@ In the second phase additional blank lines are added it these situations:
 In the third phase any artifacts possibly introduced by the previous phases are fixed:
 * any number of blank lines at the beginning of the file is removed,
 * any number of consecutive blank lines is replaced by a single blank line,
-* any number of blank lines at the end of the file are replaced by a single blank line.
+* any number of blank lines at the end of the file is replaced by a single blank line.

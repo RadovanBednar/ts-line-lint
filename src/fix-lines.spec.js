@@ -238,6 +238,34 @@ describe('fixLines function', () => {
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
         
+        it('should add blank lines around each multiline exported type aliase', () => {
+            inputSnippet = createMultilineString([
+                '// preceding non-blank line',
+                'export type ExtendedType<T> = T & {',
+                '  [P in keyof T]: T[P] & BaseType<T>;',
+                '};',
+                'export type UnionType =',
+                '  SomeType |',
+                '  AnotherType;',
+                '// following non-blank line',
+            ]);
+            expectedOutput = createMultilineString([
+                '// preceding non-blank line',
+                '',
+                'export type ExtendedType<T> = T & {',
+                '  [P in keyof T]: T[P] & BaseType<T>;',
+                '};',
+                '',
+                'export type UnionType =',
+                '  SomeType |',
+                '  AnotherType;',
+                '',
+                '// following non-blank line',
+            ]);
+            
+            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+        });
+        
     });
     
     describe('interface declarations', () => {
