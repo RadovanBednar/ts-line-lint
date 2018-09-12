@@ -12,7 +12,7 @@ function fixLines(inputCode, indentSize = 4) {
     const functionDeclaration = /((?:^[ \t]*(?:\/\/|\/\*).*\n)?^([ \t]*)(async )?function \w+\(.*\).*{\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
     const classDeclarationWithOptionalDecorator = /((^([ \t]*)@\w+\((?:{\n(?:\3[ \t]+.*\n)*?\3?})?\)\n)?^([ \t]*).*?class .*(?: |\n\4[ \t]+.*?){\n(?:(?:\4[ \t]+.*)?\n)*?^\4})/mg;
     const blockInsideClass = /(^([ \t]*)(public |protected |private |(.* )?(g|s)et |constructor\().*\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
-    const blockInsideDescribe = /(^([ \t]*)(before(Each)?\(|after(Each)?\(|it\().*\n(?:.*\n)*?\2}\);)/mg;
+    const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?\(|after(Each|All)?\(|it\().*\n(?:.*\n)*?\2}\)+;)/mg;
     const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
     const leadingBlank = /^\n+/g;
     const duplicateBlanks = /(?<=\n)(\n+)/g;
