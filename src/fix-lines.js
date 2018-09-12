@@ -1,6 +1,6 @@
 function fixLines(inputCode, indentSize = 4) {
     // search patterns
-    const newlineFollowedInputOutputDecorator = /(^[ \t]+@(?:In|Out)put\(['\w]*\))\n[ \t]+(.*)/mg;
+    const newlineFollowedPropertyDecorator = /(^[ \t]+@['\w]+\(['\w]*\))\n[ \t]+(?!.*\b(set|get)\b.*)/mg;
     const blankPrecededImport = /\n(\n^import {.*$)/mg;
     const blankPrecededVariableDeclaration = /\n(\n[ \t]*(?:var|const|let|(.* )?(private|protected|public)) )/mg;
     const blankFollowedStartOfBlock = /({\n)\n+/mg;
@@ -11,7 +11,7 @@ function fixLines(inputCode, indentSize = 4) {
     const interfaceDeclaration = /(^(?:export )?interface \w+ {\n(?:(?:[ \t]+.*)?\n)*?^})/mg;
     const functionDeclaration = /((?:^[ \t]*(?:\/\/|\/\*).*\n)?^([ \t]*)(async )?function \w+\(.*\).*{\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
     const classDeclarationWithOptionalDecorator = /((^([ \t]*)@\w+\((?:{\n(?:\3[ \t]+.*\n)*?\3?})?\)\n)?^([ \t]*).*?class .*(?: |\n\4[ \t]+.*?){\n(?:(?:\4[ \t]+.*)?\n)*?^\4})/mg;
-    const blockInsideClass = /(^([ \t]*)(public |protected |private |(.* )?(g|s)et |constructor\().*\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
+    const blockInsideClass = /((?:^[ \t]*@\w+\(['\w]*\)\n)?^([ \t]*)(public |protected |private |(.* )?(g|s)et |constructor\().*\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
     const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?\(|after(Each|All)?\(|it\().*\n(?:.*\n)*?\2}\)+;)/mg;
     const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
     const leadingBlank = /^\n+/g;
@@ -27,7 +27,7 @@ function fixLines(inputCode, indentSize = 4) {
     const replaceWithSingleBlank = '\n';
 
     let codeWithBlanksRemoved = inputCode
-      .replace(newlineFollowedInputOutputDecorator, inlineWithDeclaration)
+      .replace(newlineFollowedPropertyDecorator, inlineWithDeclaration)
       .replace(blankPrecededImport, removePrecedingBlank)
       .replace(blankPrecededVariableDeclaration, removePrecedingBlank)
       .replace(blankFollowedStartOfBlock, removeFollowingBlank)
