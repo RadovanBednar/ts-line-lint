@@ -509,7 +509,7 @@ describe('fixLines function', () => {
                 '}',
                 '',
             ]);
-    
+
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
