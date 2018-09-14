@@ -1,8 +1,8 @@
 function fixLines(inputCode, indentSize = 4) {
     // search patterns
-    const newlineFollowedPropertyDecorator = /(^[ \t]+@['\w]+\(['\w]*\))\n[ \t]+(?!.*\b(set|get)\b.*)/mg;
+    const newlineFollowedPropertyDecorator = /(^[ \t]+@\w+\([\w'"]*\))\n[ \t]+(?!.*\b(set|get)\b.*)/mg;
     const blankPrecededImport = /\n(\n^import {.*$)/mg;
-    const blankPrecededVariableDeclaration = /\n(\n[ \t]*(?:var|const|let|(.* )?(private|protected|public)) )/mg;
+    const blankPrecededVariableDeclaration = /(?<!})\n(\n[ \t]*(?:var|const|let|(@.* )?(private|protected|public)) )/mg;
     const blankFollowedStartOfBlock = /({\n)\n+/mg;
     const blankPrecededEndOfBlock = /\n+(\n[ \t]*})/mg;
     const blankUnfollowedLastImport = /(^import .*\n|^} from .*\n)(?!^(?:import|[ \t]+|\n))/mg;

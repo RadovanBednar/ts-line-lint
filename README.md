@@ -38,7 +38,6 @@ Found 0 files to process...
 $ ts-line-lint .git
 Warning: Skipping hidden directory ".git".
 Found 0 files to process...
-
 ```
 
 Accessing any directories outside of the project is forbidden, therefore any attempt to specify a directory starting with `..` will raise an error and terminate the program before any file processing takes place. This control mechanism can be circumvented by specifying an absolute path, but why would anyone do that is beyond comprehension of the tool's author :)
@@ -53,7 +52,8 @@ Error: Invalid directory "../another-project". Directories outside of CWD are no
 
 ## Blank removals
 In the first phase, these unnecessary blanks are removed:
-* newline after any decorator followed by a property declaration, e.g.
+* <details><summary style="cursor: pointer">newline after any decorator followed by a property declaration,</summary>
+
   ```javascript
   @Input()
   public foo!: Foo;
@@ -62,19 +62,53 @@ In the first phase, these unnecessary blanks are removed:
   ```javascript
   @Input() public foo!: Foo;
   ```
-* blank lines before any import statement, preventing holes in import lists,
-* blank lines before any variable declaration, e.g.
+  </details>
+* <details><summary style="cursor: pointer">blank lines before any import statement, preventing holes in import lists,</summary>
+
   ```javascript
+  import {Foo} from "./foo";
+
+  import {
+      FirstLongThingFromBar,
+      SecondLongThingFromBar
+  } from '../bar';
+  ```
+  becomes
+  ```javascript
+  import {Foo} from "./foo";
+  import {
+      FirstLongThingFromBar,
+      SecondLongThingFromBar
+  } from '../bar';
+  ```
+  </details>
+* <details><summary style="cursor: pointer">blank lines before any variable declaration not following a block of code,</summary>
+
+  ```javascript
+  if (condition) {
+      // following const stays separated
+  }
+  
+  const bar = 'bar';
+  
   describe('test suite', () => {
 
       const foo = 'foo';
   ```
   becomes
   ```javascript
+  if (condition) {
+      // following const stays separated
+  }
+
+  const bar = 'bar';
+
   describe('test suite', () => {
       const foo = 'foo';
   ```
-* blank lines before any class member variable declaration, e.g.
+  </details>
+* <details><summary style="cursor: pointer">blank lines before any class member variable declaration with an explicit access modifier,</summary>
+
   ```javascript
   class Foo {
 
@@ -85,7 +119,9 @@ In the first phase, these unnecessary blanks are removed:
   class Foo {
       private bar = 'foo';
   ```
-* blank lines following an opening brace of a block, e.g.
+  </details>
+* <details><summary style="cursor: pointer">blank lines following an opening brace of a block,</summary>
+
   ```javascript
   constructor(private foo: Foo) {
 
@@ -96,7 +132,9 @@ In the first phase, these unnecessary blanks are removed:
   constructor(private foo: Foo) {
   }
   ```
-* blank lines preceding a closing brace of a block, e.g.
+  </details>
+* <details><summary style="cursor: pointer">blank lines preceding a closing brace of a block,</summary>
+
   ```javascript
       return foo;
 
@@ -107,10 +145,12 @@ In the first phase, these unnecessary blanks are removed:
       return foo;
   }
   ```
+  </details>
 
 ## Blank insertions
-In the second phase blank lines are added it these situations:
-* around any group of single-line type aliases, e.g.
+In the second phase blank lines are added in these situations:
+* <details><summary style="cursor: pointer">around any group of single-line type aliases,</summary>
+
   ```javascript
   export type AliasedType = nativeType;
   let aliased: AliasedType;
@@ -121,23 +161,84 @@ In the second phase blank lines are added it these situations:
 
   let aliased: AliasedType;
   ```
-* around any individual multiline type alias,
-* around any interface declaration,
-* around any function declaration,
-* around any class declaration including a decorator, e.g.
+  </details>
+* <details><summary style="cursor: pointer">around any individual multiline type alias,</summary>
+
   ```javascript
-  // non-blank line
-  @Component({
-    selector: "app-foo",
-  })
-  class FooComponent {
-    // implementation
-  }
-  // non-blank line
+  // preceding non-blank line
+  export type UnionType =
+      SomeType |
+      AnotherType;
+  // following non-blank line
   ```
   becomes
   ```javascript
-  // non-blank line
+  // preceding non-blank line
+
+  export type UnionType =
+      SomeType |
+      AnotherType;
+
+  // following non-blank line
+  ```
+  </details>
+* <details><summary style="cursor: pointer">around any interface declaration,</summary>
+
+  ```javascript
+  // preceding non-blank line
+  export interface ExportedInterface {
+      prop1: type;
+      prop2: type;
+  }
+  // following non-blank line
+  ```
+  becomes
+  ```javascript
+  // preceding non-blank line
+
+  export interface ExportedInterface {
+      prop1: type;
+      prop2: type;
+  }
+
+  // following non-blank line
+  ```
+  </details>
+* <details><summary style="cursor: pointer">around any function declaration,</summary>
+
+  ```javascript
+  const foo = 'foo';
+  function bar(): string {
+      return foo.toUppercase();
+  }
+  bar();
+  ```
+  becomes
+  ```javascript
+  const foo = 'foo';
+  
+  function bar(): string {
+      return foo.toUppercase();
+  }
+  
+  bar();
+  ```
+  </details>
+* <details><summary style="cursor: pointer">around any class declaration including a decorator,</summary>
+
+  ```javascript
+  // preceding non-blank line
+  @Component({
+    selector: "app-foo",
+  })
+  class FooComponent {
+    // implementation
+  }
+  // following non-blank line
+  ```
+  becomes
+  ```javascript
+  // preceding non-blank line
 
   @Component({
     selector: "app-foo",
@@ -146,9 +247,11 @@ In the second phase blank lines are added it these situations:
     // implementation
   }
 
-  // non-blank line
+  // following non-blank line
   ```
-* around any class constructor declaration, e.g.
+  </details>
+* <details><summary style="cursor: pointer">around any class constructor declaration,</summary>
+
   ```javascript
   class Foo {
       constructor(private bar: type) {
@@ -164,10 +267,33 @@ In the second phase blank lines are added it these situations:
 
   }
   ```
-* around any class method with an explicit access modifier,
-* around any class property getter/setter including a decorator, e.g.
+  </details>
+* <details><summary style="cursor: pointer">around any class method with an explicit access modifier,</summary>
+
   ```javascript
-  class A {
+  class Foo {
+      private bar = 'bar';
+      public getBar(): string {
+          return this.bar;
+      }
+  }
+  ```
+  becomes
+  ```javascript
+  class Foo {
+      private bar = 'bar';
+
+      public getBar(): string {
+          return this.bar;
+      }
+
+  }
+  ```
+  </details>
+* <details><summary style="cursor: pointer">around any class property getter/setter including a decorator,</summary>
+
+  ```javascript
+  class Foo {
     @Input()
     set baz(param: type) {
       this _baz = param;
@@ -176,7 +302,7 @@ In the second phase blank lines are added it these situations:
   ```
   becomes
   ```javascript
-  class A {
+  class Foo {
 
     @Input()
     set baz(param: type) {
@@ -185,9 +311,62 @@ In the second phase blank lines are added it these situations:
 
   }
   ```
-* around any `describe` block (including nested `describe`s up to indentation level 4) in spec files,
-* around any `before(Each|All)`, `after(Each|All)` and `it` block in spec files,
-* after the last import statement, e.g.
+  </details>
+* <details><summary style="cursor: pointer">around any `describe` block in spec files including nested `describe`s up to indentation level 4,</summary>
+
+  ```javascript
+  // preceding non-blank line
+  describe("top-level test suite", () => {
+      describe("first level nested test suite", () => {
+          // something else
+      });
+  });
+  // following non-blank line
+  ```
+  becomes
+  ```javascript
+  // preceding non-blank line
+
+  describe("top-level test suite", () => {
+
+      describe("first level nested test suite", () => {
+          // something else
+      });
+
+  });
+
+  // following non-blank line
+  ```
+  </details>
+* <details><summary style="cursor: pointer">around any `before`/`beforeEach`/`beforeAll`, `after`/`afterEach`/`afterAll` and `it` block in spec files,</summary>
+
+  ```javascript
+  describe("test suite", () => {
+      beforeEach(() => {
+          // code
+      });
+      it("asynchronous test case", async () => {
+          // await expect...
+      });
+  });
+  ```
+  becomes
+  ```javascript
+  describe("test suite", () => {
+
+      beforeEach(() => {
+          // code
+      });
+
+      it("asynchronous test case", async () => {
+          // await expect...
+      });
+
+  });
+  ```
+  </details>
+* <details><summary style="cursor: pointer">after the last import statement,</summary>
+
   ```javascript
   import {Abc} from "abc";
   const foo = 'Foo';
@@ -198,6 +377,7 @@ In the second phase blank lines are added it these situations:
 
   const foo = 'Foo';
   ```
+  </details>
 
 ## Cleanup
 In the third phase any artifacts possibly introduced by the previous phases are fixed:

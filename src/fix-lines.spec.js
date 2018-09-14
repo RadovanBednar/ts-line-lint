@@ -214,6 +214,29 @@ describe('fixLines function', () => {
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
         });
+        
+        it('should NOT remove blank lines before variable declarations following a block', () => {
+            const declarationKeywords = ['var', 'let', 'const'];
+
+            for (const kw of declarationKeywords) {
+                inputSnippet = createMultilineString([
+                    'if (condition) {',
+                    '  // code',
+                    '}',
+                    '',
+                    `${kw} foo: type;`,
+                ]);
+                expectedOutput = createMultilineString([
+                    'if (condition) {',
+                    '  // code',
+                    '}',
+                    '',
+                    `${kw} foo: type;`,
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+        });
 
     });
 
