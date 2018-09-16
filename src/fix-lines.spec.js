@@ -2,7 +2,8 @@ const expect = require('chai').expect;
 const fixLines = require('./fix-lines');
 
 describe('fixLines function', () => {
-    const accessModifiers = ['public', 'protected', 'private'];
+    const accessModifiers = ['public ', 'protected ', 'private '];
+    const accessModifiersIncludingImplicitOne = accessModifiers.concat('');
     let inputSnippet;
     let expectedOutput;
 
@@ -291,7 +292,7 @@ describe('fixLines function', () => {
 
     });
 
-    describe('interface declarations', () => {
+    describe('interfaces', () => {
 
         it('should add blank lines around each interface declaration', () => {
             inputSnippet = createMultilineString([
@@ -329,7 +330,7 @@ describe('fixLines function', () => {
 
     });
 
-    describe('function declaration', () => {
+    describe('functions', () => {
 
         it('should add blank lines around each function declaration', () => {
             inputSnippet = createMultilineString([
@@ -383,7 +384,7 @@ describe('fixLines function', () => {
 
     });
 
-    describe('class declaration', () => {
+    describe('classes', () => {
 
         it('should add blank lines around each class declaration', () => {
             inputSnippet = createMultilineString([
@@ -496,15 +497,15 @@ describe('fixLines function', () => {
                 inputSnippet = createMultilineString([
                     'class A {',
                     '',
-                    `  ${modifier} foo = 123`,
+                    `  ${modifier}foo = 123`,
                     '',
-                    `  ${modifier} bar!: string`,
+                    `  ${modifier}bar!: string`,
                     '}',
                 ]);
                 expectedOutput = createMultilineString([
                     'class A {',
-                    `  ${modifier} foo = 123`,
-                    `  ${modifier} bar!: string`,
+                    `  ${modifier}foo = 123`,
+                    `  ${modifier}bar!: string`,
                     '}',
                     '',
                 ]);
@@ -641,20 +642,82 @@ describe('fixLines function', () => {
 
     });
 
-    describe('class methods', () => {
+    describe('constructors', () => {
 
-        it('should add blank lines around public, protected and private class method declarations', () => {
+        it('should add blank lines around any constructor declaration with or without an access modifier', () => {
+            for (const modifier of accessModifiersIncludingImplicitOne) {
+                inputSnippet = createMultilineString([
+                    'class A {',
+                    '  private prop: type;',
+                    `  ${modifier}constructor() {`,
+                    '    // implementation',
+                    '  }',
+                    '}',
+                    '',
+                ]);
+                expectedOutput = createMultilineString([
+                    'class A {',
+                    '  private prop: type;',
+                    '',
+                    `  ${modifier}constructor() {`,
+                    '    // implementation',
+                    '  }',
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+        });
+
+        it('should add blank lines around any constructor declaration with a multiline parameter list', () => {
+            for (const modifier of accessModifiersIncludingImplicitOne) {
+                const indent =  ' '.repeat(`${modifier}constructor`.length);
+
+                inputSnippet = createMultilineString([
+                    'class Foo {',
+                    '  private prop: type;',
+                    `  ${modifier}constructor(private firstDependency: FirstDependency,`,
+                    indent + 'private secondDependency: SecondDependency,',
+                    indent + 'private thirdDependency: ThirdDependency) {',
+                    '  }',
+                    '}',
+                    '',
+                ]);
+                expectedOutput = createMultilineString([
+                    'class Foo {',
+                    '  private prop: type;',
+                    '',
+                    `  ${modifier}constructor(private firstDependency: FirstDependency,`,
+                    indent + 'private secondDependency: SecondDependency,',
+                    indent + 'private thirdDependency: ThirdDependency) {',
+                    '  }',
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+        });
+
+    });
+
+    describe('methods', () => {
+
+        it('should add blank lines around any class method declaration with an explicit access modifier', () => {
             for (const modifier of accessModifiers) {
                 inputSnippet = createMultilineString([
                     'class A {',
-                    `  ${modifier} static foo(): bar {`,
+                    `  ${modifier}static foo(): bar {`,
                     '    // declarations',
                     '',
                     '    // implementation',
                     '',
                     '    // return statement',
                     '  }',
-                    `  ${modifier} baz(): void {`,
+                    `  ${modifier}baz(): void {`,
                     '    // implementation',
                     '  }',
                     '}',
@@ -662,7 +725,7 @@ describe('fixLines function', () => {
                 expectedOutput = createMultilineString([
                     'class A {',
                     '',
-                    `  ${modifier} static foo(): bar {`,
+                    `  ${modifier}static foo(): bar {`,
                     '    // declarations',
                     '',
                     '    // implementation',
@@ -670,7 +733,7 @@ describe('fixLines function', () => {
                     '    // return statement',
                     '  }',
                     '',
-                    `  ${modifier} baz(): void {`,
+                    `  ${modifier}baz(): void {`,
                     '    // implementation',
                     '  }',
                     '',
@@ -683,35 +746,39 @@ describe('fixLines function', () => {
 
         });
 
-        it('should add blank lines around constructor declarations', () => {
-            inputSnippet = createMultilineString([
-                'class A {',
-                '  private prop: type;',
-                '  constructor() {',
-                '    // implementation',
-                '  }',
-                '  private constructor() {',
-                '    // implementation',
-                '  }',
-                '}',
-            ]);
-            expectedOutput = createMultilineString([
-                'class A {',
-                '  private prop: type;',
-                '',
-                '  constructor() {',
-                '    // implementation',
-                '  }',
-                '',
-                '  private constructor() {',
-                '    // implementation',
-                '  }',
-                '',
-                '}',
-                '',
-            ]);
+        it('should add blank lines around any class method declaration with an explicit access modifier and a multiline parameter list', () => {
+            for (const modifier of accessModifiers) {
+                const indent =  ' '.repeat(`${modifier}foo`.length);
 
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+                inputSnippet = createMultilineString([
+                    'class Foo {',
+                    `  ${modifier}foo(private firstParam: VeryLongTypeName,`,
+                    indent + 'private secondParam: EvenLongerTypeName,',
+                    indent + 'private thirdParam: SomeMonstrouslyLongTypeName): bar {',
+                    '    // implementation',
+                    '',
+                    '    // return statement',
+                    '  }',
+                    '}',
+                ]);
+                expectedOutput = createMultilineString([
+                    'class Foo {',
+                    '',
+                    `  ${modifier}foo(private firstParam: VeryLongTypeName,`,
+                    indent + 'private secondParam: EvenLongerTypeName,',
+                    indent + 'private thirdParam: SomeMonstrouslyLongTypeName): bar {',
+                    '    // implementation',
+                    '',
+                    '    // return statement',
+                    '  }',
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+
         });
 
     });
