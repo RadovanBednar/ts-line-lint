@@ -12,6 +12,7 @@ function fixLines(inputCode, indentSize = 4) {
     const functionDeclaration = /((?:^[ \t]*(?:\/\/|\/\*).*\n)?^([ \t]*)(async )?function \w+\(.*\).*{\n(?:(?:\2[ \t]+.*)?\n)*?\2})/mg;
     const classDeclarationWithOptionalDecorator = /((^([ \t]*)@\w+\((?:{\n(?:\3[ \t]+.*\n)*?\3?})?\)\n)?^([ \t]*).*?class .*(?: |\n\4[ \t]+.*?){\n(?:(?:\4[ \t]+.*)?\n)*?^\4})/mg;
     const blockInsideClass = /(^([ \t]*)(@\w+\([\w'"]*\)\n\2)?(?:public |protected |private |get |set |constructor\().*{\n(?:(?:\2[ \t].*)?\n)*?^\2}\n)/mg;
+    const propertyWithEffectDecorator = /(^([ \t]*)@Effect\([^)]*\)) (.*\n(?:(?:\2[ \t]*.*)?\n)*?\2\);)/mg;
     const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?\(|after(Each|All)?\(|it\().*\n(?:.*\n)*?\2}\)+;)/mg;
     const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
     const leadingBlank = /^\n+/g;
@@ -22,6 +23,7 @@ function fixLines(inputCode, indentSize = 4) {
     const removePrecedingBlank = '$1';
     const removeFollowingBlank = '$1';
     const surroundWithBlanks = '\n$1\n';
+    const addNewlineAfterDecoratorAndSurroundWithBlanks = '\n$1\n$2$3\n';
     const addFollowingBlank = '$1\n';
     const removeCompletely = '';
     const replaceWithSingleBlank = '\n';
@@ -41,6 +43,7 @@ function fixLines(inputCode, indentSize = 4) {
       .replace(functionDeclaration, surroundWithBlanks)
       .replace(classDeclarationWithOptionalDecorator, surroundWithBlanks)
       .replace(blockInsideClass, surroundWithBlanks)
+      .replace(propertyWithEffectDecorator, addNewlineAfterDecoratorAndSurroundWithBlanks)
       .replace(blockInsideDescribe, surroundWithBlanks);
 
     variouslyIndentedDescribeBlocks.forEach((pattern) => {

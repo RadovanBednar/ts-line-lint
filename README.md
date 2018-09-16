@@ -88,10 +88,10 @@ In the first phase, these unnecessary blanks are removed:
   if (condition) {
       // following const stays separated
   }
-  
+
   const bar = 'bar';
-  
-  describe('test suite', () => {
+
+  describe('following const comes closer', () => {
 
       const foo = 'foo';
   ```
@@ -103,7 +103,7 @@ In the first phase, these unnecessary blanks are removed:
 
   const bar = 'bar';
 
-  describe('test suite', () => {
+  describe('following const comes closer', () => {
       const foo = 'foo';
   ```
   </details>
@@ -216,11 +216,11 @@ In the second phase blank lines are added in these situations:
   becomes
   ```javascript
   const foo = 'foo';
-  
+
   function bar(): string {
       return foo.toUppercase();
   }
-  
+
   bar();
   ```
   </details>
@@ -308,6 +308,28 @@ In the second phase blank lines are added in these situations:
     set baz(param: type) {
       this _baz = param;
     }
+
+  }
+  ```
+  </details>
+* <details><summary style="cursor: pointer">around any class property with @Effect() decorator,</summary>
+
+  ```javascript
+  class Foo {
+      @Effect()
+      public barAction$ = this.actions$.pipe(
+          // code
+      );
+  }
+  ```
+  becomes
+  ```javascript
+  class Foo {
+
+      @Effect()
+      public barAction$ = this.actions$.pipe(
+          // code
+      );
 
   }
   ```

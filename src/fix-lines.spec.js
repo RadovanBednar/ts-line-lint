@@ -214,7 +214,7 @@ describe('fixLines function', () => {
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
         });
-        
+
         it('should NOT remove blank lines before variable declarations following a block', () => {
             const declarationKeywords = ['var', 'let', 'const'];
 
@@ -450,7 +450,7 @@ describe('fixLines function', () => {
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
-        it('should should add blank line before class decorators, but not after them', () => {
+        it('should add blank line before class decorators, but not after them', () => {
             inputSnippet = createMultilineString([
                 '// preceding non-blank line',
                 '@Component({',
@@ -529,6 +529,31 @@ describe('fixLines function', () => {
                 '  @ViewChild(SomeComponent) someComponent: SomeComponent;',
                 '  @Input() public foo!: Foo;',
                 '  @Output() public bar = new EventEmitter<Bar>();',
+                '}',
+                '',
+            ]);
+
+            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+        });
+
+        it('should NOT inline @Effect decorator, but instead add blank lines around the declaration', () => {
+            inputSnippet = createMultilineString([
+                'class Foo {',
+                '  @Effect()',
+                '  public barAction$ = this.actions$.pipe(',
+                '    // code',
+                '  );',
+                '}',
+                '',
+            ]);
+            expectedOutput = createMultilineString([
+                'class Foo {',
+                '',
+                '  @Effect()',
+                '  public barAction$ = this.actions$.pipe(',
+                '    // code',
+                '  );',
+                '',
                 '}',
                 '',
             ]);
