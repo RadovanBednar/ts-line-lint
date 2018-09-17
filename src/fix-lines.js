@@ -7,13 +7,13 @@ function fixLines(inputCode, indentSize = 4) {
     const blankPrecededEndOfBlock = /\n+(\n[ \t]*})/mg;
     const blankUnfollowedLastImport = /(^import .*\n|^} from .*\n)(?!^(?:import|[ \t]+|\n))/mg;
     const consecutiveTypeAliases = /((?:^(export )?type .*;\n)+)/mg;
-    const multilineTypeAlias = /(^(export )?type .*\n(?:[ \t]+.*\n)+?^.*;)/mg;
-    const interfaceDeclaration = /(^(?:export )?interface \w+ {\n(?:(?:[ \t]+.*)?\n)*?^})/mg;
+    const multilineTypeAlias = /(^([ \t]*)(?:export )?type .*\n(?:.*\n)+?\2[^;]*;)/mg;
+    const interfaceDeclaration = /(^([ \t]*)(?:export )?interface \w+ {\n(?:.*\n)*?\2})/mg;
     const functionDeclaration = /(^([ \t]*)(?:(?:\/\/|\/\*) .*\n\2)?(?:async )?function .*[{,]\n(?:.*\n)*?\2})/mg;
     const classDeclarationWithOptionalDecorator = /(^([ \t]*)(?:@\w+\((?:{\n(?:.*\n)*?\2})?\)\n\2)?.*\bclass\b.*\n(?:.*\n)*?\2})/mg;
-    const blockInsideClass = /(^([ \t]*)(?:@\w+\([\w'"]*\)\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:.*\n)*?\2})/mg;
-    const propertyWithEffectDecorator = /(^([ \t]*)@Effect\([^)]*\)) (.*\n(?:(?:\2[ \t]*.*)?\n)*?\2\);)/mg;
-    const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?\(|after(Each|All)?\(|it\().*\n(?:.*\n)*?\2}\)+;)/mg;
+    const blockInsideClass = /(^([ \t]*)(?:@\w+\([\w'"]*\)\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:.*\n)*?\2}\n)/mg;
+    const propertyWithEffectDecorator = /(^([ \t]*)@Effect\([^)]*\)) (.*\n(?:.*\n)*?\2\S.*)/mg;
+    const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?|after(Each|All)?|it)\(.*\n(?:.*\n)*?\2\S.*)/mg;
     const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
     const leadingBlank = /^\n+/g;
     const duplicateBlanks = /(?<=\n)(\n+)/g;
@@ -59,9 +59,9 @@ function fixLines(inputCode, indentSize = 4) {
 
 function generateNestedDescribeBlockPatterns(indentSize, maxIndentLevel = 4) {
     const patternArray = [];
-    for (let i = 0; i <= maxIndentLevel; i++) {
-        const indentPattern = !indentSize ? '\\t' : ` {${indentSize}}`;
-        patternArray.push(new RegExp(`(^((?:${indentPattern}){${i}})describe\\(.*, \\(\\) => {\\n(.*\\n)*?\\2}\\);)`, 'mg'));
+    for (let indentLevel = 0; indentLevel <= maxIndentLevel; indentLevel++) {
+        const indentPattern = !indentSize ? `\\t{${indentLevel}}` : ` {${indentSize * indentLevel}}`;
+        patternArray.push(new RegExp(`(^(${indentPattern})describe\\(.*, \\(\\) => {\\n(.*\\n)*?\\2\\S.*)`, 'mg'));
     }
 
     return patternArray;
