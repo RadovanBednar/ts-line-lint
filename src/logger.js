@@ -14,7 +14,7 @@ module.exports = {
         return module.exports;
     },
     error: (msg) => {
-        process.stdout.write(`\u{1b}[31mError: ${msg}\u{1b}[0m\n`);
+        process.stdout.write(`\u{1b}[01;31mError: ${msg}\u{1b}[0m\n`);
         return module.exports;
     },
     rewriteLastLine: (msg) => {
@@ -22,7 +22,7 @@ module.exports = {
         return module.exports;
     },
     usage: () => {
-        process.stdout.write('Usage: ts-line-lint [DIRECTORY-IN-CWD]...\n');
+        process.stdout.write('Usage: ts-line-lint [DIRECTORY-IN-CWD]... [--ignore FILE...]\n');
         return module.exports;
     },
 };

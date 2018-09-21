@@ -5,9 +5,10 @@ const ArgvParser = require('./argv-parser');
 const log = require('./logger');
 
 let dirList, tsFileList;
+const argvParser = new ArgvParser(process.argv);
 
 try {
-    dirList = new ArgvParser(process.argv).directories;
+    dirList = argvParser.directories;
 } catch (e) {
     log
       .error(e.message)
@@ -16,7 +17,7 @@ try {
 }
 
 try {
-    tsFileList = findFiles(dirList, /\.ts$/);
+    tsFileList = findFiles(dirList, argvParser.ignored);
 } catch (e) {
     log
       .error(e.message)

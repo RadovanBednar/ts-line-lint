@@ -312,7 +312,7 @@ In the second phase blank lines are added in these situations:
   }
   ```
   </details>
-* <details><summary style="cursor: pointer">around any class property with @Effect() decorator,</summary>
+* <details><summary style="cursor: pointer">around any class property or method with @Effect() decorator,</summary>
 
   ```javascript
   class Foo {
