@@ -321,6 +321,25 @@ In the second phase blank lines are added in these situations:
   }
   ```
   </details>
+* <details><summary style="cursor: pointer">around any abstract method or property accessor,</summary>
+
+  ```javascript
+  abstract class Foo {
+    abstract set bar(v: number);
+    protected abstract getBaz();
+  }
+  ```
+  becomes
+  ```javascript
+  abstract class Foo {
+
+    abstract set bar(v: number);
+
+    protected abstract getBaz();
+
+  }
+  ```
+  </details>
 * <details><summary style="cursor: pointer">around any class property or method with @Effect() decorator,</summary>
 
   ```javascript
@@ -412,6 +431,7 @@ In the second phase blank lines are added in these situations:
 
 ## Cleanup
 In the third phase any artifacts possibly introduced by the previous phases are fixed:
+* any number of blank lines following a tslint:disable-next-line comment is removed,
 * any number of blank lines at the beginning of the file is removed,
 * any number of consecutive blank lines is replaced by a single blank line,
 * any number of blank lines at the end of the file is replaced by a single blank line.
