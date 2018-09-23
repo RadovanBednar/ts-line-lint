@@ -2,7 +2,12 @@
     "name": "ts-line-lint",
     "version": "1.0.0",
     "description": "enforce consistent use of blank lines in TypeScript files",
-    "keywords": [ "lint", "typescript", "blank", "line" ],
+    "keywords": [
+        "lint",
+        "typescript",
+        "blank",
+        "line"
+    ],
     "main": "build/index.js",
     "bin": {
         "ts-line-lint": "./build/index.js"
