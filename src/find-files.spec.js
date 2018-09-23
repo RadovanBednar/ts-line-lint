@@ -82,7 +82,7 @@ describe('findFiles function', () => {
         describe('is an array containing a file path and a directory path', () => {
             const ignoredDir = 'src/some-other-folder';
 
-            it('should return an array of all the *.ts files except for those from the ignored directory', () => {
+            it('should return an array of all the *.ts files except for the ignored file and all those from the ignored directory', () => {
                 expect(findFiles(['src'], [thirdFolderTsFile, ignoredDir])).to.deep.equal(someFolderTsFiles);
             });
 

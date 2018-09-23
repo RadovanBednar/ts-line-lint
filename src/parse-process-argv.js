@@ -1,6 +1,7 @@
 const log = require('./logger');
 
 module.exports = function(args) {
+    const testRun = !!args;
     args = (args || process.argv).slice(2);
 
     function getDirs() {
@@ -14,7 +15,9 @@ module.exports = function(args) {
             });
             return dirs;
         } else {
-            log.warn('No directory specified, using "." as fallback.');
+            if (!testRun) {
+                log.warn('No directory specified, using "." as fallback.');
+            }
             return ['.'];
         }
     }
