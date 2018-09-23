@@ -640,6 +640,30 @@ describe('fixLines function', () => {
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
+        it('should add blank lines around abstract accessors', () => {
+            for (const modifier of accessModifiers) {
+                inputSnippet = createMultilineString([
+                    'abstract class Foo {',
+                    `  ${modifier}abstract get value();`,
+                    `  ${modifier}abstract set value(v: number);`,
+                    '}',
+                    '',
+                ]);
+                expectedOutput = createMultilineString([
+                    'abstract class Foo {',
+                    '',
+                    `  ${modifier}abstract get value();`,
+                    '',
+                    `  ${modifier}abstract set value(v: number);`,
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+        });
+
     });
 
     describe('constructors', () => {
@@ -779,6 +803,30 @@ describe('fixLines function', () => {
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
 
+        });
+
+        it('should add blank lines around abstract methods', () => {
+            for (const modifier of accessModifiers) {
+                inputSnippet = createMultilineString([
+                    'abstract class Foo {',
+                    `  ${modifier}abstract getBar();`,
+                    `  ${modifier}abstract setBar(bar: Bar);`,
+                    '}',
+                    '',
+                ]);
+                expectedOutput = createMultilineString([
+                    'abstract class Foo {',
+                    '',
+                    `  ${modifier}abstract getBar();`,
+                    '',
+                    `  ${modifier}abstract setBar(bar: Bar);`,
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
         });
 
     });
