@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const parseProcessArgv = require('./parse-process-argv');
 
-describe.only('parseProcessArgv function', () => {
+describe('parseProcessArgv function', () => {
 
     describe('directories array', () => {
         const onlyCurrentDirectory = ['.'];

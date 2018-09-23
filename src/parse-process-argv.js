@@ -1,8 +1,8 @@
 const log = require('./logger');
 
-module.exports = function(args) {
-    const testRun = !!args;
-    args = (args || process.argv).slice(2);
+module.exports = function(testArgs) {
+    const testRun = !!testArgs;
+    const args = (testArgs || process.argv).slice(2);
 
     function getDirs() {
         let dirs = args.some(isArgFlag) ? args.slice(0, args.findIndex(isArgFlag)) : args;
