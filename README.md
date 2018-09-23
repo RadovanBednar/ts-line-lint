@@ -7,30 +7,32 @@ $ npm install ts-line-lint --save-dev
 ```
 
 # Usage
-Specify one or more subdirectories in your project where the program will look for \*.ts files:
+```
+ts-line-lint [DIR]... [--ignore PATH...]
+```
 
+## Directories
+Specify one or more subdirectories in your project where the program will look for \*.ts files to process:
 ```
 $ ts-line-lint src apps
 ```
 
 Specifying a non-existent directory will raise an error and terminate the program before any file processing takes place:
-
 ```
 $ ts-line-lint nonsense-dir
 Error: Couldn't find directory "nonsense-dir".
 ```
 
-If you omit any directories, the program will default to all the project subdirectories. The following two commands are essentially the same:
-
+If you don't specify any directories, the program will default to all the project subdirectories. The following two commands are thus essentially the same:
 ```
 $ ts-line-lint .
 $ ts-line-lint
 Warning: No directory specified, using "." as fallback.
 ```
+
 Nonetheless, it's better to specify the source directories explicitly, so that the synchronous file search would be faster.
 
 `node_modules` directory as well as any hidden directories will be ignored in the file search process, whether specified explicitly or implicitly via `.`. The following two commands will therefore yield exactly 0 \*.ts files to process.
-
 ```
 $ ts-line-lint node_modules
 Warning: Skipping excluded directory "node_modules".
@@ -41,11 +43,18 @@ Found 0 files to process...
 ```
 
 Accessing any directories outside of the project is forbidden, therefore any attempt to specify a directory starting with `..` will raise an error and terminate the program before any file processing takes place. This control mechanism can be circumvented by specifying an absolute path, but why would anyone do that is beyond comprehension of the tool's author :)
-
 ```
 $ ts-line-lint ../another-project
 Error: Invalid directory "../another-project". Directories outside of CWD are not allowed.
 ```
+
+## Ignored paths
+You may use an `--ignore` flag to specify individual files or directories (either directly or via glob patterns) that should be excluded from the linting process. For example, the following command would lint all the files form the `src` directory except for `index.ts`, all the files in the `util` subdirectory and all the spec files from any subdirectory (provided your shell supports the [globstar](https://stackoverflow.com/a/28199633) option):
+```
+$ ts-line-lint src --ignore src/index.ts src/util src/**/*.spec.ts
+```
+
+The `--ignore` flag must be followed by at least one argument. There's no need to list `node_modules` or any hidden directories, as those are ignored by default.
 
 # Under the hood
 `ts-line-lint` first lists all the \*.ts files in specified project subdirectories and then processes them one by one via a sequence of regular expression replacements. The sequence may be divided into three logical groups (in the order of execution): blank removals, blank insertions and cleanup.

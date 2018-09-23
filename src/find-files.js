@@ -27,8 +27,7 @@ function findRecursively(dir, ignore) {
 
             if (fs.lstatSync(filename).isDirectory()) {
                 found.push(...findRecursively(filename, ignore));
-            }
-            else if (pattern.test(filename) && !isIgnored(filename, ignore)) {
+            } else if (pattern.test(filename) && !isIgnored(filename, ignore)) {
                 found.push(filename);
             }
         }
