@@ -359,7 +359,7 @@ describe('fixLines function', () => {
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
-        it('should NOT add blank line between comment and subsequent function declaration', () => {
+        it('should NOT add blank line between tslint:disable-next-line comment and subsequent function declaration', () => {
             inputSnippet = createMultilineString([
                 '/* tslint:disable-next-line:typedef */',
                 'function bar() {',
@@ -1073,6 +1073,37 @@ describe('fixLines function', () => {
     });
 
     describe('final code refinements', () => {
+
+        it('should remove empty lines after tslint:disable-next-line comment', () => {
+            inputSnippet = createMultilineString([
+                '// tslint:disable-next-line:typedef',
+                '',
+                'function someUntypeableFunction(params: any) {',
+                '  // implementation',
+                '}',
+                '',
+                '  /* tslint:disable-next-line:typedef */',
+                '',
+                '  public someUntypeableMethod(params: any) {',
+                '    // implementation',
+                '  }',
+                '',
+            ]);
+            expectedOutput = createMultilineString([
+                '// tslint:disable-next-line:typedef',
+                'function someUntypeableFunction(params: any) {',
+                '  // implementation',
+                '}',
+                '',
+                '  /* tslint:disable-next-line:typedef */',
+                '  public someUntypeableMethod(params: any) {',
+                '    // implementation',
+                '  }',
+                '',
+            ]);
+
+            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+        });
 
         it('should remove empty lines from the beginning of a file', () => {
             inputSnippet = createMultilineString([
