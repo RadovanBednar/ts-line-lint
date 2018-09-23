@@ -22,7 +22,7 @@ module.exports = {
         return module.exports;
     },
     usage: () => {
-        process.stdout.write('Usage: ts-line-lint [DIR]... [--ignore PATH...]\n');
+        process.stdout.write('Usage: ts-line-lint [DIR]... [--config FILE] [--ignore PATH...]\n');
         return module.exports;
     },
 };

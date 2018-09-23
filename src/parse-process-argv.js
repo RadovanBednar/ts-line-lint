@@ -1,6 +1,7 @@
 const log = require('./logger');
 
 module.exports = function(args) {
+    const testRun = !!args;
     args = (args || process.argv).slice(2);
 
     function getDirs() {
@@ -14,7 +15,9 @@ module.exports = function(args) {
             });
             return dirs;
         } else {
-            log.warn('No directory specified, using "." as fallback.');
+            if (!testRun) {
+                log.warn('No directory specified, using "." as fallback.');
+            }
             return ['.'];
         }
     }
@@ -30,6 +33,17 @@ module.exports = function(args) {
         return [];
     }
 
+    function getConfig() {
+        const flag = '--config';
+
+        if (isFlagPresent(flag)) {
+            assertFlagHasArgs(flag);
+            assertFlagHasExactlyArgs(flag, 1);
+
+            return args[args.indexOf(flag) + 1];
+        }
+    }
+
     function isArgFlag(arg) {
         return arg.indexOf('--') === 0;
     }
@@ -38,10 +52,17 @@ module.exports = function(args) {
         return args.indexOf(flag) !== -1;
     }
 
-    function assertFlagHasArgs(flag) {
+    function assertFlagHasArgs(flag, argCount) {
         const nextArg = args[args.indexOf(flag) + 1];
         if (!nextArg || isArgFlag(nextArg)) {
-            throw Error(`Missing arguments for "${flag}".`);
+            throw Error(`Missing argument(s) for "${flag}".`);
+        }
+    }
+
+    function assertFlagHasExactlyArgs(flag, n) {
+        const argCount = getFlagArgs(flag).length;
+        if (argCount !== n) {
+            throw Error(`Wrong number of arguments for "${flag}": expected 1, got ${argCount}.`);
         }
     }
 
@@ -57,5 +78,6 @@ module.exports = function(args) {
     return {
         directories: getDirs(),
         ignore: getIgnored(),
+        config: getConfig(),
     }
 }

@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const parseProcessArgv = require('./parse-process-argv');
 
-describe('parseProcessArgv function', () => {
+describe.only('parseProcessArgv function', () => {
 
     describe('directories array', () => {
         const onlyCurrentDirectory = ['.'];
@@ -68,8 +68,8 @@ describe('parseProcessArgv function', () => {
         describe('when there was an "--ignore" flag used without args', () => {
             const ignoreWithoutArgs = ['--ignore'];
 
-            it('should throw a "Missing arguments" error', () => {
-                whenCalledWith(ignoreWithoutArgs).expectError('Missing arguments');
+            it('should throw a "Missing argument" error', () => {
+                whenCalledWith(ignoreWithoutArgs).expectError('Missing argument');
             });
 
         });
@@ -77,8 +77,8 @@ describe('parseProcessArgv function', () => {
         describe('when there was an "--ignore" flag used followed by another flag', () => {
             const ignoreFollowedByAnotherFlag = ['--ignore', '--flag'];
 
-            it('should throw a "Missing arguments" error', () => {
-                whenCalledWith(ignoreFollowedByAnotherFlag).expectError('Missing arguments');
+            it('should throw a "Missing argument" error', () => {
+                whenCalledWith(ignoreFollowedByAnotherFlag).expectError('Missing argument');
             });
 
         });
@@ -105,6 +105,66 @@ describe('parseProcessArgv function', () => {
 
     });
 
+    describe('config path', () => {
+
+        describe('when there was no "--config" flag used', () => {
+            const noConfigFlag = ['dir1', 'dir2'];
+
+            it('should be undefined', () => {
+                whenCalledWith(noConfigFlag).expect('config').toBe(undefined);
+            });
+
+        });
+
+        describe('when there was a "--config" flag used without args', () => {
+            const configWithoutArgs = ['--config'];
+
+            it('should throw a "Missing argument" error', () => {
+                whenCalledWith(configWithoutArgs).expectError('Missing argument');
+            });
+
+        });
+
+        describe('when there was a "--config" flag used followed by another flag', () => {
+            const configFollowedByAnotherFlag = ['--config', '--flag'];
+
+            it('should throw a "Missing argument" error', () => {
+                whenCalledWith(configFollowedByAnotherFlag).expectError('Missing argument');
+            });
+
+        });
+
+        describe('when there was a "--config" flag used with one arg', () => {
+            const configFile = 'path/to/config.json';
+            const configWithArg = ['dir1', '--config', configFile];
+
+            it('should be the value of the arg', () => {
+                whenCalledWith(configWithArg).expect('config').toBe(configFile);
+            });
+
+        });
+
+        describe('when there was a "--config" flag used with one arg followed by another flag', () => {
+            const configFile = 'path/to/config.json';
+            const configWithArg = ['dir1', '--config', configFile, '--flag'];
+
+            it('should be the value of the arg', () => {
+                whenCalledWith(configWithArg).expect('config').toBe(configFile);
+            });
+        });
+
+        describe('when there was a "--config" flag used with more than one arg', () => {
+            const configArgs = ['path/to/config.json', 'some-junk'];
+            const configWithMultipleArgs = ['dir1', '--config', ...configArgs];
+
+            it('should throw a "Wrong number of arguments" error', () => {
+                whenCalledWith(configWithMultipleArgs).expectError('Wrong number of arguments');
+            });
+
+        });
+
+    });
+
 });
 
 function whenCalledWith(args) {
@@ -113,7 +173,10 @@ function whenCalledWith(args) {
             return {
                 toEqual: function(value) {
                     expect(parseProcessArgv(['node', 'path/to/script'].concat(args))[prop]).to.deep.equal(value);
-                }
+                },
+                toBe: function(value) {
+                    expect(parseProcessArgv(['node', 'path/to/script'].concat(args))[prop]).to.equal(value);
+                },
             }
         },
         expectError: function(msg) {
