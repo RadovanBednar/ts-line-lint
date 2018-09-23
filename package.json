@@ -2,22 +2,21 @@
     "name": "ts-line-lint",
     "version": "1.0.0",
     "description": "enforce consistent use of blank lines in TypeScript files",
-    "keywords": [
-        "lint",
-        "typescript",
-        "blank",
-        "line"
-    ],
+    "keywords": [ "lint", "typescript", "blank", "line" ],
     "main": "build/index.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/RadovanBednar/ts-line-lint"
+    "bin": {
+        "ts-line-lint": "./build/index.js"
     },
     "scripts": {
         "build": "babel src --out-dir build --ignore '**/*.spec.js'",
         "prepublishOnly": "npm run build",
+        "release": "np",
         "start": "node build/index.js",
         "test": "mocha --ui bdd ./src/**/*.spec.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RadovanBednar/ts-line-lint"
     },
     "babel": {
         "presets": [
