@@ -43,11 +43,20 @@ describe('parseProcessArgv function', () => {
 
         });
 
-        describe('when there was a directory outside the CWD specified', () => {
-            const invalidArgs = ['valid-dir', '../invalid-dir'];
+        describe('when there was a relative path starting with .. specified', () => {
+            const argsWithPathToParentDir = ['valid-dir', '../invalid-dir'];
 
             it('should throw an "Invalid directory" error', () => {
-                whenCalledWith(invalidArgs).expectError('Invalid directory');
+                whenCalledWith(argsWithPathToParentDir).expectError('Invalid directory');
+            });
+
+        });
+
+        describe('when there was an absolute path specified', () => {
+            const argsWithAbsolutePath = ['valid-dir', '/absolute/path/is/invalid'];
+
+            it('should throw an "Invalid directory" error', () => {
+                whenCalledWith(argsWithAbsolutePath).expectError('Invalid directory');
             });
 
         });

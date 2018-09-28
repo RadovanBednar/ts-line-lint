@@ -8,11 +8,7 @@ module.exports = function(args) {
         let dirs = args.some(isArgFlag) ? args.slice(0, args.findIndex(isArgFlag)) : args;
 
         if (dirs.length) {
-            dirs.forEach((dir) => {
-                if (dir.indexOf('..') === 0) {
-                    throw Error(`Invalid directory "${dir}". Directories outside of CWD are not allowed.`);
-                }
-            });
+            assertOnlyRelativePathsToSubdirectoriesSpecified(dirs);
             return dirs;
         } else {
             if (!testRun) {
@@ -20,6 +16,14 @@ module.exports = function(args) {
             }
             return ['.'];
         }
+    }
+
+    function assertOnlyRelativePathsToSubdirectoriesSpecified(dirs) {
+        dirs.forEach((dir) => {
+            if (dir.startsWith('..') || dir.startsWith('/')) {
+                throw Error(`Invalid directory "${dir}". Only relative paths to project subdirectories are allowed.`);
+            }
+        });
     }
 
     function getIgnored() {
@@ -61,4 +65,4 @@ module.exports = function(args) {
         directories: getDirs(),
         ignore: getIgnored(),
     }
-}
+};
