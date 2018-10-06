@@ -1,0 +1,24 @@
+{
+    "indent": "tab",
+    "remove-blank-lines": {
+        "inline-decorator-with-property": true,
+        "before-import": true,
+        "before-variable-declaration": true,
+        "before-class-property-declaration": true,
+        "after-start-of-block": true,
+        "before-end-of-block": true
+    },
+    "insert-blank-lines": {
+        "after-last-import": true,
+        "around-group-of-type-aliases": true,
+        "around-multiline-type-alias": true,
+        "around-interface-declaration": true,
+        "around-function-declaration": true,
+        "around-class-declaration": true,
+        "around-block-inside-class": true,
+        "around-abstract-method-or-accessor": true,
+        "around-property-with-effect-decorator": true,
+        "around-block-inside-describe": true,
+        "around-describe-block": true,
+    }
+}

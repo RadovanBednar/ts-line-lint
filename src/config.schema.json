@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "indent": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "string",
+          "enum": [
+            "tab"
+          ]
+        }
+      ]
+    },
+    "remove-blank-lines": {
+      "type": "object",
+      "properties": {
+        "inline-decorator-with-property": {
+          "type": "boolean"
+        },
+        "before-import": {
+          "type": "boolean"
+        },
+        "before-variable-declaration": {
+          "type": "boolean"
+        },
+        "before-class-property-declaration": {
+          "type": "boolean"
+        },
+        "after-start-of-block": {
+          "type": "boolean"
+        },
+        "before-end-of-block": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "insert-blank-lines": {
+      "type": "object",
+      "properties": {
+        "after-last-import": {
+          "type": "boolean"
+        },
+        "around-group-of-type-aliases": {
+          "type": "boolean"
+        },
+        "around-multiline-type-alias": {
+          "type": "boolean"
+        },
+        "around-interface-declaration": {
+          "type": "boolean"
+        },
+        "around-function-declaration": {
+          "type": "boolean"
+        },
+        "around-class-declaration": {
+          "type": "boolean"
+        },
+        "around-block-inside-class": {
+          "type": "boolean"
+        },
+        "around-abstract-method-or-accessor": {
+          "type": "boolean"
+        },
+        "around-property-with-effect-decorator": {
+          "type": "boolean"
+        },
+        "around-block-inside-describe": {
+          "type": "boolean"
+        },
+        "around-describe-block": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "indent"
+  ],
+  "additionalProperties": false
+}
