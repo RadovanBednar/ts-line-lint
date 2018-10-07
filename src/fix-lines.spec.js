@@ -1,4 +1,5 @@
 const expect = require('chai').expect;
+const createMultilineString = require('./utils').createMultilineString;
 const fixLines = require('./fix-lines');
 
 describe('fixLines function', () => {
@@ -10,7 +11,7 @@ describe('fixLines function', () => {
     describe('import statements', () => {
 
         it('should remove blank lines before each import statement', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '',
                 'import {SingleImportedItem} from "abc";',
                 '',
@@ -21,8 +22,8 @@ describe('fixLines function', () => {
                 '  SecondOfSeveralImportedItems',
                 '} from "../ghi";',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
                 'import {AnotherSingleImportedItem} from "./def";',
                 'import {',
@@ -30,13 +31,13 @@ describe('fixLines function', () => {
                 '  SecondOfSeveralImportedItems',
                 '} from "../ghi";',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should add an empty line after the last import statement', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// last import is single-line',
                 'import {Abc} from "abc";',
                 'import {Def} from "./def";',
@@ -49,8 +50,8 @@ describe('fixLines function', () => {
                 '  Fed',
                 '} from "./def";',
                 'const foo = 666;',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// last import is single-line',
                 'import {Abc} from "abc";',
                 'import {Def} from "./def";',
@@ -65,7 +66,7 @@ describe('fixLines function', () => {
                 '} from "./def";',
                 '',
                 'const foo = 666;',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -75,7 +76,7 @@ describe('fixLines function', () => {
     describe('blocks', () => {
 
         it('should remove blank lines from any kind of empty block', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'class A {',
                 '',
                 '  constructor(private prop: type) {',
@@ -88,8 +89,8 @@ describe('fixLines function', () => {
                 '',
                 '}',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'class A {',
                 '',
                 '  constructor(private prop: type) {',
@@ -100,13 +101,13 @@ describe('fixLines function', () => {
                 'function doNothing(): void {',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should remove leading blank lines inside a block', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'interface WithLeadingBlank {',
                 '',
                 '  prop1: type;',
@@ -124,8 +125,8 @@ describe('fixLines function', () => {
                 '  }',
                 '}',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'interface WithLeadingBlank {',
                 '  prop1: type;',
                 '  prop2: type;',
@@ -139,13 +140,13 @@ describe('fixLines function', () => {
                 '  }',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should remove trailing blank lines inside a block', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'interface WithLeadingBlank {',
                 '  prop1: type;',
                 '  prop2: type;',
@@ -163,8 +164,8 @@ describe('fixLines function', () => {
                 '',
                 '}',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'interface WithLeadingBlank {',
                 '  prop1: type;',
                 '  prop2: type;',
@@ -178,7 +179,7 @@ describe('fixLines function', () => {
                 '  }',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -191,7 +192,7 @@ describe('fixLines function', () => {
             const declarationKeywords = ['var', 'let', 'const'];
 
             for (const kw of declarationKeywords) {
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     '// preceding non-blank line',
                     '',
                     `${kw} bar: type;`,
@@ -201,8 +202,8 @@ describe('fixLines function', () => {
                     `  ${kw} baz: type;`,
                     '}',
                     '',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     '// preceding non-blank line',
                     `${kw} bar: type;`,
                     '',
@@ -210,7 +211,7 @@ describe('fixLines function', () => {
                     `  ${kw} baz: type;`,
                     '}',
                     '',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
@@ -220,20 +221,20 @@ describe('fixLines function', () => {
             const declarationKeywords = ['var', 'let', 'const'];
 
             for (const kw of declarationKeywords) {
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     'if (condition) {',
                     '  // code',
                     '}',
                     '',
                     `${kw} foo: type;`,
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     'if (condition) {',
                     '  // code',
                     '}',
                     '',
                     `${kw} foo: type;`,
-                ]);
+                );
 
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
@@ -244,26 +245,26 @@ describe('fixLines function', () => {
     describe('type aliases', () => {
 
         it('should add blank lines around each group of consecutive exported type aliases', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'export type AliasedType = type;',
                 'export type AnotherAliasedType = type2;',
                 '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'export type AliasedType = type;',
                 'export type AnotherAliasedType = type2;',
                 '',
                 '// following non-blank line',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should add blank lines around each multiline exported type alias', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'export type ExtendedType<T> = T & {',
                 '  [P in keyof T]: T[P] & BaseType<T>;',
@@ -272,8 +273,8 @@ describe('fixLines function', () => {
                 '  SomeType |',
                 '  AnotherType;',
                 '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'export type ExtendedType<T> = T & {',
@@ -285,7 +286,7 @@ describe('fixLines function', () => {
                 '  AnotherType;',
                 '',
                 '// following non-blank line',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -295,7 +296,7 @@ describe('fixLines function', () => {
     describe('interfaces', () => {
 
         it('should add blank lines around each interface declaration', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'interface LocalInterface {',
                 '  prop1: type;',
@@ -307,8 +308,8 @@ describe('fixLines function', () => {
                 '  method2(param: type): type;',
                 '}',
                 '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'interface LocalInterface {',
@@ -323,7 +324,7 @@ describe('fixLines function', () => {
                 '}',
                 '',
                 '// following non-blank line',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -333,7 +334,7 @@ describe('fixLines function', () => {
     describe('functions', () => {
 
         it('should add blank lines around each function declaration', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'const foo = 666;',
                 'function bar() {',
                 '}',
@@ -341,8 +342,8 @@ describe('fixLines function', () => {
                 '  }',
                 'async function bar2(): Promise<void> {',
                 '}',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'const foo = 666;',
                 '',
                 'function bar() {',
@@ -354,21 +355,21 @@ describe('fixLines function', () => {
                 'async function bar2(): Promise<void> {',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should NOT add blank line between comment and subsequent function declaration', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '/* tslint:disable-next-line:typedef */',
                 'function bar() {',
                 '}',
                 '// tslint:disable-next-line:typedef',
                 'function baz() {',
                 '}',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '/* tslint:disable-next-line:typedef */',
                 'function bar() {',
                 '}',
@@ -377,7 +378,7 @@ describe('fixLines function', () => {
                 'function baz() {',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -387,7 +388,7 @@ describe('fixLines function', () => {
     describe('classes', () => {
 
         it('should add blank lines around each class declaration', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'export abstract class A extends B {',
                 '  // properties',
@@ -401,8 +402,8 @@ describe('fixLines function', () => {
                 '  }',
                 '});',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'export abstract class A extends B {',
@@ -419,13 +420,13 @@ describe('fixLines function', () => {
                 '',
                 '});',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should add blank lines around class declaration with newline before opening brace', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'export class VeryLongClassName<TYPE extends SomeType>',
                 '  implements EvenLongerInterfaceName<SomeMonstrouslyLongName> {',
@@ -434,8 +435,8 @@ describe('fixLines function', () => {
                 '  // methods',
                 '}',
                 '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'export class VeryLongClassName<TYPE extends SomeType>',
@@ -446,13 +447,13 @@ describe('fixLines function', () => {
                 '}',
                 '',
                 '// following non-blank line',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should add blank line before class decorators, but not after them', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 '@Component({',
                 '  selector: "app-a",',
@@ -465,8 +466,8 @@ describe('fixLines function', () => {
                 'export class B {',
                 '  // implementation',
                 '}',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 '@Component({',
@@ -483,7 +484,7 @@ describe('fixLines function', () => {
                 '  // implementation',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -494,28 +495,28 @@ describe('fixLines function', () => {
 
         it('should remove blank lines before each public, protected and private property', () => {
             for (const modifier of accessModifiers) {
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     'class A {',
                     '',
                     `  ${modifier}foo = 123`,
                     '',
                     `  ${modifier}bar!: string`,
                     '}',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     'class A {',
                     `  ${modifier}foo = 123`,
                     `  ${modifier}bar!: string`,
                     '}',
                     '',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
         });
 
         it('should inline decorators with property declarations', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'class A {',
                 '  @ViewChild(SomeComponent)',
                 '  someComponent: SomeComponent;',
@@ -524,21 +525,21 @@ describe('fixLines function', () => {
                 '  @Output()',
                 '  public bar = new EventEmitter<Bar>();',
                 '}',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'class A {',
                 '  @ViewChild(SomeComponent) someComponent: SomeComponent;',
                 '  @Input() public foo!: Foo;',
                 '  @Output() public bar = new EventEmitter<Bar>();',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should NOT inline @Effect decorator, but instead add blank lines around the declaration', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'class Foo {',
                 '  @Effect()',
                 '  public barAction$ = this.actions$.pipe(',
@@ -546,8 +547,8 @@ describe('fixLines function', () => {
                 '  );',
                 '}',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'class Foo {',
                 '',
                 '  @Effect()',
@@ -557,13 +558,13 @@ describe('fixLines function', () => {
                 '',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should NOT inline @Input decorator with property setter declaration', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'class A {',
                 '',
                 '  @Input()',
@@ -573,8 +574,8 @@ describe('fixLines function', () => {
                 '',
                 '}',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'class A {',
                 '',
                 '  @Input()',
@@ -584,33 +585,33 @@ describe('fixLines function', () => {
                 '',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should remove blank lines before each @Input and @Output property', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'class A {',
                 '',
                 '  @Input() public foo!: Foo;',
                 '',
                 '  @Output() public bar = new EventEmitter<Bar>();',
                 '}',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'class A {',
                 '  @Input() public foo!: Foo;',
                 '  @Output() public bar = new EventEmitter<Bar>();',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should add blank lines around class property getters and setters including decorated ones', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'class A {',
                 '  @Input()',
                 '  set baz(param: type) {',
@@ -620,8 +621,8 @@ describe('fixLines function', () => {
                 '    return this _baz;',
                 '  }',
                 '}',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'class A {',
                 '',
                 '  @Input()',
@@ -635,7 +636,7 @@ describe('fixLines function', () => {
                 '',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -646,7 +647,7 @@ describe('fixLines function', () => {
 
         it('should add blank lines around any constructor declaration with or without an access modifier', () => {
             for (const modifier of accessModifiersIncludingImplicitOne) {
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     'class A {',
                     '  private prop: type;',
                     `  ${modifier}constructor() {`,
@@ -654,8 +655,8 @@ describe('fixLines function', () => {
                     '  }',
                     '}',
                     '',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     'class A {',
                     '  private prop: type;',
                     '',
@@ -665,7 +666,7 @@ describe('fixLines function', () => {
                     '',
                     '}',
                     '',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
@@ -675,7 +676,7 @@ describe('fixLines function', () => {
             for (const modifier of accessModifiersIncludingImplicitOne) {
                 const indent =  ' '.repeat(`${modifier}constructor`.length);
 
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     'class Foo {',
                     '  private prop: type;',
                     `  ${modifier}constructor(private firstDependency: FirstDependency,`,
@@ -684,8 +685,8 @@ describe('fixLines function', () => {
                     '  }',
                     '}',
                     '',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     'class Foo {',
                     '  private prop: type;',
                     '',
@@ -696,7 +697,7 @@ describe('fixLines function', () => {
                     '',
                     '}',
                     '',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
@@ -708,7 +709,7 @@ describe('fixLines function', () => {
 
         it('should add blank lines around any class method declaration with an explicit access modifier', () => {
             for (const modifier of accessModifiers) {
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     'class A {',
                     `  ${modifier}static foo(): bar {`,
                     '    // declarations',
@@ -721,8 +722,8 @@ describe('fixLines function', () => {
                     '    // implementation',
                     '  }',
                     '}',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     'class A {',
                     '',
                     `  ${modifier}static foo(): bar {`,
@@ -739,7 +740,7 @@ describe('fixLines function', () => {
                     '',
                     '}',
                     '',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
@@ -750,7 +751,7 @@ describe('fixLines function', () => {
             for (const modifier of accessModifiers) {
                 const indent =  ' '.repeat(`${modifier}foo`.length);
 
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     'class Foo {',
                     `  ${modifier}foo(private firstParam: VeryLongTypeName,`,
                     indent + 'private secondParam: EvenLongerTypeName,',
@@ -760,8 +761,8 @@ describe('fixLines function', () => {
                     '    // return statement',
                     '  }',
                     '}',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     'class Foo {',
                     '',
                     `  ${modifier}foo(private firstParam: VeryLongTypeName,`,
@@ -774,7 +775,7 @@ describe('fixLines function', () => {
                     '',
                     '}',
                     '',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).toConvertTo(expectedOutput);
             }
@@ -786,7 +787,7 @@ describe('fixLines function', () => {
     describe('unit tests', () => {
 
         it('should add blank lines around unindented "describe" statements', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'describe("first test suite", () => {',
                 '  // something',
@@ -795,8 +796,8 @@ describe('fixLines function', () => {
                 '  // something else',
                 '});',
                 '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'describe("first test suite", () => {',
@@ -808,7 +809,7 @@ describe('fixLines function', () => {
                 '});',
                 '',
                 '// following non-blank line',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -817,7 +818,7 @@ describe('fixLines function', () => {
             for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
                 const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
 
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     '// preceding non-blank line',
                     'describe("top-level test suite", () => {',
                     ind + 'describe("first level nested test suite", () => {',
@@ -825,8 +826,8 @@ describe('fixLines function', () => {
                     ind + '});',
                     '});',
                     '// following non-blank line',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     '// preceding non-blank line',
                     '',
                     'describe("top-level test suite", () => {',
@@ -838,7 +839,7 @@ describe('fixLines function', () => {
                     '});',
                     '',
                     '// following non-blank line',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
             }
@@ -849,7 +850,7 @@ describe('fixLines function', () => {
             for (let spaceCount = 0; spaceCount <= 5; spaceCount++) {
                 const ind = !spaceCount ? '\t' : ' '.repeat(spaceCount);
 
-                inputSnippet = createMultilineString([
+                inputSnippet = createMultilineString(
                     '// preceding non-blank line',
                     'describe("top-level test suite", () => {',
                     ind + 'describe("first level nested test suite", () => {',
@@ -861,8 +862,8 @@ describe('fixLines function', () => {
                     ind + '});',
                     '});',
                     '// following non-blank line',
-                ]);
-                expectedOutput = createMultilineString([
+                );
+                expectedOutput = createMultilineString(
                     '// preceding non-blank line',
                     '',
                     'describe("top-level test suite", () => {',
@@ -882,14 +883,14 @@ describe('fixLines function', () => {
                     '});',
                     '',
                     '// following non-blank line',
-                ]);
+                );
 
                 expectSnippet(inputSnippet).withIndentationSize(spaceCount).toConvertTo(expectedOutput);
             }
         });
 
         it('should add blank lines around "before(Each|All)", "after(Each|All)" and "it" statements', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'describe("first test suite", () => {',
                 '  before(() => {',
@@ -925,8 +926,8 @@ describe('fixLines function', () => {
                 '  });',
                 '});',
                 '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'describe("first test suite", () => {',
@@ -980,13 +981,13 @@ describe('fixLines function', () => {
                 '});',
                 '',
                 '// following non-blank line',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should add blank lines around test statements with Angular async/fakeAsync', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'describe("test suite", () => {',
                 '  beforeEach(async(() => {',
@@ -998,8 +999,8 @@ describe('fixLines function', () => {
                 '  }));',
                 '});',
                 '// following non-blank line',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 '// preceding non-blank line',
                 '',
                 'describe("test suite", () => {',
@@ -1017,7 +1018,7 @@ describe('fixLines function', () => {
                 '});',
                 '',
                 '// following non-blank line',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
@@ -1027,25 +1028,25 @@ describe('fixLines function', () => {
     describe('final code refinements', () => {
 
         it('should remove empty lines from the beginning of a file', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 '',
                 '',
                 'function bar() {',
                 '}',
                 '',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'function bar() {',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should replace multiple consecutive blank lines with a single one', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'const foo = 666;',
                 '',
                 '',
@@ -1056,8 +1057,8 @@ describe('fixLines function', () => {
                 'function baz(param: type): type {',
                 '}',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'const foo = 666;',
                 '',
                 'function bar() {',
@@ -1066,32 +1067,28 @@ describe('fixLines function', () => {
                 'function baz(param: type): type {',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
         it('should replace multiple trailing blank lines with a single one', () => {
-            inputSnippet = createMultilineString([
+            inputSnippet = createMultilineString(
                 'function baz(param: type): type {',
                 '}',
                 '',
                 '',
-            ]);
-            expectedOutput = createMultilineString([
+            );
+            expectedOutput = createMultilineString(
                 'function baz(param: type): type {',
                 '}',
                 '',
-            ]);
+            );
 
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
     });
-
-    function createMultilineString(lines) {
-        return lines.join('\n');
-    }
 
     function expectSnippet(snippet) {
         let indentSize;

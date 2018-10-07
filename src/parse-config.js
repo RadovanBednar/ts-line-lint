@@ -12,18 +12,23 @@ module.exports = function(configFile) {
     }
 
     try {
-        configObject = JSON.parse(fileContent);
+        configObject = JSON.parse(fileContent, (_, value) => value === 'none' ? undefined : value );
     } catch (e) {
         throw Error(`Could not parse config file "${configFile}" (${e.message})`);
     }
 
-    const validationErrors = validate(configObject, schema).errors;
-
-    if (validationErrors.length > 0) {
-        throw Error(`Invalid config file "${configFile}" (${validationErrors.join(', ')})`);
-    }
+    assertConfigObjectIsValidAccordingToSchema(configObject, configFile);
 
     return {
-        indent: 4,
+        ...configObject,
+        indent: configObject.indent === "tab" ? 0 : configObject.indent,
+    }
+}
+
+function assertConfigObjectIsValidAccordingToSchema(parsedObj, sourceFile) {
+    const validationErrors = validate(parsedObj, schema).errors;
+
+    if (validationErrors.length > 0) {
+        throw Error(`Invalid config file "${sourceFile}" (${validationErrors.join(', ')})`);
     }
 }

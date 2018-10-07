@@ -1,6 +1,68 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "definitions": {
+    "modification-options": {
+      "type": "string",
+      "enum": [
+        "before",
+        "after",
+        "both",
+        "none"
+      ]
+    },
+    "search-patterns": {
+      "type": "object",
+      "properties": {
+        "individual-import": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "consecutive-imports": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "individual-multiline-type-alias": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "consecutive-uniline-type-aliases": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "interface-declaration": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "variable-declaration": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "block-content": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "function-declaration": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "class-declaration": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "class-property-declaration": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "method-or-accessor-declaration": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "abstract-method-or-accessor": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "property-with-effect-decorator": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "unit-test-describe": {
+          "$ref": "#/definitions/modification-options"
+        },
+        "unit-test-block-within-describe": {
+          "$ref": "#/definitions/modification-options"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
   "properties": {
     "indent": {
       "anyOf": [
@@ -17,67 +79,10 @@
       ]
     },
     "remove-blank-lines": {
-      "type": "object",
-      "properties": {
-        "inline-decorator-with-property": {
-          "type": "boolean"
-        },
-        "before-import": {
-          "type": "boolean"
-        },
-        "before-variable-declaration": {
-          "type": "boolean"
-        },
-        "before-class-property-declaration": {
-          "type": "boolean"
-        },
-        "after-start-of-block": {
-          "type": "boolean"
-        },
-        "before-end-of-block": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
+      "$ref": "#/definitions/search-patterns"
     },
     "insert-blank-lines": {
-      "type": "object",
-      "properties": {
-        "after-last-import": {
-          "type": "boolean"
-        },
-        "around-group-of-type-aliases": {
-          "type": "boolean"
-        },
-        "around-multiline-type-alias": {
-          "type": "boolean"
-        },
-        "around-interface-declaration": {
-          "type": "boolean"
-        },
-        "around-function-declaration": {
-          "type": "boolean"
-        },
-        "around-class-declaration": {
-          "type": "boolean"
-        },
-        "around-block-inside-class": {
-          "type": "boolean"
-        },
-        "around-abstract-method-or-accessor": {
-          "type": "boolean"
-        },
-        "around-property-with-effect-decorator": {
-          "type": "boolean"
-        },
-        "around-block-inside-describe": {
-          "type": "boolean"
-        },
-        "around-describe-block": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
+      "$ref": "#/definitions/search-patterns"
     }
   },
   "required": [
