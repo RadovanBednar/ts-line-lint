@@ -1,6 +1,7 @@
 const fs = require('mock-fs');
 const expect = require('chai').expect;
 const createMultilineString = require('./utils').createMultilineString;
+const resolveNestedValue = require('./utils').resolveNestedValue;
 const parseConfig = require('./parse-config');
 
 describe.only('parseConfig function', () => {
@@ -10,7 +11,7 @@ describe.only('parseConfig function', () => {
     describe('when called with a non-existent file', () => {
 
         it('should throw a "Could not open config file" error', () => {
-            expect(() => parseConfig('non-existent.json')).to.throw('Could not open config file');
+           whenCalledWith('non-existent.json').expectError('Could not open config file');
         });
 
     });
@@ -22,7 +23,7 @@ describe.only('parseConfig function', () => {
         });
 
         it('should throw a "Could not open config file" error', () => {
-            expect(() => parseConfig('some-directory')).to.throw('Could not open config file');
+           whenCalledWith('some-directory').expectError('Could not open config file');
         });
 
     });
@@ -34,7 +35,7 @@ describe.only('parseConfig function', () => {
         });
 
         it('should throw a "Could not parse config file" error', () => {
-            expect(() => parseConfig('not.json')).to.throw('Could not parse config file');
+           whenCalledWith('not.json').expectError('Could not parse config file');
         });
 
     });
@@ -46,7 +47,7 @@ describe.only('parseConfig function', () => {
         });
 
         it('should throw an "Invalid config file" error', () => {
-            expect(() => parseConfig('invalid-config.json')).to.throw('Invalid config file');
+           whenCalledWith('invalid-config.json').expectError('Invalid config file');
         });
 
     });
@@ -62,7 +63,7 @@ describe.only('parseConfig function', () => {
                 });
 
                 it('should return "indent" property with value 0', () => {
-                    expect(parseConfig('config.json').indent).to.equal(0);
+                    whenCalledWith('config.json').expectProperty('indent').toHaveValue(0);
                 });
 
             });
@@ -76,7 +77,7 @@ describe.only('parseConfig function', () => {
                     for (let i = minIndent; i <= maxIndent; i++) {
                         fs({ 'config.json': `{ "indent": ${i} }` });
 
-                        expect(parseConfig('config.json').indent).to.equal(i);
+                         whenCalledWith('config.json').expectProperty('indent').toHaveValue(i);
                     }
                 });
 
@@ -102,13 +103,13 @@ describe.only('parseConfig function', () => {
             });
 
             it('should not include properties with value "none"', () => {
-                expect(parseConfig('config.json')['remove-blank-lines']['consecutive-imports']).to.be.undefined;
+                whenCalledWith('config.json').expectProperty('remove-blank-lines', 'consecutive-imports').toBeUndefined;
             });
 
             it('should include properties with values ather than "none"', () => {
-                expect(parseConfig('config.json')['remove-blank-lines']['individual-import']).to.equal('before');
-                expect(parseConfig('config.json')['remove-blank-lines']['individual-multiline-type-alias']).to.equal('after');
-                expect(parseConfig('config.json')['remove-blank-lines']['consecutive-uniline-type-aliases']).to.equal('both');
+                whenCalledWith('config.json').expectProperty('remove-blank-lines', 'individual-import').toHaveValue('before');
+                whenCalledWith('config.json').expectProperty('remove-blank-lines', 'individual-multiline-type-alias').toHaveValue('after');
+                whenCalledWith('config.json').expectProperty('remove-blank-lines', 'consecutive-uniline-type-aliases').toHaveValue('both');
             });
 
         });
@@ -131,13 +132,13 @@ describe.only('parseConfig function', () => {
             });
 
             it('should not include properties with value "none"', () => {
-                expect(parseConfig('config.json')['insert-blank-lines']['consecutive-imports']).to.be.undefined;
+                whenCalledWith('config.json').expectProperty('insert-blank-lines', 'consecutive-imports').toBeUndefined;
             });
 
             it('should include properties with values ather than "none"', () => {
-                expect(parseConfig('config.json')['insert-blank-lines']['individual-import']).to.equal('before');
-                expect(parseConfig('config.json')['insert-blank-lines']['individual-multiline-type-alias']).to.equal('after');
-                expect(parseConfig('config.json')['insert-blank-lines']['consecutive-uniline-type-aliases']).to.equal('both');
+                whenCalledWith('config.json').expectProperty('insert-blank-lines', 'individual-import').toHaveValue('before');
+                whenCalledWith('config.json').expectProperty('insert-blank-lines', 'individual-multiline-type-alias').toHaveValue('after');
+                whenCalledWith('config.json').expectProperty('insert-blank-lines', 'consecutive-uniline-type-aliases').toHaveValue('both');
             });
 
         });
@@ -145,3 +146,21 @@ describe.only('parseConfig function', () => {
     });
 
 });
+
+function whenCalledWith(file) {
+    return {
+        expectProperty: function(...path) {
+            return {
+                toHaveValue: function(value) {
+                    expect(resolveNestedValue(parseConfig(file), path)).to.equal(value);
+                },
+                toBeUndefined: () => {
+                    expect(resolveNestedValue(parseConfig(file), path)).to.be.undefined;
+                }
+            }
+        },
+        expectError: function(msg) {
+            expect(() => parseConfig(file)).to.throw(msg);
+        }
+    }
+}
