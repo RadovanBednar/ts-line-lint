@@ -1,92 +1,98 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "definitions": {
-    "modification-options": {
-      "type": "string",
-      "enum": [
-        "before",
-        "after",
-        "both",
-        "none"
-      ]
-    },
-    "search-patterns": {
-      "type": "object",
-      "properties": {
-        "individual-import": {
-          "$ref": "#/definitions/modification-options"
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "indent": {
+            "anyOf": [
+                {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "tab"
+                    ]
+                }
+            ]
         },
-        "consecutive-imports": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "individual-multiline-type-alias": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "consecutive-uniline-type-aliases": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "interface-declaration": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "variable-declaration": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "block-content": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "function-declaration": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "class-declaration": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "class-property-declaration": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "method-or-accessor-declaration": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "abstract-method-or-accessor": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "property-with-effect-decorator": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "unit-test-describe": {
-          "$ref": "#/definitions/modification-options"
-        },
-        "unit-test-block-within-describe": {
-          "$ref": "#/definitions/modification-options"
+        "rules": {
+            "type": "object",
+            "properties": {
+                "individual-import": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "consecutive-imports": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "individual-multiline-type-alias": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "consecutive-uniline-type-aliases": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "interface-declaration": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "variable-declaration": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "block-content": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "function-declaration": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "class-declaration": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "class-property-declaration": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "method-or-accessor-declaration": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "abstract-method-or-accessor": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "property-with-effect-decorator": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "unit-test-describe": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "unit-test-block-within-describe": {
+                    "$ref": "#/definitions/rule_options"
+                }
+            },
+            "additionalProperties": false
         }
-      },
-      "additionalProperties": false
-    }
-  },
-  "properties": {
-    "indent": {
-      "anyOf": [
-        {
-          "type": "integer",
-          "minimum": 1
+    },
+    "required": [
+        "indent", "rules"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+        "modification_options": {
+            "type": "string",
+            "enum": [
+                "before",
+                "after",
+                "both",
+                "none"
+            ]
         },
-        {
-          "type": "string",
-          "enum": [
-            "tab"
-          ]
+        "rule_options": {
+            "type": "object",
+            "properties": {
+                "remove": {
+                    "$ref": "#/definitions/modification_options"
+                },
+                "insert": {
+                    "$ref": "#/definitions/modification_options"
+                }
+            },
+            "additionalProperties": false
         }
-      ]
-    },
-    "remove-blank-lines": {
-      "$ref": "#/definitions/search-patterns"
-    },
-    "insert-blank-lines": {
-      "$ref": "#/definitions/search-patterns"
     }
-  },
-  "required": [
-    "indent"
-  ],
-  "additionalProperties": false
 }

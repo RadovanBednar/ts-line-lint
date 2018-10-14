@@ -1,37 +1,50 @@
 {
     "indent": "tab",
-    "remove-blank-lines": {
-        "individual-import": "before",
-        "consecutive-imports": "none",
-        "individual-multiline-type-alias": "none",
-        "consecutive-uniline-type-aliases": "none",
-        "interface-declaration": "none",
-        "variable-declaration": "before",
-        "block-content":  "both",
-        "function-declaration": "none",
-        "class-declaration": "none",
-        "class-property-declaration": "before",
-        "method-or-accessor-declaration": "none",
-        "abstract-method-or-accessor": "none",
-        "property-with-effect-decorator": "none",
-        "unit-test-describe": "none",
-        "unit-test-block-within-describe": "none"
-    },
-    "insert-blank-lines": {
-        "individual-import": "none",
-        "consecutive-imports": "after",
-        "individual-multiline-type-alias": "both",
-        "consecutive-uniline-type-aliases": "both",
-        "interface-declaration": "both",
-        "variable-declaration": "none",
-        "block-content":  "none",
-        "function-declaration": "both",
-        "class-declaration": "both",
-        "class-property-declaration": "none",
-        "method-or-accessor-declaration": "both",
-        "abstract-method-or-accessor": "both",
-        "property-with-effect-decorator": "both",
-        "unit-test-describe": "both",
-        "unit-test-block-within-describe": "both"
+    "rules": {
+        "individual-import": {
+            "remove": "before"
+        },
+        "consecutive-imports": {
+            "insert": "after"
+        },
+        "individual-multiline-type-alias": {
+            "insert": "both"
+        },
+        "consecutive-uniline-type-aliases": {
+            "insert": "both"
+        },
+        "interface-declaration": {
+            "insert": "both"
+        },
+        "variable-declaration": {
+            "remove": "before",
+        },
+        "block-content": {
+            "remove": "both",
+        },
+        "function-declaration": {
+            "insert": "both"
+        },
+        "class-declaration": {
+            "insert": "both"
+        },
+        "class-property-declaration": {
+            "remove": "before",
+        },
+        "method-or-accessor-declaration": {
+            "insert": "both"
+        },
+        "abstract-method-or-accessor": {
+            "insert": "both"
+        },
+        "property-with-effect-decorator": {
+            "insert": "both"
+        },
+        "unit-test-describe": {
+            "insert": "both"
+        },
+        "unit-test-block-within-describe": {
+            "insert": "both"
+        }
     }
 }
