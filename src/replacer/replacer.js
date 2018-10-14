@@ -1,59 +1,88 @@
 class Replacer {
     constructor(config) {
         this.indent = config.indent;
-        this.rules = config.rules;
-
         this.replacementPipeline = prepareReplacementPipeline(config);
     }
 
     fix(code) {
-        return this.replacementPipeline
-            .reduce((result, step) => String.prototype.replace.call(result, step.search, step.replace), code);
+        return applyReplacements(code, this.replacementPipeline);
     }
 }
 
 function prepareReplacementPipeline(config) {
-    const pipeline = [];
-    const patterns = {
-        'blanks': /(\n*)/,
-        'individual-import': /(^import {(.*|(?:\n(?:[ \t]*.*,?\n)+?))} from .*\n)/,
-    };
-    
-    if (config.rules['individual-import']) {
-        if (config.rules['individual-import'].remove === "before") {
-            pipeline.push({
-                 search: new RegExp(patterns.blanks.source + patterns['individual-import'].source, 'mg'),
-                 replace: '$2',
-             });
-        } else if (config.rules["individual-import"].remove === "after") {
-            pipeline.push({
-                 search: new RegExp(patterns['individual-import'].source + patterns.blanks.source, 'mg'),
-                 replace: '$1',
-             });
-        } else if (config.rules["individual-import"].remove === "both") {
-            pipeline.push({
-                 search: new RegExp(patterns.blanks.source + patterns['individual-import'].source + patterns.blanks.source, 'mg'),
-                 replace: '$2',
-             });
-        } else if (config.rules['individual-import'].insert === "before") {
-            pipeline.push({
-                 search: new RegExp(patterns['individual-import'].source, 'mg'),
-                 replace: '\n$1',
-             });
-        } else if (config.rules['individual-import'].insert === "after") {
-            pipeline.push({
-                 search: new RegExp(patterns['individual-import'].source, 'mg'),
-                 replace: '$1\n',
-             });
-        } else if (config.rules['individual-import'].insert === "both") {
-            pipeline.push({
-                 search: new RegExp(patterns['individual-import'].source, 'mg'),
-                 replace: '\n$1\n',
-             });
+    const patternMap = new Map([
+        ['individual-import', /(^import {(.*|(?:\n(?:[ \t]*.*,?\n)+?))} from .*\n)/mg],
+    ]);
+
+    return [
+        ...prepareRemovalPipeline(config.rules, patternMap),
+        ...prepareInsertionPipeline(config.rules, patternMap)
+    ];
+}
+
+function prepareRemovalPipeline(rules, patternMap) {
+    const removalPipeline = [];
+    for (const ruleName of patternMap.keys()) {
+        if (!rules[ruleName]) continue;
+
+        const removeOption = rules[ruleName].remove;
+        if (removeOption && removeOption !== 'none') {
+            switch (removeOption) {
+                case 'before':
+                removalPipeline.push([concatRegExp(/(\n*)/, patternMap.get(ruleName)), '$2']);
+                break;
+                case 'after':
+                removalPipeline.push([concatRegExp(patternMap.get(ruleName), /(\n*)/), '$1']);
+                break;
+                case 'both':
+                removalPipeline.push([concatRegExp(/(\n*)/, patternMap.get(ruleName), /(\n*)/), '$2']);
+            }
         }
     }
 
-    return pipeline;
+    return removalPipeline;
+}
+
+function prepareInsertionPipeline(rules, patternMap) {
+    const insertionPipeline = [];
+    for (const ruleName of patternMap.keys()) {
+        if (!rules[ruleName]) continue;
+
+        const insertOption = rules[ruleName].insert;
+        if (insertOption && insertOption !== 'none') {
+            switch (insertOption) {
+                case 'before':
+                insertionPipeline.push([patternMap.get(ruleName), '\n$1']);
+                break;
+                case 'after':
+                insertionPipeline.push([patternMap.get(ruleName), '$1\n']);
+                break;
+                case 'both':
+                insertionPipeline.push([patternMap.get(ruleName), '\n$1\n']);
+            }
+        }
+    }
+
+    return insertionPipeline;
+}
+
+function concatRegExp(...patterns) {
+    const combinedLiteral = patterns.reduce((result, pattern) => result + pattern.source, '');
+    const combinedFlags = sortAndRemoveDuplicateChars(patterns.reduce((result, pattern) => result + pattern.flags, ''));
+
+    return new RegExp(combinedLiteral, combinedFlags);
+}
+
+function sortAndRemoveDuplicateChars(str) {
+    return str.split('').sort().join('').replace(/(.)(?=.*\1)/g, '')
+}
+
+function applyReplacements(code, pipeline) {
+    return pipeline.reduce((result, step) => {
+        const search = step[0];
+        const replace = step[1];
+        return String.prototype.replace.call(result, search, replace);
+    }, code);
 }
 
 module.exports = Replacer;

@@ -34,7 +34,7 @@ describe.only('Replacer', () => {
         describe('has an option "remove: none"', () => {
 
             beforeEach(() => {
-                config = createConfig('individual-import', 'remove', 'none');
+                config = createConfig('individual-import', 'remove');
             });
 
             it('should not change lines around individual imports', () => {
@@ -117,7 +117,7 @@ describe.only('Replacer', () => {
         describe('has an option "insert: none"', () => {
 
             beforeEach(() => {
-                config = createConfig('individual-import', 'insert', 'none');
+                config = createConfig('individual-import', 'insert');
             });
 
             it('should not change lines around individual imports', () => {
@@ -223,10 +223,43 @@ describe.only('Replacer', () => {
 
         });
 
+        describe('has options "remove: after, insert: before"', () => {
+
+            beforeEach(() => {
+                config = createConfig('individual-import', 'remove', 'after', 'insert', 'before');
+            });
+
+            it('should first remove all blank lines before and then insert one blank line after each individual import', () => {
+                expectedOutput = createMultilineString(
+                    '',
+                    '',
+                    'import {SingleImportedItem} from "abc";',
+                    '',
+                    'import {AnotherSingleImportedItem} from "./def";',
+                    '',
+                    'import {YetAnotherSingleImportedItem} from "./ghi";',
+                    '',
+                    'import {',
+                    '  FirstOfSeveralImportedItems,',
+                    '  SecondOfSeveralImportedItems',
+                    '} from "../jkl";',
+                    '// non-blank line',
+                );
+
+                expectReplacerWithConfig(config).toConvert(importSnippet).to(expectedOutput);
+            });
+
+        });
+
     });
 
-    function createConfig(rule, property, option) {
-        return { rules: { [rule]: { [property]: option } } }
+    function createConfig(rule, property, option = 'none', property2, option2 = 'none') {
+        const config = { rules: { [rule]: { [property]: option } } };
+        if (property2) {
+            config.rules[rule][property2] = option2;
+        }
+
+        return config;
     }
 
     function expectReplacerWithConfig(config) {
