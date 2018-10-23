@@ -17,7 +17,7 @@
         "build": "babel src --out-dir build --ignore '**/*.spec.js'",
         "prepublish": "npm run build",
         "start": "node build/index.js",
-        "test": "mocha --ui bdd ./src/**/*.spec.js"
+        "test": "mocha -r ts-node/register src/**/*.spec.ts"
     },
     "babel": {
         "presets": [
@@ -27,14 +27,18 @@
     "author": "Radovan Bednár",
     "license": "ISC",
     "devDependencies": {
+        "@types/chai": "^4.1.6",
+        "@types/mocha": "^5.2.5",
         "babel-cli": "^6.26.0",
         "babel-preset-latest": "^6.24.1",
         "chai": "^4.1.2",
         "mocha": "^5.2.0",
         "mock-fs": "^4.7.0",
-        "np": "^3.0.4"
+        "np": "^3.0.4",
+        "ts-node": "^7.0.1"
     },
     "dependencies": {
-        "jsonschema": "^1.2.4"
+        "jsonschema": "^1.2.4",
+        "typescript": "^3.1.3"
     }
 }
