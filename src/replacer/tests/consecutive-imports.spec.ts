@@ -3,18 +3,16 @@ import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-confi
 import { createMockConfig } from './create-mock-config';
 import { createMultilineString } from '../../utils/text-utils';
 
-export function individualImportRuleTestSuite() {
+export function consecutiveImportsRuleTestSuite() {
     const inputSnippet = createMultilineString(
         'import {SingleImportedItem} from "abc";',
-        '',
         'import {AnotherSingleImportedItem} from "./def";',
-        'import {YetAnotherSingleImportedItem} from "./ghi";',
         '',
+        'import {YetAnotherSingleImportedItem} from "./ghi";',
         'import {',
         '  FirstOfSeveralImportedItems,',
         '  SecondOfSeveralImportedItems',
         '} from "../jkl";',
-        '',
         '// non-blank line',
     );
     let expectedOutput: string;
@@ -31,7 +29,7 @@ export function individualImportRuleTestSuite() {
     describe('has option "remove: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'remove', 'none');
+            config = createMockConfig('consecutive-imports', 'remove', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -43,10 +41,10 @@ export function individualImportRuleTestSuite() {
     describe('has option "remove: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'remove', 'before');
+            config = createMockConfig('consecutive-imports', 'remove', 'before');
         });
 
-        it('should remove blank lines before each individual import', () => {
+        it('should remove blank lines before each group of consecutive imports', () => {
             expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
                 'import {AnotherSingleImportedItem} from "./def";',
@@ -55,7 +53,6 @@ export function individualImportRuleTestSuite() {
                 '  FirstOfSeveralImportedItems,',
                 '  SecondOfSeveralImportedItems',
                 '} from "../jkl";',
-                '',
                 '// non-blank line',
             );
 
@@ -67,10 +64,10 @@ export function individualImportRuleTestSuite() {
     describe('has option "remove: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'remove', 'after');
+            config = createMockConfig('consecutive-imports', 'remove', 'after');
         });
 
-        it('should remove blank lines after each individual import', () => {
+        it('should remove blank lines after each group of consecutive imports', () => {
             expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
                 'import {AnotherSingleImportedItem} from "./def";',
@@ -90,10 +87,10 @@ export function individualImportRuleTestSuite() {
     describe('has option "remove: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'remove', 'both');
+            config = createMockConfig('consecutive-imports', 'remove', 'both');
         });
 
-        it('should remove blank lines both before and after each individual import', () => {
+        it('should remove blank lines both before and after each group of consecutive imports', () => {
             expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
                 'import {AnotherSingleImportedItem} from "./def";',
@@ -113,7 +110,7 @@ export function individualImportRuleTestSuite() {
     describe('has option "insert: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'insert', 'none');
+            config = createMockConfig('consecutive-imports', 'insert', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -125,22 +122,19 @@ export function individualImportRuleTestSuite() {
     describe('has option "insert: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'insert', 'before');
+            config = createMockConfig('consecutive-imports', 'insert', 'before');
         });
 
-        it('should insert a blank line before each individual import', () => {
+        it('should insert a blank line before each group of consecutive imports', () => {
             expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
-                '',
                 'import {AnotherSingleImportedItem} from "./def";',
                 '',
                 'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
                 'import {',
                 '  FirstOfSeveralImportedItems,',
                 '  SecondOfSeveralImportedItems',
                 '} from "../jkl";',
-                '',
                 '// non-blank line',
             );
 
@@ -152,17 +146,15 @@ export function individualImportRuleTestSuite() {
     describe('has option "insert: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'insert', 'after');
+            config = createMockConfig('consecutive-imports', 'insert', 'after');
         });
 
-        it('should insert a blank line after each individual import', () => {
+        it('should insert a blank line after each group of consecutive imports', () => {
             expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
-                '',
                 'import {AnotherSingleImportedItem} from "./def";',
                 '',
                 'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
                 'import {',
                 '  FirstOfSeveralImportedItems,',
                 '  SecondOfSeveralImportedItems',
@@ -179,17 +171,15 @@ export function individualImportRuleTestSuite() {
     describe('has option "insert: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-import', 'insert', 'both');
+            config = createMockConfig('consecutive-imports', 'insert', 'both');
         });
 
-        it('should insert blank lines both before and after each individual import', () => {
+        it('should insert blank lines both before and after each group of consecutive imports', () => {
             expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
-                '',
                 'import {AnotherSingleImportedItem} from "./def";',
                 '',
                 'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
                 'import {',
                 '  FirstOfSeveralImportedItems,',
                 '  SecondOfSeveralImportedItems',
@@ -208,18 +198,15 @@ export function individualImportRuleTestSuite() {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'individual-import': { remove: 'before', insert: 'after' } }
+                rules: { 'consecutive-imports': { remove: 'before', insert: 'after' } }
             };
         });
 
-        it('should first remove all blank lines before and then insert one blank line after each individual import', () => {
+        it('should first remove all blank lines before and then insert one blank line after each group of consecutive imports', () => {
             expectedOutput = createMultilineString(
                 'import {SingleImportedItem} from "abc";',
-                '',
                 'import {AnotherSingleImportedItem} from "./def";',
-                '',
                 'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
                 'import {',
                 '  FirstOfSeveralImportedItems,',
                 '  SecondOfSeveralImportedItems',
