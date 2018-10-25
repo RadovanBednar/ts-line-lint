@@ -1,8 +1,7 @@
-#!/usr/bin/env node
-const findFiles = require('./find-files');
-const processFile = require('./process-file');
-const parseProcessArgv = require('./parse-process-argv');
-const log = require('./logger');
+import { findFiles } from './find-files';
+import { processFile } from './process-file';
+import { parseProcessArgv } from './parse-process-argv';
+import { log } from './logger';
 
 try {
     const argv = parseProcessArgv();
@@ -19,13 +18,9 @@ try {
         }
     });
 
-    log
-      .newline(total ? 2 : 1)
-      .info(`Line-linting complete, ${modified} of ${total} files were modified.`);
+    log.newline(total ? 2 : 1).info(`Line-linting complete, ${modified} of ${total} files were modified.`);
 } catch (e) {
-    log
-      .error(e.message)
-      .usage();
+    log.error(e.message).usage();
     process.exit(1);
 }
 

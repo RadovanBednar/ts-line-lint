@@ -1,16 +1,17 @@
-const expect = require('chai').expect;
-const parseProcessArgv = require('./parse-process-argv');
+import { expect } from 'chai';
+import { parseProcessArgv, CommandLineOptions } from './parse-process-argv';
 
-describe('parseProcessArgv function', () => {
+process.env.NODE_ENV = 'test';
+
+describe.only('parseProcessArgv function', () => {
 
     describe('directories array', () => {
         const onlyCurrentDirectory = ['.'];
 
         describe('when there were no args specified', () => {
-            const noArgs = [];
 
             it('should contain only the current directory', () => {
-                whenCalledWith(noArgs).expect('directories').toEqual(onlyCurrentDirectory);
+                whenCalledWith([]).expect('directories').toEqual(onlyCurrentDirectory);
             });
 
         });
@@ -116,17 +117,17 @@ describe('parseProcessArgv function', () => {
 
 });
 
-function whenCalledWith(args) {
+function whenCalledWith(args: Array<string>) {
     return {
-        expect: function(prop) {
+        expect: function(property: keyof CommandLineOptions) {
             return {
-                toEqual: function(value) {
-                    expect(parseProcessArgv(['node', 'path/to/script'].concat(args))[prop]).to.deep.equal(value);
+                toEqual: function(value: Array<string>) {
+                    expect(parseProcessArgv(args)[property]).to.deep.equal(value);
                 }
             }
         },
-        expectError: function(msg) {
-            expect(() => parseProcessArgv(['node', 'path/to/script'].concat(args))).to.throw(msg);
+        expectError: function(message: string) {
+            expect(() => parseProcessArgv(args)).to.throw(message);
         }
     }
 }

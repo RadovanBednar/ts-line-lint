@@ -1,6 +1,6 @@
-const fs = require('mock-fs');
-const expect = require('chai').expect;
-const findFiles = require('./find-files');
+import * as fs from 'mock-fs';
+import { expect } from 'chai';
+import { findFiles } from './find-files';
 
 describe('findFiles function', () => {
 
@@ -26,16 +26,6 @@ describe('findFiles function', () => {
 
             it('should return an array of all the *.ts files', () => {
                 expect(findFiles(['src'])).to.deep.equal(allSrcTsFiles);
-            });
-
-        });
-
-        describe('is not an array', () => {
-
-            it('should return an array of all the *.ts files', () => {
-                for (const notArray of [undefined, null, true, 'string', 123, {}]) {
-                    expect(findFiles(['src'], notArray)).to.deep.equal(allSrcTsFiles);
-                }
             });
 
         });
