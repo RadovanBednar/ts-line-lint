@@ -1,24 +1,33 @@
-const log = require('./logger');
+import { log } from './logger';
 
-module.exports = function(args) {
-    const testRun = !!args;
-    args = (args || process.argv).slice(2);
+export interface CommandLineOptions {
+    directories: Array<string>;
+    ignore: Array<string>;
+}
 
-    function getDirs() {
+export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
+    const args = testArgs || process.argv.slice(2);
+
+    return {
+        directories: getDirs(),
+        ignore: getIgnored(),
+    }
+
+    function getDirs(): Array<string> {
         let dirs = args.some(isArgFlag) ? args.slice(0, args.findIndex(isArgFlag)) : args;
 
         if (dirs.length) {
             assertOnlyRelativePathsToSubdirectoriesSpecified(dirs);
             return dirs;
         } else {
-            if (!testRun) {
-                log.warn('No directory specified, using "." as fallback.');
+            if (process.env.NODE_ENV !== 'test') {
+                log.warning('No directory specified, using "." as fallback.');
             }
             return ['.'];
         }
     }
 
-    function assertOnlyRelativePathsToSubdirectoriesSpecified(dirs) {
+    function assertOnlyRelativePathsToSubdirectoriesSpecified(dirs: Array<string>): void {
         dirs.forEach((dir) => {
             if (dir.startsWith('..') || dir.startsWith('/')) {
                 throw Error(`Invalid directory "${dir}". Only relative paths to project subdirectories are allowed.`);
@@ -26,7 +35,7 @@ module.exports = function(args) {
         });
     }
 
-    function getIgnored() {
+    function getIgnored(): Array<string> {
         const flag = '--ignore';
 
         if (isFlagPresent(flag)) {
@@ -37,22 +46,22 @@ module.exports = function(args) {
         return [];
     }
 
-    function isArgFlag(arg) {
+    function isArgFlag(arg: string): boolean {
         return arg.indexOf('--') === 0;
     }
 
-    function isFlagPresent(flag) {
+    function isFlagPresent(flag: string): boolean {
         return args.indexOf(flag) !== -1;
     }
 
-    function assertFlagHasArgs(flag) {
+    function assertFlagHasArgs(flag: string): void {
         const nextArg = args[args.indexOf(flag) + 1];
         if (!nextArg || isArgFlag(nextArg)) {
             throw Error(`Missing arguments for "${flag}".`);
         }
     }
 
-    function getFlagArgs(flag) {
+    function getFlagArgs(flag: string): Array<string> {
         const flagArgs = args.slice(args.indexOf(flag) + 1);
 
         if (flagArgs.some(isArgFlag)) {
@@ -61,8 +70,4 @@ module.exports = function(args) {
         return flagArgs;
     }
 
-    return {
-        directories: getDirs(),
-        ignore: getIgnored(),
-    }
-};
+}

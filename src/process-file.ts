@@ -1,9 +1,9 @@
-const fs = require('fs');
+import * as fs from 'fs';
+
 const fixLines = require('./fix-lines');
 
-function processFile(file) {
+export function processFile(file: string): boolean {
     const content = fs.readFileSync(file, 'utf-8');
-
     const newContent = fixLines(content);
 
     if (content !== newContent) {
@@ -13,5 +13,3 @@ function processFile(file) {
 
     return false;
 }
-
-module.exports = processFile;
