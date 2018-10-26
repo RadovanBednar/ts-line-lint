@@ -3,7 +3,7 @@ import { parseProcessArgv, CommandLineOptions } from './parse-process-argv';
 
 process.env.NODE_ENV = 'test';
 
-describe.only('parseProcessArgv function', () => {
+describe('parseProcessArgv function', () => {
 
     describe('directories array', () => {
         const onlyCurrentDirectory = ['.'];

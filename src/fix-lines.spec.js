@@ -936,7 +936,60 @@ describe('fixLines function', () => {
             }
         });
 
-        it('should add blank lines around "before(Each|All)", "after(Each|All)" and "it" statements', () => {
+        it('should add blank lines around uniline "before(Each|All)" and "after(Each|All)" statements', () => {
+            inputSnippet = createMultilineString([
+                '// preceding non-blank line',
+                'describe("first test suite", () => {',
+                '  before(stuffToDoBeforeAll);',
+                '  // non-blank line',
+                '  beforeAll(stuffToDoBeforeAll);',
+                '  // non-blank line',
+                '  beforeEach(stuffToDoBeforeEach);',
+                '  // non-blank line',
+                '  after(stuffToDoAfterAll);',
+                '  // non-blank line',
+                '  afterAll(stuffToDoAfterAll);',
+                '  // non-blank line',
+                '  afterEach((stuffToDoAfterEach);',
+                '});',
+                '// following non-blank line',
+            ]);
+            expectedOutput = createMultilineString([
+                '// preceding non-blank line',
+                '',
+                'describe("first test suite", () => {',
+                '',
+                '  before(stuffToDoBeforeAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  beforeAll(stuffToDoBeforeAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  beforeEach(stuffToDoBeforeEach);',
+                '',
+                '  // non-blank line',
+                '',
+                '  after(stuffToDoAfterAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  afterAll(stuffToDoAfterAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  afterEach((stuffToDoAfterEach);',
+                '',
+                '});',
+                '',
+                '// following non-blank line',
+            ]);
+
+            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+        });
+
+        it('should add blank lines around multiline "before(Each|All)", "after(Each|All)" and "it" statements', () => {
             inputSnippet = createMultilineString([
                 '// preceding non-blank line',
                 'describe("first test suite", () => {',

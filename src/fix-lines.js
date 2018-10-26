@@ -14,7 +14,8 @@ function fixLines(inputCode, indentSize = 4) {
     const blockInsideClass = /(^([ \t]*)(?:@\w+\([\w'"]*\)\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:(?!\2};).*\n)*?\2}\n)/mg;
     const abstractMethodOrAccessor = /(^([ \t]*)(?:public |protected |private )?abstract [^(\n]*\(.*\n)/mg;
     const propertyWithEffectDecorator = /(^([ \t]*)@Effect\([^)]*\)) (.*\n(?:.*\n)*?\2\S.*)/mg;
-    const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?|after(Each|All)?|it)\(.*\n(?:.*\n)*?\2\S.*)/mg;
+    const unilineTestHook = /(^([ \t]*)(before(Each|All)?|after(Each|All)?)\(.*;)/mg;
+    const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?|after(Each|All)?|it)\(.*{\n(?:.*\n)*?\2\S.*)/mg;
     const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
     const tslintDisableNextLineComment = /(^([ \t]*)\/(?:\/|\*) tslint:disable-next-line.*\n)\n+/mg;
     const leadingBlank = /^\n+/g;
@@ -47,6 +48,7 @@ function fixLines(inputCode, indentSize = 4) {
       .replace(blockInsideClass, surroundWithBlanks)
       .replace(abstractMethodOrAccessor, surroundWithBlanks)
       .replace(propertyWithEffectDecorator, addNewlineAfterDecoratorAndSurroundWithBlanks)
+      .replace(unilineTestHook, surroundWithBlanks)
       .replace(blockInsideDescribe, surroundWithBlanks);
 
     variouslyIndentedDescribeBlocks.forEach((pattern) => {
