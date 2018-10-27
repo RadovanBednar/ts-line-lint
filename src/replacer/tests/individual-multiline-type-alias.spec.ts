@@ -194,7 +194,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'individual-multiline-type-alias': { remove: 'before', insert: 'after' } },
+                rules: { 'individual-multiline-type-alias': { remove: 'both', insert: 'after' } },
             };
         });
 

@@ -208,7 +208,7 @@ export function individualImportRuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'individual-import': { remove: 'before', insert: 'after' } },
+                rules: { 'individual-import': { remove: 'both', insert: 'after' } },
             };
         });
 

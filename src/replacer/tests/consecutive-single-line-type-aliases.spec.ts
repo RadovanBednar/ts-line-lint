@@ -185,7 +185,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'consecutive-single-line-type-aliases': { remove: 'before', insert: 'after' } },
+                rules: { 'consecutive-single-line-type-aliases': { remove: 'both', insert: 'after' } },
             };
         });
 

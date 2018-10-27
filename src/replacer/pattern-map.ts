@@ -5,7 +5,7 @@ export const patternMap: Dictionary<RegExp> = {
     'consecutive-imports': /((?:^import {(?:.*|(?:\n(?:[ \t]*.*,?\n)+?))} from .*\n)+)/mg,
     'individual-multiline-type-alias': /(^([ \t]*)(?:export )?type .*\n(?:[ \t]+.*\n)+?\2[^;]*;\n)/mg,
     'consecutive-single-line-type-aliases': /((?:^[ \t]*(?:export )?type .*;\n)+)/mg,
-    // 'interface-declaration': //mg,
+    'interface-declaration': /(^([ \t]*)(?:export )?interface \w+ {\n(?:.*\n)*?\2}\n)/mg,
     // 'variable-declaration': //mg,
     // 'block-content': //mg,
     // 'function-declaration': //mg,

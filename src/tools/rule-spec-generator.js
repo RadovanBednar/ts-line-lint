@@ -158,7 +158,7 @@ export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { '%RULE_NAME_KEBAB_CASE%': { remove: 'before', insert: 'after' } },
+                rules: { '%RULE_NAME_KEBAB_CASE%': { remove: 'both', insert: 'after' } },
             };
         });
 

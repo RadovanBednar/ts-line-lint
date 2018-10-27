@@ -198,7 +198,7 @@ export function consecutiveImportsRuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'consecutive-imports': { remove: 'before', insert: 'after' } },
+                rules: { 'consecutive-imports': { remove: 'both', insert: 'after' } },
             };
         });
 
