@@ -1,6 +1,6 @@
-import { LineLintConfig, EMPTY_RULES_CONFIG } from "../../config/line-lint-config";
-import { Replacer } from "../replacer";
-import { expect } from "chai";
+import { expect } from 'chai';
+import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
+import { Replacer } from '../replacer';
 
 export function expectReplacerWithConfig(config: LineLintConfig) {
     const replacer = new Replacer(config);
@@ -11,8 +11,8 @@ export function expectReplacerWithConfig(config: LineLintConfig) {
             return {
                 to(output: string): void {
                     expect(replacer.fix(snippet)).to.equal(output);
-                }
-            }
+                },
+            };
         },
         toOnlyApplyCleanupReplacementsTo(snippet: string) {
             expect(replacer.fix(snippet)).to.equal(cleanupOnlyReplacer.fix(snippet));

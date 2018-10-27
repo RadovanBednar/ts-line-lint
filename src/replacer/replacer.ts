@@ -1,6 +1,6 @@
-import { LineLintConfig, LineLintRules } from "../config/line-lint-config";
-import { patternMap } from "./pattern-map";
-import { concatRegExp } from "../utils/text-utils";
+import { LineLintConfig, LineLintRules } from '../config/line-lint-config';
+import { concatRegExp } from '../utils/text-utils';
+import { patternMap } from './pattern-map';
 
 type ReplacementStep = [RegExp, string];
 type ReplacementPipeline = Array<ReplacementStep>;
@@ -27,7 +27,7 @@ export class Replacer {
     private prepareRemovalPipeline(rules: LineLintRules): ReplacementPipeline {
         const removalPipeline: ReplacementPipeline = [];
         for (const ruleName of Object.keys(patternMap)) {
-            if (!rules[ruleName]) continue;
+            if (!rules[ruleName]) { continue; }
 
             const removeOption = rules[ruleName].remove;
             if (removeOption && removeOption !== 'none') {
@@ -50,7 +50,7 @@ export class Replacer {
     private prepareInsertionPipeline(rules: LineLintRules): ReplacementPipeline {
         const insertionPipeline: ReplacementPipeline = [];
         for (const ruleName of Object.keys(patternMap)) {
-            if (!rules[ruleName]) continue;
+            if (!rules[ruleName]) { continue; }
 
             const insertOption = rules[ruleName].insert;
             if (insertOption && insertOption !== 'none') {

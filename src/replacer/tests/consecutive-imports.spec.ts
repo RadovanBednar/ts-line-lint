@@ -1,7 +1,7 @@
-import { expectReplacerWithConfig } from './replacer-expects';
 import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
-import { createMockConfig } from './create-mock-config';
 import { createMultilineString } from '../../utils/text-utils';
+import { createMockConfig } from './create-mock-config';
+import { expectReplacerWithConfig } from './replacer-expects';
 
 export function consecutiveImportsRuleTestSuite() {
     const inputSnippet = createMultilineString(
@@ -198,25 +198,26 @@ export function consecutiveImportsRuleTestSuite() {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'consecutive-imports': { remove: 'before', insert: 'after' } }
+                rules: { 'consecutive-imports': { remove: 'before', insert: 'after' } },
             };
         });
 
-        it('should first remove all blank lines before and then insert one blank line after each group of consecutive imports', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                'import {AnotherSingleImportedItem} from "./def";',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '',
-                '// non-blank line',
-            );
+        it('should first remove all blank lines before and \
+        then insert one blank line after each group of consecutive imports', () => {
+                expectedOutput = createMultilineString(
+                    'import {SingleImportedItem} from "abc";',
+                    'import {AnotherSingleImportedItem} from "./def";',
+                    'import {YetAnotherSingleImportedItem} from "./ghi";',
+                    'import {',
+                    '  FirstOfSeveralImportedItems,',
+                    '  SecondOfSeveralImportedItems',
+                    '} from "../jkl";',
+                    '',
+                    '// non-blank line',
+                );
 
-            expectReplacerWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
-        });
+                expectReplacerWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            });
 
     });
 

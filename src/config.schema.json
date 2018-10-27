@@ -28,7 +28,7 @@
                 "individual-multiline-type-alias": {
                     "$ref": "#/definitions/rule_options"
                 },
-                "consecutive-uniline-type-aliases": {
+                "consecutive-single-line-type-aliases": {
                     "$ref": "#/definitions/rule_options"
                 },
                 "interface-declaration": {
@@ -61,7 +61,13 @@
                 "unit-test-describe": {
                     "$ref": "#/definitions/rule_options"
                 },
-                "unit-test-block-within-describe": {
+                "unit-test-single-line-hook-statement": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "unit-test-hook-statement-block": {
+                    "$ref": "#/definitions/rule_options"
+                },
+                "unit-test-it-statement": {
                     "$ref": "#/definitions/rule_options"
                 }
             },

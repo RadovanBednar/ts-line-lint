@@ -1,5 +1,5 @@
-import { expectReplacerToConvert } from './replacer-expects';
 import { createMultilineString } from '../../utils/text-utils';
+import { expectReplacerToConvert } from './replacer-expects';
 
 export function cleanupTestSuite() {
     let inputSnippet: string;
