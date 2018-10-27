@@ -74,7 +74,7 @@ export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
         }
     }
 
-    function assertFlagHasExactlyArgs(flag: string, n: number) {
+    function assertFlagHasExactlyArgs(flag: string, n: number): void {
         const argCount = getFlagArgs(flag).length;
         if (argCount !== n) {
             throw Error(`Wrong number of arguments for "${flag}": expected 1, got ${argCount}.`);

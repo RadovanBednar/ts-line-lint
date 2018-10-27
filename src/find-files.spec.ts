@@ -83,7 +83,7 @@ describe('findFiles function', () => {
 
 });
 
-function setMockFileStructure() {
+function setMockFileStructure(): void {
     fs({
         src: {
             'some-folder': {

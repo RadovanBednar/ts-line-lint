@@ -121,7 +121,7 @@ describe('parseProcessArgv function', () => {
             const noConfigFlag = ['dir1', 'dir2'];
 
             it('should be undefined', () => {
-                whenCalledWith(noConfigFlag).expect('config').toBe(undefined);
+                whenCalledWith(noConfigFlag).expect('config').toBeUndefined();
             });
 
         });
@@ -177,19 +177,24 @@ describe('parseProcessArgv function', () => {
 
 });
 
+// tslint:disable-next-line:typedef
 function whenCalledWith(args: Array<string>) {
     return {
+        // tslint:disable-next-line:typedef
         expect(property: keyof CommandLineOptions) {
             return {
-                toEqual(value: Array<string>) {
+                toEqual(value: Array<string>): void {
                     expect(parseProcessArgv(args)[property]).to.deep.equal(value);
                 },
-                toBe(value: Array<string>) {
+                toBe(value: string): void {
                     expect(parseProcessArgv(args)[property]).to.equal(value);
+                },
+                toBeUndefined(): void {
+                    expect(parseProcessArgv(args)[property]).to.be.undefined;
                 },
             };
         },
-        expectError(message: string) {
+        expectError(message: string): void {
             expect(() => parseProcessArgv(args)).to.throw(message);
         },
     };

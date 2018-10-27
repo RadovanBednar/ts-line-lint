@@ -1,16 +1,13 @@
 {
-    "extends": "tslint:recommended",
+    "extends": [
+        "tslint:recommended",
+        "tslint-no-unused-expression-chai"
+    ],
     "rules": {
-        "array-type": [
-            true,
-            "generic"
-        ],
+        "array-type": [true, "generic"],
         "interface-name": [true, "never-prefix"],
         "object-literal-sort-keys": false,
-        "quotemark": [
-           true,
-           "single",
-           "avoid-template"
-       ]
+        "quotemark": [true, "single", "avoid-template"],
+        "typedef": [true, "call-signature", "parameter", "member-variable-declaration"]
     }
 }

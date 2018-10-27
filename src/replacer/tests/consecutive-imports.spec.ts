@@ -3,7 +3,7 @@ import { createMultilineString } from '../../utils/text-utils';
 import { createMockConfig } from './create-mock-config';
 import { expectReplacerWithConfig } from './replacer-expects';
 
-export function consecutiveImportsRuleTestSuite() {
+export function consecutiveImportsRuleTestSuite(): void {
     const inputSnippet = createMultilineString(
         'import {SingleImportedItem} from "abc";',
         'import {AnotherSingleImportedItem} from "./def";',
