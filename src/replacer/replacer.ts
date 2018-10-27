@@ -33,13 +33,13 @@ export class Replacer {
             if (removeOption && removeOption !== 'none') {
                 switch (removeOption) {
                     case 'before':
-                        removalPipeline.push([concatRegExp(/(\n*)/, patternMap[ruleName]), '$2']);
+                        removalPipeline.push([concatRegExp(/^\n*/, patternMap[ruleName]), '$1']);
                         break;
                     case 'after':
                         removalPipeline.push([concatRegExp(patternMap[ruleName], /(\n*)/), '$1']);
                         break;
                     case 'both':
-                        removalPipeline.push([concatRegExp(/(\n*)/, patternMap[ruleName], /(\n*)/), '$2']);
+                        removalPipeline.push([concatRegExp(/^\n*/, patternMap[ruleName], /(\n*)/), '$1']);
                 }
             }
         }
