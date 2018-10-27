@@ -3,29 +3,26 @@ import { createMultilineString } from '../../utils/text-utils';
 import { createMockConfig } from './create-mock-config';
 import { expectReplacerWithConfig } from './replacer-expects';
 
-export function individualMultilineTypeAliasRuleTestSuite(): void {
+export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     const inputSnippetWithBlanks = createMultilineString(
-        '// preceding non-blank line',
+        '// non-blank line before first group',
         '',
-        'export type ExtendedType<T> = T & {',
-        '  [P in keyof T]: T[P] & BaseType<T>;',
-        '};',
+        'export type AliasedType = type;',
+        'export type AnotherAliasedType = type2;',
         '',
-        'export type UnionType =',
-        '  SomeType |',
-        '  AnotherType;',
+        '// non-blank line between groups',
         '',
-        '// following non-blank line',
+        '    type IndentedAlias = type3;',
+        '',
+        '// non-blank line after second group',
     );
     const inputSnippetWithoutBlanks = createMultilineString(
-        '// preceding non-blank line',
-        'export type ExtendedType<T> = T & {',
-        '  [P in keyof T]: T[P] & BaseType<T>;',
-        '};',
-        'export type UnionType =',
-        '  SomeType |',
-        '  AnotherType;',
-        '// following non-blank line',
+        '// non-blank line before first group',
+        'export type AliasedType = type;',
+        'export type AnotherAliasedType = type2;',
+        '// non-blank line between groups',
+        '    type IndentedAlias = type3;',
+        '// non-blank line after second group',
     );
     let expectedOutput: string;
     let config: LineLintConfig;
@@ -42,7 +39,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "remove: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'remove', 'none');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -55,20 +52,19 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "remove: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'remove', 'before');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'before');
         });
 
-        it('should remove blank lines before each individual multiline type alias', () => {
+        it('should remove blank lines before each group of consecutive single line type aliases', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
-                'export type ExtendedType<T> = T & {',
-                '  [P in keyof T]: T[P] & BaseType<T>;',
-                '};',
-                'export type UnionType =',
-                '  SomeType |',
-                '  AnotherType;',
+                '// non-blank line before first group',
+                'export type AliasedType = type;',
+                'export type AnotherAliasedType = type2;',
                 '',
-                '// following non-blank line',
+                '// non-blank line between groups',
+                '    type IndentedAlias = type3;',
+                '',
+                '// non-blank line after second group',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -79,20 +75,19 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "remove: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'remove', 'after');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'after');
         });
 
-        it('should remove blank lines after each individual multiline type alias', () => {
+        it('should remove blank lines after each group of consecutive single line type aliases', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
+                '// non-blank line before first group',
                 '',
-                'export type ExtendedType<T> = T & {',
-                '  [P in keyof T]: T[P] & BaseType<T>;',
-                '};',
-                'export type UnionType =',
-                '  SomeType |',
-                '  AnotherType;',
-                '// following non-blank line',
+                'export type AliasedType = type;',
+                'export type AnotherAliasedType = type2;',
+                '// non-blank line between groups',
+                '',
+                '    type IndentedAlias = type3;',
+                '// non-blank line after second group',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -103,10 +98,10 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "remove: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'remove', 'both');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'both');
         });
 
-        it('should remove blank lines both before and after each individual multiline type alias', () => {
+        it('should remove blank lines both before and after each group of consecutive single line type aliases', () => {
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(inputSnippetWithoutBlanks);
         });
 
@@ -115,7 +110,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "insert: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'insert', 'none');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -128,21 +123,19 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "insert: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'insert', 'before');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'before');
         });
 
-        it('should insert a blank line before each individual multiline type alias', () => {
+        it('should insert a blank line before each group of consecutive single line type aliases', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
+                '// non-blank line before first group',
                 '',
-                'export type ExtendedType<T> = T & {',
-                '  [P in keyof T]: T[P] & BaseType<T>;',
-                '};',
+                'export type AliasedType = type;',
+                'export type AnotherAliasedType = type2;',
+                '// non-blank line between groups',
                 '',
-                'export type UnionType =',
-                '  SomeType |',
-                '  AnotherType;',
-                '// following non-blank line',
+                '    type IndentedAlias = type3;',
+                '// non-blank line after second group',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -153,21 +146,19 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "insert: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'insert', 'after');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'after');
         });
 
-        it('should insert a blank line after each individual multiline type alias', () => {
+        it('should insert a blank line after each group of consecutive single line type aliases', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
-                'export type ExtendedType<T> = T & {',
-                '  [P in keyof T]: T[P] & BaseType<T>;',
-                '};',
+                '// non-blank line before first group',
+                'export type AliasedType = type;',
+                'export type AnotherAliasedType = type2;',
                 '',
-                'export type UnionType =',
-                '  SomeType |',
-                '  AnotherType;',
+                '// non-blank line between groups',
+                '    type IndentedAlias = type3;',
                 '',
-                '// following non-blank line',
+                '// non-blank line after second group',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -178,10 +169,10 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
     describe('has option "insert: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('individual-multiline-type-alias', 'insert', 'both');
+            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'both');
         });
 
-        it('should insert blank lines both before and after each individual multiline type alias', () => {
+        it('should insert blank lines both before and after each group of consecutive single line type aliases', () => {
             expectedOutput = inputSnippetWithBlanks;
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -194,22 +185,20 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'individual-multiline-type-alias': { remove: 'before', insert: 'after' } },
+                rules: { 'consecutive-single-line-type-aliases': { remove: 'before', insert: 'after' } },
             };
         });
 
         it('should first apply the removal and then the insertion', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
-                'export type ExtendedType<T> = T & {',
-                '  [P in keyof T]: T[P] & BaseType<T>;',
-                '};',
+                '// non-blank line before first group',
+                'export type AliasedType = type;',
+                'export type AnotherAliasedType = type2;',
                 '',
-                'export type UnionType =',
-                '  SomeType |',
-                '  AnotherType;',
+                '// non-blank line between groups',
+                '    type IndentedAlias = type3;',
                 '',
-                '// following non-blank line',
+                '// non-blank line after second group',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);

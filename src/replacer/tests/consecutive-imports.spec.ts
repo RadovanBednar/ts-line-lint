@@ -193,7 +193,7 @@ export function consecutiveImportsRuleTestSuite(): void {
 
     });
 
-    describe('has options "remove: after, insert: before"', () => {
+    describe('has both "remove" and "insert" options', () => {
 
         beforeEach(() => {
             config = {
@@ -202,22 +202,21 @@ export function consecutiveImportsRuleTestSuite(): void {
             };
         });
 
-        it('should first remove all blank lines before and \
-        then insert one blank line after each group of consecutive imports', () => {
-                expectedOutput = createMultilineString(
-                    'import {SingleImportedItem} from "abc";',
-                    'import {AnotherSingleImportedItem} from "./def";',
-                    'import {YetAnotherSingleImportedItem} from "./ghi";',
-                    'import {',
-                    '  FirstOfSeveralImportedItems,',
-                    '  SecondOfSeveralImportedItems',
-                    '} from "../jkl";',
-                    '',
-                    '// non-blank line',
-                );
+        it('should first apply the removal and then the insertion', () => {
+            expectedOutput = createMultilineString(
+                'import {SingleImportedItem} from "abc";',
+                'import {AnotherSingleImportedItem} from "./def";',
+                'import {YetAnotherSingleImportedItem} from "./ghi";',
+                'import {',
+                '  FirstOfSeveralImportedItems,',
+                '  SecondOfSeveralImportedItems',
+                '} from "../jkl";',
+                '',
+                '// non-blank line',
+            );
 
-                expectReplacerWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
-            });
+            expectReplacerWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+        });
 
     });
 

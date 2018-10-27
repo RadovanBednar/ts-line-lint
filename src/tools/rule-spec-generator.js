@@ -153,7 +153,7 @@ export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {
 
     });
 
-    describe('has options "remove: after, insert: before"', () => {
+    describe('has both "remove" and "insert" options', () => {
 
         beforeEach(() => {
             config = {
@@ -162,8 +162,7 @@ export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {
             };
         });
 
-        it('should first remove all blank lines before and \
-        then insert one blank line after each %SNIPPET_DESC%', () => {
+        it('should first apply the removal and then the insertion', () => {
                 expectedOutput = createMultilineString(
                     // REPLACE THIS MANUALLY
                 );

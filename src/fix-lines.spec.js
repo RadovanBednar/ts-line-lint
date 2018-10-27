@@ -242,57 +242,6 @@ describe('fixLines function', () => {
 
     });
 
-    describe('type aliases', () => {
-
-        it('should add blank lines around each group of consecutive exported type aliases', () => {
-            inputSnippet = createMultilineString(
-                '// preceding non-blank line',
-                'export type AliasedType = type;',
-                'export type AnotherAliasedType = type2;',
-                '// following non-blank line',
-            );
-            expectedOutput = createMultilineString(
-                '// preceding non-blank line',
-                '',
-                'export type AliasedType = type;',
-                'export type AnotherAliasedType = type2;',
-                '',
-                '// following non-blank line',
-            );
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-        it('should add blank lines around each multiline exported type alias', () => {
-            inputSnippet = createMultilineString(
-                '// preceding non-blank line',
-                'export type ExtendedType<T> = T & {',
-                '  [P in keyof T]: T[P] & BaseType<T>;',
-                '};',
-                'export type UnionType =',
-                '  SomeType |',
-                '  AnotherType;',
-                '// following non-blank line',
-            );
-            expectedOutput = createMultilineString(
-                '// preceding non-blank line',
-                '',
-                'export type ExtendedType<T> = T & {',
-                '  [P in keyof T]: T[P] & BaseType<T>;',
-                '};',
-                '',
-                'export type UnionType =',
-                '  SomeType |',
-                '  AnotherType;',
-                '',
-                '// following non-blank line',
-            );
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-    });
-
     describe('interfaces', () => {
 
         it('should add blank lines around each interface declaration', () => {

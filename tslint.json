@@ -5,6 +5,12 @@
     ],
     "rules": {
         "array-type": [true, "generic"],
+        "ban": [
+            true,
+            "eval",
+            ["describe", "only"],
+            ["it", "only"]
+        ],
         "interface-name": [true, "never-prefix"],
         "object-literal-sort-keys": false,
         "quotemark": [true, "single", "avoid-template"],
