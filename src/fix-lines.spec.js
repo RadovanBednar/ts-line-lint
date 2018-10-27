@@ -360,7 +360,7 @@ describe('fixLines function', () => {
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
-        it('should NOT add blank line between comment and subsequent function declaration', () => {
+        it('should NOT add blank line between tslint:disable-next-line comment and subsequent function declaration', () => {
             inputSnippet = createMultilineString(
                 '/* tslint:disable-next-line:typedef */',
                 'function bar() {',
@@ -641,6 +641,30 @@ describe('fixLines function', () => {
             expectSnippet(inputSnippet).toConvertTo(expectedOutput);
         });
 
+        it('should add blank lines around abstract accessors', () => {
+            for (const modifier of accessModifiers) {
+                inputSnippet = createMultilineString([
+                    'abstract class Foo {',
+                    `  ${modifier}abstract get value();`,
+                    `  ${modifier}abstract set value(v: number);`,
+                    '}',
+                    '',
+                ]);
+                expectedOutput = createMultilineString([
+                    'abstract class Foo {',
+                    '',
+                    `  ${modifier}abstract get value();`,
+                    '',
+                    `  ${modifier}abstract set value(v: number);`,
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+        });
+
     });
 
     describe('constructors', () => {
@@ -782,6 +806,30 @@ describe('fixLines function', () => {
 
         });
 
+        it('should add blank lines around abstract methods', () => {
+            for (const modifier of accessModifiers) {
+                inputSnippet = createMultilineString([
+                    'abstract class Foo {',
+                    `  ${modifier}abstract getBar();`,
+                    `  ${modifier}abstract setBar(bar: Bar);`,
+                    '}',
+                    '',
+                ]);
+                expectedOutput = createMultilineString([
+                    'abstract class Foo {',
+                    '',
+                    `  ${modifier}abstract getBar();`,
+                    '',
+                    `  ${modifier}abstract setBar(bar: Bar);`,
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+        });
+
     });
 
     describe('unit tests', () => {
@@ -889,7 +937,60 @@ describe('fixLines function', () => {
             }
         });
 
-        it('should add blank lines around "before(Each|All)", "after(Each|All)" and "it" statements', () => {
+        it('should add blank lines around uniline "before(Each|All)" and "after(Each|All)" statements', () => {
+            inputSnippet = createMultilineString(
+                '// preceding non-blank line',
+                'describe("first test suite", () => {',
+                '  before(stuffToDoBeforeAll);',
+                '  // non-blank line',
+                '  beforeAll(stuffToDoBeforeAll);',
+                '  // non-blank line',
+                '  beforeEach(stuffToDoBeforeEach);',
+                '  // non-blank line',
+                '  after(stuffToDoAfterAll);',
+                '  // non-blank line',
+                '  afterAll(stuffToDoAfterAll);',
+                '  // non-blank line',
+                '  afterEach((stuffToDoAfterEach);',
+                '});',
+                '// following non-blank line',
+            );
+            expectedOutput = createMultilineString(
+                '// preceding non-blank line',
+                '',
+                'describe("first test suite", () => {',
+                '',
+                '  before(stuffToDoBeforeAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  beforeAll(stuffToDoBeforeAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  beforeEach(stuffToDoBeforeEach);',
+                '',
+                '  // non-blank line',
+                '',
+                '  after(stuffToDoAfterAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  afterAll(stuffToDoAfterAll);',
+                '',
+                '  // non-blank line',
+                '',
+                '  afterEach((stuffToDoAfterEach);',
+                '',
+                '});',
+                '',
+                '// following non-blank line',
+            );
+
+            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+        });
+
+        it('should add blank lines around multiline "before(Each|All)", "after(Each|All)" and "it" statements', () => {
             inputSnippet = createMultilineString(
                 '// preceding non-blank line',
                 'describe("first test suite", () => {',
@@ -1026,6 +1127,37 @@ describe('fixLines function', () => {
     });
 
     describe('final code refinements', () => {
+
+        it('should remove empty lines after tslint:disable-next-line comment', () => {
+            inputSnippet = createMultilineString([
+                '// tslint:disable-next-line:typedef',
+                '',
+                'function someUntypeableFunction(params: any) {',
+                '  // implementation',
+                '}',
+                '',
+                '  /* tslint:disable-next-line:typedef */',
+                '',
+                '  public someUntypeableMethod(params: any) {',
+                '    // implementation',
+                '  }',
+                '',
+            ]);
+            expectedOutput = createMultilineString([
+                '// tslint:disable-next-line:typedef',
+                'function someUntypeableFunction(params: any) {',
+                '  // implementation',
+                '}',
+                '',
+                '  /* tslint:disable-next-line:typedef */',
+                '  public someUntypeableMethod(params: any) {',
+                '    // implementation',
+                '  }',
+                '',
+            ]);
+
+            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+        });
 
         it('should remove empty lines from the beginning of a file', () => {
             inputSnippet = createMultilineString(

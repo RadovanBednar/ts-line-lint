@@ -32,7 +32,7 @@ Warning: No directory specified, using "." as fallback.
 
 Nonetheless, it's better to specify the source directories explicitly, so that the synchronous file search would be faster.
 
-`node_modules` directory as well as any hidden directories will be ignored in the file search process, whether specified explicitly or implicitly via `.`. The following two commands will therefore yield exactly 0 \*.ts files to process.
+`node_modules` directory as well as any hidden directories will be ignored in the file search process, whether specified explicitly or implicitly via `.`. The following two commands will therefore yield exactly 0 \*.ts files to process:
 ```
 $ ts-line-lint node_modules
 Warning: Skipping excluded directory "node_modules".
@@ -42,10 +42,12 @@ Warning: Skipping hidden directory ".git".
 Found 0 files to process...
 ```
 
-Accessing any directories outside of the project is forbidden, therefore any attempt to specify a directory starting with `..` will raise an error and terminate the program before any file processing takes place. This control mechanism can be circumvented by specifying an absolute path, but why would anyone do that is beyond comprehension of the tool's author :)
+To prevent accidental changes in any files outside the project, only relative paths to the current project's subdirectories may be specified. Specifying a path starting with `..` or an absolute path will therefore raise an error and terminate the program before any file processing takes place:
 ```
 $ ts-line-lint ../another-project
-Error: Invalid directory "../another-project". Directories outside of CWD are not allowed.
+Error: Invalid directory "../another-project". Only relative paths to project subdirectories are allowed.
+$ ts-line-lint /absolute/path/to/no/matter/where
+Error: Invalid directory "/absolute/path/to/no/matter/where". Only relative paths to project subdirectories are allowed.
 ```
 
 ## Ignored paths
@@ -321,6 +323,25 @@ In the second phase blank lines are added in these situations:
   }
   ```
   </details>
+* <details><summary style="cursor: pointer">around any abstract method or property accessor,</summary>
+
+  ```javascript
+  abstract class Foo {
+    abstract set bar(v: number);
+    protected abstract getBaz();
+  }
+  ```
+  becomes
+  ```javascript
+  abstract class Foo {
+
+    abstract set bar(v: number);
+
+    protected abstract getBaz();
+
+  }
+  ```
+  </details>
 * <details><summary style="cursor: pointer">around any class property or method with @Effect() decorator,</summary>
 
   ```javascript
@@ -412,6 +433,7 @@ In the second phase blank lines are added in these situations:
 
 ## Cleanup
 In the third phase any artifacts possibly introduced by the previous phases are fixed:
+* any number of blank lines following a tslint:disable-next-line comment is removed,
 * any number of blank lines at the beginning of the file is removed,
 * any number of consecutive blank lines is replaced by a single blank line,
 * any number of blank lines at the end of the file is replaced by a single blank line.

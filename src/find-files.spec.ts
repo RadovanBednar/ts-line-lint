@@ -1,6 +1,6 @@
-const fs = require('mock-fs');
-const expect = require('chai').expect;
-const findFiles = require('./find-files');
+import { expect } from 'chai';
+import * as fs from 'mock-fs';
+import { findFiles } from './find-files';
 
 describe('findFiles function', () => {
 
@@ -12,12 +12,12 @@ describe('findFiles function', () => {
         const someFolderTsFiles = [
             'src/some-folder/first-file.ts',
             'src/some-folder/second-file.ts',
-            'src/some-folder/third-file.ts'
+            'src/some-folder/third-file.ts',
         ];
         const someOtherFolderTsFiles = [
-            'src/some-other-folder/another-file.ts',
             'src/some-other-folder/some-file.ts',
-            'src/some-other-folder/yet-another-file.ts'
+            'src/some-other-folder/some-other-file.ts',
+            'src/some-other-folder/yet-another-file.ts',
         ];
         const thirdFolderTsFile = 'src/third-folder/lonely-file.ts';
         const allSrcTsFiles = [...someFolderTsFiles, ...someOtherFolderTsFiles, thirdFolderTsFile];
@@ -26,16 +26,6 @@ describe('findFiles function', () => {
 
             it('should return an array of all the *.ts files', () => {
                 expect(findFiles(['src'])).to.deep.equal(allSrcTsFiles);
-            });
-
-        });
-
-        describe('is not an array', () => {
-
-            it('should return an array of all the *.ts files', () => {
-                for (const notArray of [undefined, null, true, 'string', 123, {}]) {
-                    expect(findFiles(['src'], notArray)).to.deep.equal(allSrcTsFiles);
-                }
             });
 
         });
@@ -82,9 +72,10 @@ describe('findFiles function', () => {
         describe('is an array containing a file path and a directory path', () => {
             const ignoredDir = 'src/some-other-folder';
 
-            it('should return an array of all the *.ts files except for those from the ignored directory', () => {
-                expect(findFiles(['src'], [thirdFolderTsFile, ignoredDir])).to.deep.equal(someFolderTsFiles);
-            });
+            it('should return an array of all the *.ts files except for the ignored file \
+            and all those from the ignored directory', () => {
+                    expect(findFiles(['src'], [thirdFolderTsFile, ignoredDir])).to.deep.equal(someFolderTsFiles);
+                });
 
         });
 
@@ -94,21 +85,21 @@ describe('findFiles function', () => {
 
 function setMockFileStructure() {
     fs({
-        'src': {
+        src: {
             'some-folder': {
                 'first-file.ts': 'import {...} ...',
                 'second-file.ts': 'import {...} ...',
-                'third-file.ts': 'import {...} ...',
                 'style.css': 'div {...}',
+                'third-file.ts': 'import {...} ...',
             },
             'some-other-folder': {
                 'some-file.ts': 'import {...} ...',
-                'another-file.ts': 'import {...} ...',
+                'some-other-file.ts': 'import {...} ...',
                 'yet-another-file.ts': 'import {...} ...',
             },
             'third-folder': {
                 'lonely-file.ts': 'import {...} ...',
-            }
-        }
+            },
+        },
     });
 }

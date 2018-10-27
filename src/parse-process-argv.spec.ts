@@ -1,5 +1,7 @@
-const expect = require('chai').expect;
-const parseProcessArgv = require('./parse-process-argv');
+import { expect } from 'chai';
+import { CommandLineOptions, parseProcessArgv } from './parse-process-argv';
+
+process.env.NODE_ENV = 'test';
 
 describe('parseProcessArgv function', () => {
 
@@ -7,10 +9,9 @@ describe('parseProcessArgv function', () => {
         const onlyCurrentDirectory = ['.'];
 
         describe('when there were no args specified', () => {
-            const noArgs = [];
 
             it('should contain only the current directory', () => {
-                whenCalledWith(noArgs).expect('directories').toEqual(onlyCurrentDirectory);
+                whenCalledWith([]).expect('directories').toEqual(onlyCurrentDirectory);
             });
 
         });
@@ -43,11 +44,20 @@ describe('parseProcessArgv function', () => {
 
         });
 
-        describe('when there was a directory outside the CWD specified', () => {
-            const invalidArgs = ['valid-dir', '../invalid-dir'];
+        describe('when there was a relative path starting with .. specified', () => {
+            const argsWithPathToParentDir = ['valid-dir', '../invalid-dir'];
 
             it('should throw an "Invalid directory" error', () => {
-                whenCalledWith(invalidArgs).expectError('Invalid directory');
+                whenCalledWith(argsWithPathToParentDir).expectError('Invalid directory');
+            });
+
+        });
+
+        describe('when there was an absolute path specified', () => {
+            const argsWithAbsolutePath = ['valid-dir', '/absolute/path/is/invalid'];
+
+            it('should throw an "Invalid directory" error', () => {
+                whenCalledWith(argsWithAbsolutePath).expectError('Invalid directory');
             });
 
         });
@@ -167,20 +177,20 @@ describe('parseProcessArgv function', () => {
 
 });
 
-function whenCalledWith(args) {
+function whenCalledWith(args: Array<string>) {
     return {
-        expect: function(prop) {
+        expect(property: keyof CommandLineOptions) {
             return {
-                toEqual: function(value) {
-                    expect(parseProcessArgv(['node', 'path/to/script'].concat(args))[prop]).to.deep.equal(value);
+                toEqual(value: Array<string>) {
+                    expect(parseProcessArgv(args)[property]).to.deep.equal(value);
                 },
-                toBe: function(value) {
-                    expect(parseProcessArgv(['node', 'path/to/script'].concat(args))[prop]).to.equal(value);
+                toBe(value: Array<string>) {
+                    expect(parseProcessArgv(args)[property]).to.equal(value);
                 },
-            }
+            };
         },
-        expectError: function(msg) {
-            expect(() => parseProcessArgv(['node', 'path/to/script'].concat(args))).to.throw(msg);
-        }
-    }
+        expectError(message: string) {
+            expect(() => parseProcessArgv(args)).to.throw(message);
+        },
+    };
 }

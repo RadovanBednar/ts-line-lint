@@ -7,14 +7,17 @@ function fixLines(inputCode, indentSize = 4) {
     const blankPrecededEndOfBlock = /\n+(\n[ \t]*})/mg;
     const blankUnfollowedLastImport = /(^import .*\n|^} from .*\n)(?!^(?:import|[ \t]+|\n))/mg;
     const consecutiveTypeAliases = /((?:^(export )?type .*;\n)+)/mg;
-    const multilineTypeAlias = /(^([ \t]*)(?:export )?type .*\n(?:.*\n)+?\2[^;]*;)/mg;
+    const multilineTypeAlias = /(^([ \t]*)(?:export )?type .*\n(?:[ \t]+.*\n)+?\2[^;]*;)/mg;
     const interfaceDeclaration = /(^([ \t]*)(?:export )?interface \w+ {\n(?:.*\n)*?\2})/mg;
-    const functionDeclaration = /(^([ \t]*)(?:(?:\/\/|\/\*) .*\n\2)?(?:async )?function .*[{,]\n(?:.*\n)*?\2})/mg;
+    const functionDeclaration = /(^([ \t]*)(?:async )?function .*[{,]\n(?:.*\n)*?\2})/mg;
     const classDeclarationWithOptionalDecorator = /(^([ \t]*)(?:@\w+\((?:{\n(?:.*\n)*?\2})?\)\n\2)?.*\bclass\b.*\n(?:.*\n)*?\2})/mg;
-    const blockInsideClass = /(^([ \t]*)(?:@\w+\([\w'"]*\)\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:.*\n)*?\2}\n)/mg;
+    const blockInsideClass = /(^([ \t]*)(?:@\w+\([\w'"]*\)\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:(?!\2};).*\n)*?\2}\n)/mg;
+    const abstractMethodOrAccessor = /(^([ \t]*)(?:public |protected |private )?abstract [^(\n]*\(.*\n)/mg;
     const propertyWithEffectDecorator = /(^([ \t]*)@Effect\([^)]*\)) (.*\n(?:.*\n)*?\2\S.*)/mg;
-    const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?|after(Each|All)?|it)\(.*\n(?:.*\n)*?\2\S.*)/mg;
+    const unilineTestHook = /(^([ \t]*)(before(Each|All)?|after(Each|All)?)\(.*;)/mg;
+    const blockInsideDescribe = /(^([ \t]*)(before(Each|All)?|after(Each|All)?|it)\(.*{\n(?:.*\n)*?\2\S.*)/mg;
     const variouslyIndentedDescribeBlocks = generateNestedDescribeBlockPatterns(indentSize, 4);
+    const tslintDisableNextLineComment = /(^([ \t]*)\/(?:\/|\*) tslint:disable-next-line.*\n)\n+/mg;
     const leadingBlank = /^\n+/g;
     const duplicateBlanks = /(?<=\n)(\n+)/g;
     const excessTrailingBlanks = /(?<=\n)(\n+)$/g;
@@ -43,7 +46,9 @@ function fixLines(inputCode, indentSize = 4) {
       .replace(functionDeclaration, surroundWithBlanks)
       .replace(classDeclarationWithOptionalDecorator, surroundWithBlanks)
       .replace(blockInsideClass, surroundWithBlanks)
+      .replace(abstractMethodOrAccessor, surroundWithBlanks)
       .replace(propertyWithEffectDecorator, addNewlineAfterDecoratorAndSurroundWithBlanks)
+      .replace(unilineTestHook, surroundWithBlanks)
       .replace(blockInsideDescribe, surroundWithBlanks);
 
     variouslyIndentedDescribeBlocks.forEach((pattern) => {
@@ -52,6 +57,7 @@ function fixLines(inputCode, indentSize = 4) {
 
     //cleanup
     return codeWithBlanksInserted
+      .replace(tslintDisableNextLineComment, removeFollowingBlank)
       .replace(leadingBlank, removeCompletely)
       .replace(duplicateBlanks, replaceWithSingleBlank)
       .replace(excessTrailingBlanks, removeCompletely);
