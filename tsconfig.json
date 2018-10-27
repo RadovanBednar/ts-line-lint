@@ -9,6 +9,7 @@
   "exclude": [
     "node_modules",
     "tsDist",
-    "dist"
+    "build",
+    "tools"
   ]
 }
