@@ -1,6 +1,5 @@
 import * as fs from 'fs';
-
-const fixLines = require('./fix-lines');
+import fixLines = require('./fix-lines');
 
 export function processFile(file: string): boolean {
     const content = fs.readFileSync(file, 'utf-8');

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { parseProcessArgv, CommandLineOptions } from './parse-process-argv';
+import { CommandLineOptions, parseProcessArgv } from './parse-process-argv';
 
 process.env.NODE_ENV = 'test';
 
@@ -119,15 +119,15 @@ describe('parseProcessArgv function', () => {
 
 function whenCalledWith(args: Array<string>) {
     return {
-        expect: function(property: keyof CommandLineOptions) {
+        expect(property: keyof CommandLineOptions) {
             return {
-                toEqual: function(value: Array<string>) {
+                toEqual(value: Array<string>) {
                     expect(parseProcessArgv(args)[property]).to.deep.equal(value);
-                }
-            }
+                },
+            };
         },
-        expectError: function(message: string) {
+        expectError(message: string) {
             expect(() => parseProcessArgv(args)).to.throw(message);
-        }
-    }
+        },
+    };
 }

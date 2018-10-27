@@ -11,10 +11,10 @@ export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
     return {
         directories: getDirs(),
         ignore: getIgnored(),
-    }
+    };
 
     function getDirs(): Array<string> {
-        let dirs = args.some(isArgFlag) ? args.slice(0, args.findIndex(isArgFlag)) : args;
+        const dirs = args.some(isArgFlag) ? args.slice(0, args.findIndex(isArgFlag)) : args;
 
         if (dirs.length) {
             assertOnlyRelativePathsToSubdirectoriesSpecified(dirs);
@@ -65,7 +65,7 @@ export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
         const flagArgs = args.slice(args.indexOf(flag) + 1);
 
         if (flagArgs.some(isArgFlag)) {
-            return flagArgs.slice(0, flagArgs.findIndex(isArgFlag))
+            return flagArgs.slice(0, flagArgs.findIndex(isArgFlag));
         }
         return flagArgs;
     }

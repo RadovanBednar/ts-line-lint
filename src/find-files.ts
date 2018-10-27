@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 import { log } from './logger';
 
 export function findFiles(dirs: Array<string>, ignore?: Array<string>): Array<string> {
@@ -12,7 +12,7 @@ function findRecursively(dir: string, ignore?: Array<string>): Array<string> {
     const pattern = /\.ts$/;
     const nodeModulesPattern = /(^|\/)node_modules\/?$/;
     const hiddenDirectoryPattern = /(^|\/)\.[^\/.]+\/?$/;
-    let found: Array<string> = [];
+    const found: Array<string> = [];
 
     assertDirectoryExists(dir);
 
@@ -22,7 +22,7 @@ function findRecursively(dir: string, ignore?: Array<string>): Array<string> {
         log.warning(`Skipping hidden directory "${dir}".`);
     } else {
         for (const file of fs.readdirSync(dir)) {
-            let filename = path.join(dir, file);
+            const filename = path.join(dir, file);
 
             if (fs.lstatSync(filename).isDirectory()) {
                 found.push(...findRecursively(filename, ignore));
@@ -37,10 +37,12 @@ function findRecursively(dir: string, ignore?: Array<string>): Array<string> {
 
 function assertDirectoryExists(dirname: string): void {
     if (!fs.existsSync(dirname)) {
-        throw Error(`Couldn't find directory "${dirname}".`)
+        throw Error(`Couldn't find directory "${dirname}".`);
     }
 }
 
 function isIgnored(filename: string, ignorePatterns?: Array<string>): boolean {
-    return ignorePatterns ? ignorePatterns.some((pattern) => filename.indexOf(pattern) === 0) : false;
+    return ignorePatterns
+        ? ignorePatterns.some((pattern) => filename.indexOf(pattern) === 0)
+        : false;
 }

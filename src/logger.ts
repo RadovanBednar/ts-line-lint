@@ -1,7 +1,7 @@
 class Logger {
 
-    public newline(number: number): Logger {
-        for (let i = 0; i < number; i++) {
+    public newline(n: number): Logger {
+        for (let i = 0; i < n; i++) {
             process.stdout.write('\n');
         }
         return this;

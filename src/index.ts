@@ -1,7 +1,7 @@
 import { findFiles } from './find-files';
-import { processFile } from './process-file';
-import { parseProcessArgv } from './parse-process-argv';
 import { log } from './logger';
+import { parseProcessArgv } from './parse-process-argv';
+import { processFile } from './process-file';
 
 try {
     const argv = parseProcessArgv();
