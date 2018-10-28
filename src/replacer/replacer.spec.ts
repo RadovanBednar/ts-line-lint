@@ -5,6 +5,7 @@ import { consecutiveSingleLineTypeAliasesRuleTestSuite } from './tests/consecuti
 import { individualImportRuleTestSuite } from './tests/individual-import.spec';
 import { individualMultilineTypeAliasRuleTestSuite } from './tests/individual-multiline-type-alias.spec';
 import { interfaceDeclarationRuleTestSuite } from './tests/interface-declaration.spec';
+import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
 
 describe('Replacer', () => {
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
@@ -14,4 +15,5 @@ describe('Replacer', () => {
     describe('when "individual-multiline-type-alias" rule', individualMultilineTypeAliasRuleTestSuite);
     describe('when "consecutive-single-line-type-aliases" rule', consecutiveSingleLineTypeAliasesRuleTestSuite);
     describe('when "interface-declaration" rule', interfaceDeclarationRuleTestSuite);
+    describe('when "single-line-variable-declaration" rule', singleLineVariableDeclarationRuleTestSuite);
 });

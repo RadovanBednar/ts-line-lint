@@ -27,7 +27,8 @@ export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {
     );
     let expectedOutput: string;
     let config: LineLintConfig;
-
+console.log(inputSnippetWithBlanks);
+console.log(inputSnippetWithoutBlanks);
     describe('is not specified', () => {
 
         it('should only apply cleanup replacements', () => {

@@ -37,7 +37,7 @@
                 "interface-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
-                "variable-declaration": {
+                "single-line-variable-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
                 "function-declaration": {
@@ -49,7 +49,7 @@
                 "class-property-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
-                "method-or-accessor-declaration": {
+                "class-method-or-accessor-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
                 "abstract-method-or-accessor": {
