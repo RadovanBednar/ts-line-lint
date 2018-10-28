@@ -4,56 +4,31 @@ import { createMockConfig } from './create-mock-config';
 import { expectReplacerWithConfig } from './replacer-expects';
 
 export function singleLineVariableDeclarationRuleTestSuite(): void {
-    const inputSnippetWithBlanks = createMultilineString(
-        '// non-blank-line',
-        '',
-        'var topLevelVar = "foo";',
-        '',
-        '// non-blank-line',
-        '',
-        'let topLevelLet = "foo";',
-        '',
-        '// non-blank-line',
-        '',
-        'const topLevelConst = "foo";',
-        '',
-        '// non-blank-line',
-        '',
-        '  var indentedLevelVar = "bar";',
-        '',
-        '// non-blank-line',
-        '',
-        '  let indentedLevelLet = "bar";',
-        '',
-        '// non-blank-line',
-        '',
-        '  const indentedLevelConst = "bar";',
-        '',
-        '// non-blank-line',
-    );
-    const inputSnippetWithoutBlanks = createMultilineString(
-        '// non-blank-line',
-        'var topLevelVar = "foo";',
-        '// non-blank-line',
-        'let topLevelLet = "foo";',
-        '// non-blank-line',
-        'const topLevelConst = "foo";',
-        '// non-blank-line',
-        '  var indentedLevelVar = "bar";',
-        '// non-blank-line',
-        '  let indentedLevelLet = "bar";',
-        '// non-blank-line',
-        '  const indentedLevelConst = "bar";',
-        '// non-blank-line',
-    );
-    let expectedOutput: string;
     let config: LineLintConfig;
+    const noBlanksAround = createMultilineString(
+        '// non-blank line',
+        'var topLevelVar = "foo";',
+        '// non-blank line',
+        'let topLevelLet = "foo";',
+        '// non-blank line',
+        'const topLevelConst = "foo";',
+        '// non-blank line',
+        '  var indentedLevelVar = "bar";',
+        '// non-blank line',
+        '  let indentedLevelLet = "bar";',
+        '// non-blank line',
+        '  const indentedLevelConst = "bar";',
+        '// non-blank line',
+    );
+    const blanksAround = noBlanksAround.replace(/(\/\/ non-blank line)/g, '\n$1\n').slice(1, -1);
+    const blanksOnlyAfter = noBlanksAround.replace(/(\/\/ non-blank line)/g, '\n$1').slice(1);
+    const blanksOnlyBefore = noBlanksAround.replace(/(\/\/ non-blank line)/g, '$1\n').slice(0, -1);
 
     describe('is not specified', () => {
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
+            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -65,8 +40,8 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
+            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -78,29 +53,7 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should remove blank lines before each single line variable declaration', () => {
-            expectedOutput = createMultilineString(
-                '// non-blank-line',
-                'var topLevelVar = "foo";',
-                '',
-                '// non-blank-line',
-                'let topLevelLet = "foo";',
-                '',
-                '// non-blank-line',
-                'const topLevelConst = "foo";',
-                '',
-                '// non-blank-line',
-                '  var indentedLevelVar = "bar";',
-                '',
-                '// non-blank-line',
-                '  let indentedLevelLet = "bar";',
-                '',
-                '// non-blank-line',
-                '  const indentedLevelConst = "bar";',
-                '',
-                '// non-blank-line',
-            );
-
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
+            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -112,29 +65,7 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should remove blank lines after each single line variable declaration', () => {
-            expectedOutput = createMultilineString(
-                '// non-blank-line',
-                '',
-                'var topLevelVar = "foo";',
-                '// non-blank-line',
-                '',
-                'let topLevelLet = "foo";',
-                '// non-blank-line',
-                '',
-                'const topLevelConst = "foo";',
-                '// non-blank-line',
-                '',
-                '  var indentedLevelVar = "bar";',
-                '// non-blank-line',
-                '',
-                '  let indentedLevelLet = "bar";',
-                '// non-blank-line',
-                '',
-                '  const indentedLevelConst = "bar";',
-                '// non-blank-line',
-            );
-
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
+            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -146,7 +77,7 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should remove blank lines both before and after each single line variable declaration', () => {
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(inputSnippetWithoutBlanks);
+            expectReplacerWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
         });
 
     });
@@ -158,8 +89,8 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
+            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -171,29 +102,7 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should insert a blank line before each single line variable declaration', () => {
-            expectedOutput = createMultilineString(
-                '// non-blank-line',
-                '',
-                'var topLevelVar = "foo";',
-                '// non-blank-line',
-                '',
-                'let topLevelLet = "foo";',
-                '// non-blank-line',
-                '',
-                'const topLevelConst = "foo";',
-                '// non-blank-line',
-                '',
-                '  var indentedLevelVar = "bar";',
-                '// non-blank-line',
-                '',
-                '  let indentedLevelLet = "bar";',
-                '// non-blank-line',
-                '',
-                '  const indentedLevelConst = "bar";',
-                '// non-blank-line',
-            );
-
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
+            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -205,29 +114,7 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should insert a blank line after each single line variable declaration', () => {
-            expectedOutput = createMultilineString(
-                '// non-blank-line',
-                'var topLevelVar = "foo";',
-                '',
-                '// non-blank-line',
-                'let topLevelLet = "foo";',
-                '',
-                '// non-blank-line',
-                'const topLevelConst = "foo";',
-                '',
-                '// non-blank-line',
-                '  var indentedLevelVar = "bar";',
-                '',
-                '// non-blank-line',
-                '  let indentedLevelLet = "bar";',
-                '',
-                '// non-blank-line',
-                '  const indentedLevelConst = "bar";',
-                '',
-                '// non-blank-line',
-            );
-
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
+            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -239,9 +126,7 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should insert blank lines both before and after each single line variable declaration', () => {
-            expectedOutput = inputSnippetWithBlanks;
-
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
+            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
         });
 
     });
@@ -256,29 +141,7 @@ export function singleLineVariableDeclarationRuleTestSuite(): void {
         });
 
         it('should first apply the removal and then the insertion', () => {
-            expectedOutput = createMultilineString(
-                '// non-blank-line',
-                'var topLevelVar = "foo";',
-                '',
-                '// non-blank-line',
-                'let topLevelLet = "foo";',
-                '',
-                '// non-blank-line',
-                'const topLevelConst = "foo";',
-                '',
-                '// non-blank-line',
-                '  var indentedLevelVar = "bar";',
-                '',
-                '// non-blank-line',
-                '  let indentedLevelLet = "bar";',
-                '',
-                '// non-blank-line',
-                '  const indentedLevelConst = "bar";',
-                '',
-                '// non-blank-line',
-            );
-
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
+            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
