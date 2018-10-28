@@ -8,7 +8,7 @@ export const patternMap: Dictionary<RegExp> = {
     'interface-declaration': /(^([ \t]*)(?:export )?interface \w+ {\n(?:.*\n)*?\2}\n)/mg,
     'single-line-variable-declaration': /(^[ \t]*(?:var|let|const) [^;\n]*;\n)/mg,
     'multiline-variable-declaration': /(^[ \t]*(?:var|let|const) [^;]*\n[^;]*;\n)/mg,
-    // 'function-declaration': //mg,
+    'function-declaration': /(^([ \t]*)(?:async )?function .*[{,]\n(?:.*\n)*?\2}\n)/mg,
     // 'class-declaration': //mg,
     // 'class-property-declaration': //mg,
     // 'method-or-accessor-declaration': //mg,
@@ -19,6 +19,7 @@ export const patternMap: Dictionary<RegExp> = {
     // 'unit-test-hook-statement-block': //mg,
     // 'unit-test-it-statement': //mg,
 
+    'tslint-disable-next-line-comment': /(^[ \t]*\/(?:\/|\*) tslint:disable-next-line.*\n)\n+/mg,
     'leading-blank': /^\n+/g,
     'duplicate-blanks': /(?<=\n)(\n+)/g,
     'excess-trailing-blanks': /(?<=\n)(\n+)$/g,

@@ -8,6 +8,7 @@ import { interfaceDeclarationRuleTestSuite } from './tests/interface-declaration
 import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
 import { multilineVariableDeclarationRuleTestSuite } from './tests/multiline-variable-declaration.spec';
 import { functionDeclarationRuleTestSuite } from './tests/function-declaration.spec';
+import { classDeclarationRuleTestSuite } from './tests/class-declaration.spec';
 
 describe('Replacer', () => {
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
@@ -19,4 +20,5 @@ describe('Replacer', () => {
     describe('when "interface-declaration" rule', interfaceDeclarationRuleTestSuite);
     describe('when "single-line-variable-declaration" rule', singleLineVariableDeclarationRuleTestSuite);
     describe('when "multi-line-variable-declaration" rule', multilineVariableDeclarationRuleTestSuite);
+    describe('when "function-declaration" rule', functionDeclarationRuleTestSuite);
 });

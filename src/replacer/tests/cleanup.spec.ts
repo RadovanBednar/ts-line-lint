@@ -5,6 +5,37 @@ export function cleanupTestSuite(): void {
     let inputSnippet: string;
     let expectedOutput: string;
 
+    it('should remove empty lines after tslint:disable-next-line comment', () => {
+        inputSnippet = createMultilineString(
+            '// tslint:disable-next-line:typedef',
+            '',
+            'function someUntypeableFunction(params: any) {',
+            '  // implementation',
+            '}',
+            '',
+            '  /* tslint:disable-next-line:typedef */',
+            '',
+            '  public someUntypeableNestedMethod(params: any) {',
+            '    // implementation',
+            '  }',
+            '',
+        );
+        expectedOutput = createMultilineString(
+            '// tslint:disable-next-line:typedef',
+            'function someUntypeableFunction(params: any) {',
+            '  // implementation',
+            '}',
+            '',
+            '  /* tslint:disable-next-line:typedef */',
+            '  public someUntypeableNestedMethod(params: any) {',
+            '    // implementation',
+            '  }',
+            '',
+        );
+
+        expectReplacerToConvert(inputSnippet).to(expectedOutput);
+    });
+
     it('should remove empty lines from the beginning of a file', () => {
         inputSnippet = createMultilineString(
             '',

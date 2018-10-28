@@ -98,6 +98,7 @@ export class Replacer {
 
     private prepareCleanupPipeline(): ReplacementPipeline {
         return [
+            [patternMap['tslint-disable-next-line-comment'], '$1'],
             [patternMap['leading-blank'], ''],
             [patternMap['duplicate-blanks'], '\n'],
             [patternMap['excess-trailing-blanks'], ''],
