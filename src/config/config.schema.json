@@ -19,6 +19,9 @@
         "rules": {
             "type": "object",
             "properties": {
+                "block-padding": {
+                    "$ref": "#/definitions/rule_options"
+                },
                 "individual-import": {
                     "$ref": "#/definitions/rule_options"
                 },
@@ -35,9 +38,6 @@
                     "$ref": "#/definitions/rule_options"
                 },
                 "variable-declaration": {
-                    "$ref": "#/definitions/rule_options"
-                },
-                "block-content": {
                     "$ref": "#/definitions/rule_options"
                 },
                 "function-declaration": {

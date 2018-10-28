@@ -5,7 +5,6 @@ import { Replacer } from '../replacer';
 // tslint:disable-next-line:typedef
 export function expectReplacerWithConfig(config: LineLintConfig) {
     const replacer = new Replacer(config);
-    const cleanupOnlyReplacer = new Replacer(EMPTY_RULES_CONFIG);
 
     return {
         // tslint:disable-next-line:typedef
@@ -17,6 +16,7 @@ export function expectReplacerWithConfig(config: LineLintConfig) {
             };
         },
         toOnlyApplyCleanupReplacementsTo(snippet: string): void {
+            const cleanupOnlyReplacer = new Replacer(EMPTY_RULES_CONFIG);
             expect(replacer.fix(snippet)).to.equal(cleanupOnlyReplacer.fix(snippet));
         },
     };

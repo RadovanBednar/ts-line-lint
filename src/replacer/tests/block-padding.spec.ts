@@ -3,26 +3,36 @@ import { createMultilineString } from '../../utils/text-utils';
 import { createMockConfig } from './create-mock-config';
 import { expectReplacerWithConfig } from './replacer-expects';
 
-export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
+export function blockPaddingRuleTestSuite(): void {
     const inputSnippetWithBlanks = createMultilineString(
-        '// non-blank line',
+        'const objectLiteral = {',
         '',
-        'export type AliasedType = type;',
-        'export type AnotherAliasedType = type2;',
+        '  foo: "bar",',
+        '  baz: "foo",',
         '',
-        '// non-blank line',
+        '};',
         '',
-        '    type IndentedAlias = type3;',
+        '  function indentedFunction() {',
         '',
-        '// non-blank line',
+        '    const foo = "foo";',
+        '',
+        '    return foo + "bar";',
+        '',
+        '  }',
+        '',
     );
     const inputSnippetWithoutBlanks = createMultilineString(
-        '// non-blank line',
-        'export type AliasedType = type;',
-        'export type AnotherAliasedType = type2;',
-        '// non-blank line',
-        '    type IndentedAlias = type3;',
-        '// non-blank line',
+        'const objectLiteral = {',
+        '  foo: "bar",',
+        '  baz: "foo",',
+        '};',
+        '',
+        '  function indentedFunction() {',
+        '    const foo = "foo";',
+        '',
+        '    return foo + "bar";',
+        '  }',
+        '',
     );
     let expectedOutput: string;
     let config: LineLintConfig;
@@ -39,7 +49,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "remove: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'none');
+            config = createMockConfig('block-padding', 'remove', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -52,19 +62,24 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "remove: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'before');
+            config = createMockConfig('block-padding', 'remove', 'before');
         });
 
-        it('should remove blank lines before each group of consecutive single line type aliases', () => {
+        it('should remove blank lines at the beginning of each block', () => {
             expectedOutput = createMultilineString(
-                '// non-blank line',
-                'export type AliasedType = type;',
-                'export type AnotherAliasedType = type2;',
+                'const objectLiteral = {',
+                '  foo: "bar",',
+                '  baz: "foo",',
                 '',
-                '// non-blank line',
-                '    type IndentedAlias = type3;',
+                '};',
                 '',
-                '// non-blank line',
+                '  function indentedFunction() {',
+                '    const foo = "foo";',
+                '',
+                '    return foo + "bar";',
+                '',
+                '  }',
+                '',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -75,19 +90,24 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "remove: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'after');
+            config = createMockConfig('block-padding', 'remove', 'after');
         });
 
-        it('should remove blank lines after each group of consecutive single line type aliases', () => {
+        it('should remove blank lines at the end of each block', () => {
             expectedOutput = createMultilineString(
-                '// non-blank line',
+                'const objectLiteral = {',
                 '',
-                'export type AliasedType = type;',
-                'export type AnotherAliasedType = type2;',
-                '// non-blank line',
+                '  foo: "bar",',
+                '  baz: "foo",',
+                '};',
                 '',
-                '    type IndentedAlias = type3;',
-                '// non-blank line',
+                '  function indentedFunction() {',
+                '',
+                '    const foo = "foo";',
+                '',
+                '    return foo + "bar";',
+                '  }',
+                '',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -98,10 +118,10 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "remove: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'remove', 'both');
+            config = createMockConfig('block-padding', 'remove', 'both');
         });
 
-        it('should remove blank lines both before and after each group of consecutive single line type aliases', () => {
+        it('should remove blank lines both at the beginning and at the end of each block', () => {
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(inputSnippetWithoutBlanks);
         });
 
@@ -110,7 +130,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "insert: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'none');
+            config = createMockConfig('block-padding', 'insert', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -123,19 +143,24 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "insert: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'before');
+            config = createMockConfig('block-padding', 'insert', 'before');
         });
 
-        it('should insert a blank line before each group of consecutive single line type aliases', () => {
+        it('should insert a blank line to the beginning of each block', () => {
             expectedOutput = createMultilineString(
-                '// non-blank line',
+                'const objectLiteral = {',
                 '',
-                'export type AliasedType = type;',
-                'export type AnotherAliasedType = type2;',
-                '// non-blank line',
+                '  foo: "bar",',
+                '  baz: "foo",',
+                '};',
                 '',
-                '    type IndentedAlias = type3;',
-                '// non-blank line',
+                '  function indentedFunction() {',
+                '',
+                '    const foo = "foo";',
+                '',
+                '    return foo + "bar";',
+                '  }',
+                '',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -146,19 +171,24 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "insert: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'after');
+            config = createMockConfig('block-padding', 'insert', 'after');
         });
 
-        it('should insert a blank line after each group of consecutive single line type aliases', () => {
+        it('should insert a blank line to the end of each block', () => {
             expectedOutput = createMultilineString(
-                '// non-blank line',
-                'export type AliasedType = type;',
-                'export type AnotherAliasedType = type2;',
+                'const objectLiteral = {',
+                '  foo: "bar",',
+                '  baz: "foo",',
                 '',
-                '// non-blank line',
-                '    type IndentedAlias = type3;',
+                '};',
                 '',
-                '// non-blank line',
+                '  function indentedFunction() {',
+                '    const foo = "foo";',
+                '',
+                '    return foo + "bar";',
+                '',
+                '  }',
+                '',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -169,10 +199,10 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('has option "insert: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('consecutive-single-line-type-aliases', 'insert', 'both');
+            config = createMockConfig('block-padding', 'insert', 'both');
         });
 
-        it('should insert blank lines both before and after each group of consecutive single line type aliases', () => {
+        it('should insert blank lines both to the beginning and to the end of each block', () => {
             expectedOutput = inputSnippetWithBlanks;
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -185,20 +215,25 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'consecutive-single-line-type-aliases': { remove: 'both', insert: 'after' } },
+                rules: { 'block-padding': { remove: 'both', insert: 'after' } },
             };
         });
 
         it('should first apply the removal and then the insertion', () => {
             expectedOutput = createMultilineString(
-                '// non-blank line',
-                'export type AliasedType = type;',
-                'export type AnotherAliasedType = type2;',
+                'const objectLiteral = {',
+                '  foo: "bar",',
+                '  baz: "foo",',
                 '',
-                '// non-blank line',
-                '    type IndentedAlias = type3;',
+                '};',
                 '',
-                '// non-blank line',
+                '  function indentedFunction() {',
+                '    const foo = "foo";',
+                '',
+                '    return foo + "bar";',
+                '',
+                '  }',
+                '',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);

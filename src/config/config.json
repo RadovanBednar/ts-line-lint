@@ -1,6 +1,9 @@
 {
     "indent": "tab",
     "rules": {
+        "block-padding": {
+            "remove": "both",
+        },
         "individual-import": {
             "remove": "before"
         },
@@ -18,9 +21,6 @@
         },
         "variable-declaration": {
             "remove": "before",
-        },
-        "block-content": {
-            "remove": "both",
         },
         "function-declaration": {
             "insert": "both"

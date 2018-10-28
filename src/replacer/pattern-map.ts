@@ -7,7 +7,6 @@ export const patternMap: Dictionary<RegExp> = {
     'consecutive-single-line-type-aliases': /((?:^[ \t]*(?:export )?type .*;\n)+)/mg,
     'interface-declaration': /(^([ \t]*)(?:export )?interface \w+ {\n(?:.*\n)*?\2}\n)/mg,
     // 'variable-declaration': //mg,
-    // 'block-content': //mg,
     // 'function-declaration': //mg,
     // 'class-declaration': //mg,
     // 'class-property-declaration': //mg,

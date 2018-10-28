@@ -5,7 +5,7 @@ import { expectReplacerWithConfig } from './replacer-expects';
 
 export function individualMultilineTypeAliasRuleTestSuite(): void {
     const inputSnippetWithBlanks = createMultilineString(
-        '// preceding non-blank line',
+        '// non-blank line',
         '',
         'export type ExtendedType<T> = T & {',
         '  [P in keyof T]: T[P] & BaseType<T>;',
@@ -15,17 +15,17 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
         '  SomeType |',
         '  AnotherType;',
         '',
-        '// following non-blank line',
+        '// non-blank line',
     );
     const inputSnippetWithoutBlanks = createMultilineString(
-        '// preceding non-blank line',
+        '// non-blank line',
         'export type ExtendedType<T> = T & {',
         '  [P in keyof T]: T[P] & BaseType<T>;',
         '};',
         'export type UnionType =',
         '  SomeType |',
         '  AnotherType;',
-        '// following non-blank line',
+        '// non-blank line',
     );
     let expectedOutput: string;
     let config: LineLintConfig;
@@ -60,7 +60,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
 
         it('should remove blank lines before each individual multiline type alias', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
+                '// non-blank line',
                 'export type ExtendedType<T> = T & {',
                 '  [P in keyof T]: T[P] & BaseType<T>;',
                 '};',
@@ -68,7 +68,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
                 '  SomeType |',
                 '  AnotherType;',
                 '',
-                '// following non-blank line',
+                '// non-blank line',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -84,7 +84,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
 
         it('should remove blank lines after each individual multiline type alias', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
+                '// non-blank line',
                 '',
                 'export type ExtendedType<T> = T & {',
                 '  [P in keyof T]: T[P] & BaseType<T>;',
@@ -92,7 +92,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
                 'export type UnionType =',
                 '  SomeType |',
                 '  AnotherType;',
-                '// following non-blank line',
+                '// non-blank line',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -133,7 +133,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
 
         it('should insert a blank line before each individual multiline type alias', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
+                '// non-blank line',
                 '',
                 'export type ExtendedType<T> = T & {',
                 '  [P in keyof T]: T[P] & BaseType<T>;',
@@ -142,7 +142,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
                 'export type UnionType =',
                 '  SomeType |',
                 '  AnotherType;',
-                '// following non-blank line',
+                '// non-blank line',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -158,7 +158,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
 
         it('should insert a blank line after each individual multiline type alias', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
+                '// non-blank line',
                 'export type ExtendedType<T> = T & {',
                 '  [P in keyof T]: T[P] & BaseType<T>;',
                 '};',
@@ -167,7 +167,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
                 '  SomeType |',
                 '  AnotherType;',
                 '',
-                '// following non-blank line',
+                '// non-blank line',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -200,7 +200,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
 
         it('should first apply the removal and then the insertion', () => {
             expectedOutput = createMultilineString(
-                '// preceding non-blank line',
+                '// non-blank line',
                 'export type ExtendedType<T> = T & {',
                 '  [P in keyof T]: T[P] & BaseType<T>;',
                 '};',
@@ -209,7 +209,7 @@ export function individualMultilineTypeAliasRuleTestSuite(): void {
                 '  SomeType |',
                 '  AnotherType;',
                 '',
-                '// following non-blank line',
+                '// non-blank line',
             );
 
             expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);

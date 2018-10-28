@@ -18,10 +18,36 @@ export class Replacer {
 
     private prepareReplacementPipeline(config: LineLintConfig): ReplacementPipeline {
         return [
+            ...this.prepareBlockPaddingPipeline(config.rules),
             ...this.prepareRemovalPipeline(config.rules),
             ...this.prepareInsertionPipeline(config.rules),
             ...this.prepareCleanupPipeline(),
         ];
+    }
+    private prepareBlockPaddingPipeline(rules: LineLintRules): ReplacementPipeline {
+        const blockPaddingPipeline: ReplacementPipeline = [];
+        if (rules['block-padding']) {
+            const removeOption = rules['block-padding'].remove;
+            const insertOption = rules['block-padding'].insert;
+
+            if (removeOption && (removeOption === 'before' || removeOption === 'both')) {
+                blockPaddingPipeline.push([/({\n)\n+/mg, '$1']);
+            }
+
+            if (removeOption && (removeOption === 'after' || removeOption === 'both')) {
+                blockPaddingPipeline.push([/\n+(\n[ \t]*})/mg, '$1']);
+            }
+
+            if (insertOption && (insertOption === 'before' || insertOption === 'both')) {
+                blockPaddingPipeline.push([/({\n)/mg, '$1\n']);
+            }
+
+            if (insertOption && (insertOption === 'after' || insertOption === 'both')) {
+                blockPaddingPipeline.push([/(\n[ \t]*})/mg, '\n$1']);
+            }
+        }
+
+        return blockPaddingPipeline;
     }
 
     private prepareRemovalPipeline(rules: LineLintRules): ReplacementPipeline {

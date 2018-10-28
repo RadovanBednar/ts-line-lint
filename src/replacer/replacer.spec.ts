@@ -1,3 +1,4 @@
+import { blockPaddingRuleTestSuite } from './tests/block-padding.spec';
 import { cleanupTestSuite } from './tests/cleanup.spec';
 import { consecutiveImportsRuleTestSuite } from './tests/consecutive-imports.spec';
 import { consecutiveSingleLineTypeAliasesRuleTestSuite } from './tests/consecutive-single-line-type-aliases.spec';
@@ -7,6 +8,7 @@ import { interfaceDeclarationRuleTestSuite } from './tests/interface-declaration
 
 describe('Replacer', () => {
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
+    describe('when "block-padding" rule', blockPaddingRuleTestSuite);
     describe('when "individual-import" rule', individualImportRuleTestSuite);
     describe('when "consecutive-imports" rule', consecutiveImportsRuleTestSuite);
     describe('when "individual-multiline-type-alias" rule', individualMultilineTypeAliasRuleTestSuite);
