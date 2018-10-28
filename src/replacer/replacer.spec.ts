@@ -1,14 +1,14 @@
 import { blockPaddingRuleTestSuite } from './tests/block-padding.spec';
+import { classDeclarationRuleTestSuite } from './tests/class-declaration.spec';
 import { cleanupTestSuite } from './tests/cleanup.spec';
 import { consecutiveImportsRuleTestSuite } from './tests/consecutive-imports.spec';
 import { consecutiveSingleLineTypeAliasesRuleTestSuite } from './tests/consecutive-single-line-type-aliases.spec';
+import { functionDeclarationRuleTestSuite } from './tests/function-declaration.spec';
 import { individualImportRuleTestSuite } from './tests/individual-import.spec';
 import { individualMultilineTypeAliasRuleTestSuite } from './tests/individual-multiline-type-alias.spec';
 import { interfaceDeclarationRuleTestSuite } from './tests/interface-declaration.spec';
-import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
 import { multilineVariableDeclarationRuleTestSuite } from './tests/multiline-variable-declaration.spec';
-import { functionDeclarationRuleTestSuite } from './tests/function-declaration.spec';
-import { classDeclarationRuleTestSuite } from './tests/class-declaration.spec';
+import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
 
 describe('Replacer', () => {
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
@@ -21,4 +21,5 @@ describe('Replacer', () => {
     describe('when "single-line-variable-declaration" rule', singleLineVariableDeclarationRuleTestSuite);
     describe('when "multi-line-variable-declaration" rule', multilineVariableDeclarationRuleTestSuite);
     describe('when "function-declaration" rule', functionDeclarationRuleTestSuite);
+    describe('when "class-declaration" rule', classDeclarationRuleTestSuite);
 });

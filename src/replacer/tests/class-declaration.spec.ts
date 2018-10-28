@@ -1,33 +1,47 @@
-const fs = require('fs');
-const rule = process.argv[2];
-const snippetDesc = process.argv[3];
-
-if (!rule) {
-    console.log("No rule specified. Terminating.");
-    process.exit(1);
-}
-
-if (!snippetDesc) {
-    console.log("No snippet description specified. Terminating.");
-    process.exit(1);
-}
-
-const ruleCamel = rule[0] + rule.split('-').map((word) => word[0].toUpperCase() + word.slice(1)).join('').slice(1);
-const specTemplate = `import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
+import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
 import { createMockConfig } from './create-mock-config';
 import { expectReplacerWithConfig } from './replacer-expects';
 
-export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {
+export function classDeclarationRuleTestSuite(): void {
     let config: LineLintConfig;
     const noBlanksAround = createMultilineString(
-       // FILL IN MANUALLY
+        '// non-blank line',
+        'export abstract class Foo extends Bar {',
+        '  // properties',
+        '',
+        '  // methods',
+        '}',
+        '// non-blank line',
+        'export class VeryLongClassName<TYPE extends SomeType>',
+        '  implements EvenLongerInterfaceName<SomeMonstrouslyLongName> {',
+        '  // properties',
+        '',
+        '  // methods',
+        '}',
+        '// non-blank line',
+        '  @Component({',
+        '    selector: "app-indented-foo",',
+        '  })',
+        '  class IndentedFoo implements OnInit {',
+        '    // implementation',
+        '  }',
+        '// non-blank line',
+        '@Component({ selector: "app-bar" })',
+        'class Bar implements OnInit {',
+        '  // implementation',
+        '}',
+        '// non-blank line',
+        '@Injectable()',
+        'export class Baz {',
+        '  // implementation',
+        '}',
+        '// non-blank line',
     );
     const blanksAround = noBlanksAround.replace(/(\/\/ non-blank line)/g, '\n$1\n').slice(1, -1);
     const blanksOnlyAfter = noBlanksAround.replace(/(\/\/ non-blank line)/g, '\n$1').slice(1);
     const blanksOnlyBefore = noBlanksAround.replace(/(\/\/ non-blank line)/g, '$1\n').slice(0, -1);
-console.log(noBlanksAround);
-console.log(blanksAround);
+
     describe('is not specified', () => {
 
         it('should only apply cleanup replacements', () => {
@@ -40,7 +54,7 @@ console.log(blanksAround);
     describe('has option "remove: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'remove', 'none');
+            config = createMockConfig('class-declaration', 'remove', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -53,10 +67,10 @@ console.log(blanksAround);
     describe('has option "remove: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'remove', 'before');
+            config = createMockConfig('class-declaration', 'remove', 'before');
         });
 
-        it('should remove blank lines before each %SNIPPET_DESC%', () => {
+        it('should remove blank lines before each class declaration', () => {
             expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
@@ -65,10 +79,10 @@ console.log(blanksAround);
     describe('has option "remove: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'remove', 'after');
+            config = createMockConfig('class-declaration', 'remove', 'after');
         });
 
-        it('should remove blank lines after each %SNIPPET_DESC%', () => {
+        it('should remove blank lines after each class declaration', () => {
             expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
         });
 
@@ -77,10 +91,10 @@ console.log(blanksAround);
     describe('has option "remove: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'remove', 'both');
+            config = createMockConfig('class-declaration', 'remove', 'both');
         });
 
-        it('should remove blank lines both before and after each %SNIPPET_DESC%', () => {
+        it('should remove blank lines both before and after each class declaration', () => {
             expectReplacerWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
         });
 
@@ -89,7 +103,7 @@ console.log(blanksAround);
     describe('has option "insert: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'insert', 'none');
+            config = createMockConfig('class-declaration', 'insert', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -102,10 +116,10 @@ console.log(blanksAround);
     describe('has option "insert: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'insert', 'before');
+            config = createMockConfig('class-declaration', 'insert', 'before');
         });
 
-        it('should insert a blank line before each %SNIPPET_DESC%', () => {
+        it('should insert a blank line before each class declaration', () => {
             expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
         });
 
@@ -114,10 +128,10 @@ console.log(blanksAround);
     describe('has option "insert: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'insert', 'after');
+            config = createMockConfig('class-declaration', 'insert', 'after');
         });
 
-        it('should insert a blank line after each %SNIPPET_DESC%', () => {
+        it('should insert a blank line after each class declaration', () => {
             expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
         });
 
@@ -126,10 +140,10 @@ console.log(blanksAround);
     describe('has option "insert: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('%RULE_NAME_KEBAB_CASE%', 'insert', 'both');
+            config = createMockConfig('class-declaration', 'insert', 'both');
         });
 
-        it('should insert blank lines both before and after each %SNIPPET_DESC%', () => {
+        it('should insert blank lines both before and after each class declaration', () => {
             expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
         });
 
@@ -140,7 +154,7 @@ console.log(blanksAround);
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { '%RULE_NAME_KEBAB_CASE%': { remove: 'both', insert: 'after' } },
+                rules: { 'class-declaration': { remove: 'both', insert: 'after' } },
             };
         });
 
@@ -151,9 +165,3 @@ console.log(blanksAround);
     });
 
 }
-`.replace(/%RULE_NAME_KEBAB_CASE%/g, rule)
-.replace(/%RULE_NAME_CAMEL_CASE%/g, ruleCamel)
-.replace(/%SNIPPET_DESC%/g, snippetDesc);
-
-fs.writeFileSync(`src/replacer/tests/${rule}.spec.ts`, specTemplate, 'utf-8')
-process.exit(0);

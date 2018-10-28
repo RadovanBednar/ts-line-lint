@@ -9,7 +9,7 @@ export const patternMap: Dictionary<RegExp> = {
     'single-line-variable-declaration': /(^[ \t]*(?:var|let|const) [^;\n]*;\n)/mg,
     'multiline-variable-declaration': /(^[ \t]*(?:var|let|const) [^;]*\n[^;]*;\n)/mg,
     'function-declaration': /(^([ \t]*)(?:async )?function .*[{,]\n(?:.*\n)*?\2}\n)/mg,
-    // 'class-declaration': //mg,
+    'class-declaration': /(^([ \t]*)(?:@\w+\([^)]*\)\n\2)?.*\bclass\b.*\n(?:.*\n)*?\2}\n)/mg,
     // 'class-property-declaration': //mg,
     // 'method-or-accessor-declaration': //mg,
     // 'abstract-method-or-accessor': //mg,
