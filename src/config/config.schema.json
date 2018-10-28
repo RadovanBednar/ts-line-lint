@@ -40,6 +40,9 @@
                 "single-line-variable-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
+                "multiline-variable-declaration": {
+                    "$ref": "#/definitions/rule_options"
+                },
                 "function-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
