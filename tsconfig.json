@@ -4,6 +4,7 @@
     "outDir": "tsDist",
     "module": "commonjs",
     "target": "es6",
+    "types": ["node"],
     "strict": true
   },
   "exclude": [
