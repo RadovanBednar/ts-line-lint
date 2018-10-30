@@ -697,7 +697,7 @@ describe('fixLines function', () => {
 
         it('should add blank lines around any constructor declaration with a multiline parameter list', () => {
             for (const modifier of accessModifiersIncludingImplicitOne) {
-                const indent =  ' '.repeat(`${modifier}constructor`.length);
+                const indent = ' '.repeat(`${modifier}constructor`.length);
 
                 inputSnippet = createMultilineString([
                     'class Foo {',
@@ -772,7 +772,7 @@ describe('fixLines function', () => {
 
         it('should add blank lines around any class method declaration with an explicit access modifier and a multiline parameter list', () => {
             for (const modifier of accessModifiers) {
-                const indent =  ' '.repeat(`${modifier}foo`.length);
+                const indent = ' '.repeat(`${modifier}foo`.length);
 
                 inputSnippet = createMultilineString([
                     'class Foo {',
@@ -810,6 +810,11 @@ describe('fixLines function', () => {
                 inputSnippet = createMultilineString([
                     'abstract class Foo {',
                     `  ${modifier}abstract getBar();`,
+                    '// non-blank line',
+                    `  ${modifier}abstract async getBar();`,
+                    '// non-blank line',
+                    `  ${modifier}async abstract getBar();`,
+                    '// non-blank line',
                     `  ${modifier}abstract setBar(bar: Bar);`,
                     '}',
                     '',
@@ -818,6 +823,16 @@ describe('fixLines function', () => {
                     'abstract class Foo {',
                     '',
                     `  ${modifier}abstract getBar();`,
+                    '',
+                    '// non-blank line',
+                    '',
+                    `  ${modifier}abstract async getBar();`,
+                    '',
+                    '// non-blank line',
+                    '',
+                    `  ${modifier}async abstract getBar();`,
+                    '',
+                    '// non-blank line',
                     '',
                     `  ${modifier}abstract setBar(bar: Bar);`,
                     '',
