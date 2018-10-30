@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { findFiles } from './find-files';
 import { log } from './logger';
 import { parseProcessArgv } from './parse-process-argv';
