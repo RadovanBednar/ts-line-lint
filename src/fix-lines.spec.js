@@ -10,28 +10,6 @@ describe('fixLines function', () => {
 
     describe('class properties', () => {
 
-        it('should remove blank lines before each public, protected and private property', () => {
-            for (const modifier of accessModifiers) {
-                inputSnippet = createMultilineString(
-                    'class A {',
-                    '',
-                    `  ${modifier}foo = 123`,
-                    '',
-                    `  ${modifier}bar!: string`,
-                    '}',
-                );
-                expectedOutput = createMultilineString(
-                    'class A {',
-                    `  ${modifier}foo = 123`,
-                    `  ${modifier}bar!: string`,
-                    '}',
-                    '',
-                );
-
-                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-            }
-        });
-
         it('should inline decorators with property declarations', () => {
             inputSnippet = createMultilineString(
                 'class A {',
@@ -48,31 +26,6 @@ describe('fixLines function', () => {
                 '  @ViewChild(SomeComponent) someComponent: SomeComponent;',
                 '  @Input() public foo!: Foo;',
                 '  @Output() public bar = new EventEmitter<Bar>();',
-                '}',
-                '',
-            );
-
-            expectSnippet(inputSnippet).toConvertTo(expectedOutput);
-        });
-
-        it('should NOT inline @Effect decorator, but instead add blank lines around the declaration', () => {
-            inputSnippet = createMultilineString(
-                'class Foo {',
-                '  @Effect()',
-                '  public barAction$ = this.actions$.pipe(',
-                '    // code',
-                '  );',
-                '}',
-                '',
-            );
-            expectedOutput = createMultilineString(
-                'class Foo {',
-                '',
-                '  @Effect()',
-                '  public barAction$ = this.actions$.pipe(',
-                '    // code',
-                '  );',
-                '',
                 '}',
                 '',
             );

@@ -11,6 +11,7 @@ import { individualMultilineTypeAliasRuleTestSuite } from './tests/individual-mu
 import { interfaceDeclarationRuleTestSuite } from './tests/interface-declaration.spec';
 import { methodOrAccessorDeclarationRuleTestSuite } from './tests/method-or-accessor-declaration.spec';
 import { multilineVariableDeclarationRuleTestSuite } from './tests/multiline-variable-declaration.spec';
+import { propertyWithEffectDecoratorRuleTestSuite } from './tests/property-with-effect-decorator.spec';
 import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
 
 describe('Replacer', () => {
@@ -28,4 +29,5 @@ describe('Replacer', () => {
     describe('when "class-property-declaration" rule', classPropertyDeclarationRuleTestSuite);
     describe('when "method-or-accessor-declaration" rule', methodOrAccessorDeclarationRuleTestSuite);
     describe('when "abstract-method-or-accessor" rule', abstractMethodOrAccessorRuleTestSuite);
+    describe('when "property-with-effect-decorator" rule', propertyWithEffectDecoratorRuleTestSuite);
 });
