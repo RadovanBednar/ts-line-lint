@@ -1,5 +1,6 @@
 import { blockPaddingRuleTestSuite } from './tests/block-padding.spec';
 import { classDeclarationRuleTestSuite } from './tests/class-declaration.spec';
+import { classPropertyDeclarationRuleTestSuite } from './tests/class-property-declaration.spec';
 import { cleanupTestSuite } from './tests/cleanup.spec';
 import { consecutiveImportsRuleTestSuite } from './tests/consecutive-imports.spec';
 import { consecutiveSingleLineTypeAliasesRuleTestSuite } from './tests/consecutive-single-line-type-aliases.spec';
@@ -22,4 +23,5 @@ describe('Replacer', () => {
     describe('when "multi-line-variable-declaration" rule', multilineVariableDeclarationRuleTestSuite);
     describe('when "function-declaration" rule', functionDeclarationRuleTestSuite);
     describe('when "class-declaration" rule', classDeclarationRuleTestSuite);
+    describe('when "class-property-declaration" rule', classPropertyDeclarationRuleTestSuite);
 });
