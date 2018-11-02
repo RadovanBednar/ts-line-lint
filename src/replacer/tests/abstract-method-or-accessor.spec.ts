@@ -3,60 +3,30 @@ import { createMultilineString } from '../../utils/text-utils';
 import { createMockConfig } from './create-mock-config';
 import { expectReplacerWithConfig } from './replacer-expects';
 
-export function methodOrAccessorDeclarationRuleTestSuite(): void {
+export function abstractMethodOrAccessorRuleTestSuite(): void {
     let config: LineLintConfig;
     const noBlanksAround = createMultilineString(
         'class Foo {',
         '  // non-blank line',
-        '  constructor() {',
-        '  }',
+        '  public abstract getBar(): Bar;',
         '  // non-blank line',
-        '  public constructor() {',
-        '    // implementation',
-        '  }',
+        '  protected abstract setBar(bar: Bar): void;',
         '  // non-blank line',
-        '  protected constructor() {',
-        '  }',
+        '  protected abstract untyped();',
         '  // non-blank line',
-        '  private constructor(private firstDependency: FirstDependency,',
-        '                      private secondDependency: SecondDependency,',
-        '                      private thirdDependency: ThirdDependency) {',
-        '  }',
+        '  protected abstract baz(firstParam: VeryLongTypeName,',
+        '                         secondParam: EvenLongerTypeName,',
+        '                         thirdParam: SomeMonstrouslyLongTypeName): Baz;',
         '  // non-blank line',
-        '  public static foo(): bar {',
-        '    // implementation',
-        '',
-        '    // return statement',
-        '  }',
+        '  protected abstract get value();',
         '  // non-blank line',
-        '  protected bar(protected firstParam: VeryLongTypeName,',
-        '                protected secondParam: EvenLongerTypeName,',
-        '                protected thirdParam: SomeMonstrouslyLongTypeName): bar {',
-        '    // implementation',
-        '',
-        '    // return statement',
-        '  }',
+        '  public abstract set value(v: number);',
         '  // non-blank line',
-        '  @HostListener("click", ["$event.target"])',
-        '  public onClick(btn) {',
-        '    // implementation',
-        '  }',
+        '  public async abstract getBar(): Promise<Bar>;',
         '  // non-blank line',
-        '  private baz(): void {',
-        '    // implementation',
-        '  }',
-        '  // non-blank line',
-        '  get foo() {',
-        '    return this _foo;',
-        '  }',
-        '  // non-blank line',
-        '  @Input()',
-        '  set foo(param: type) {',
-        '    this _foo = param;',
-        '  }',
+        '  protected abstract async setBar(bar: Bar): Promise<void>;',
         '  // non-blank line',
         '}',
-        '',
     );
     const blanksAround = noBlanksAround
         .replace(/((?<!{\n)  \/\/ non-blank line)/g, '\n$1')
@@ -76,7 +46,7 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "remove: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'remove', 'none');
+            config = createMockConfig('abstract-method-or-accessor', 'remove', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -89,10 +59,10 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "remove: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'remove', 'before');
+            config = createMockConfig('abstract-method-or-accessor', 'remove', 'before');
         });
 
-        it('should remove blank lines before each method or property accessor declaration', () => {
+        it('should remove blank lines before each abstract method or property accessor', () => {
             expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
@@ -101,10 +71,10 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "remove: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'remove', 'after');
+            config = createMockConfig('abstract-method-or-accessor', 'remove', 'after');
         });
 
-        it('should remove blank lines after each method or property accessor declaration', () => {
+        it('should remove blank lines after each abstract method or property accessor', () => {
             expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
         });
 
@@ -113,10 +83,10 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "remove: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'remove', 'both');
+            config = createMockConfig('abstract-method-or-accessor', 'remove', 'both');
         });
 
-        it('should remove blank lines both before and after each method or property accessor declaration', () => {
+        it('should remove blank lines both before and after each abstract method or property accessor', () => {
             expectReplacerWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
         });
 
@@ -125,7 +95,7 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "insert: none"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'insert', 'none');
+            config = createMockConfig('abstract-method-or-accessor', 'insert', 'none');
         });
 
         it('should only apply cleanup replacements', () => {
@@ -138,10 +108,10 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "insert: before"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'insert', 'before');
+            config = createMockConfig('abstract-method-or-accessor', 'insert', 'before');
         });
 
-        it('should insert a blank line before each method or property accessor declaration', () => {
+        it('should insert a blank line before each abstract method or property accessor', () => {
             expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
         });
 
@@ -150,10 +120,10 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "insert: after"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'insert', 'after');
+            config = createMockConfig('abstract-method-or-accessor', 'insert', 'after');
         });
 
-        it('should insert a blank line after each method or property accessor declaration', () => {
+        it('should insert a blank line after each abstract method or property accessor', () => {
             expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
         });
 
@@ -162,10 +132,10 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
     describe('has option "insert: both"', () => {
 
         beforeEach(() => {
-            config = createMockConfig('method-or-accessor-declaration', 'insert', 'both');
+            config = createMockConfig('abstract-method-or-accessor', 'insert', 'both');
         });
 
-        it('should insert blank lines both before and after each method or property accessor declaration', () => {
+        it('should insert blank lines both before and after each abstract method or property accessor', () => {
             expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
         });
 
@@ -176,7 +146,7 @@ export function methodOrAccessorDeclarationRuleTestSuite(): void {
         beforeEach(() => {
             config = {
                 ...EMPTY_RULES_CONFIG,
-                rules: { 'method-or-accessor-declaration': { remove: 'both', insert: 'after' } },
+                rules: { 'abstract-method-or-accessor': { remove: 'both', insert: 'after' } },
             };
         });
 

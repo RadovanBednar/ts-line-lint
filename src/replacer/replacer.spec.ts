@@ -1,3 +1,4 @@
+import { abstractMethodOrAccessorRuleTestSuite } from './tests/abstract-method-or-accessor.spec';
 import { blockPaddingRuleTestSuite } from './tests/block-padding.spec';
 import { classDeclarationRuleTestSuite } from './tests/class-declaration.spec';
 import { classPropertyDeclarationRuleTestSuite } from './tests/class-property-declaration.spec';
@@ -26,4 +27,5 @@ describe('Replacer', () => {
     describe('when "class-declaration" rule', classDeclarationRuleTestSuite);
     describe('when "class-property-declaration" rule', classPropertyDeclarationRuleTestSuite);
     describe('when "method-or-accessor-declaration" rule', methodOrAccessorDeclarationRuleTestSuite);
+    describe('when "abstract-method-or-accessor" rule', abstractMethodOrAccessorRuleTestSuite);
 });

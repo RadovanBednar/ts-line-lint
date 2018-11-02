@@ -15,7 +15,7 @@ export const patternMap: Dictionary<RegExp> = {
     'method-or-accessor-declaration':
         // tslint:disable-next-line:max-line-length
         /(^([ \t]+)(?:@.*\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:(?!\2};).*\n)*?\2}\n)/mg,
-    // 'abstract-method-or-accessor': //mg,
+    'abstract-method-or-accessor': /(^([ \t]*)(?:public |protected |private )?(?:async )?abstract [^(\n]*\([^;]*;\n)/mg,
     // 'property-with-effect-decorator': //mg,
     // 'unit-test-describe': //mg,
     // 'unit-test-single-line-hook-statement': //mg,
