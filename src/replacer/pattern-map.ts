@@ -12,7 +12,9 @@ export const patternMap: Dictionary<RegExp> = {
     'class-declaration': /(^([ \t]*)(?:@\w+\([^)]*\)\n\2)?.*\bclass\b.*\n(?:.*\n)*?\2}\n)/mg,
     'class-property-declaration':
         /(^([ \t]+)(?:@.* )?(?:private|protected|public) .*(?:;|[\[{]\n(?:\2[ \t]+.*\n)+\2[\]}];)\n)/mg,
-    // 'method-or-accessor-declaration': //mg,
+    'method-or-accessor-declaration':
+        // tslint:disable-next-line:max-line-length
+        /(^([ \t]+)(?:@.*\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:(?!\2};).*\n)*?\2}\n)/mg,
     // 'abstract-method-or-accessor': //mg,
     // 'property-with-effect-decorator': //mg,
     // 'unit-test-describe': //mg,

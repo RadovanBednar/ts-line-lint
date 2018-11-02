@@ -8,6 +8,7 @@ import { functionDeclarationRuleTestSuite } from './tests/function-declaration.s
 import { individualImportRuleTestSuite } from './tests/individual-import.spec';
 import { individualMultilineTypeAliasRuleTestSuite } from './tests/individual-multiline-type-alias.spec';
 import { interfaceDeclarationRuleTestSuite } from './tests/interface-declaration.spec';
+import { methodOrAccessorDeclarationRuleTestSuite } from './tests/method-or-accessor-declaration.spec';
 import { multilineVariableDeclarationRuleTestSuite } from './tests/multiline-variable-declaration.spec';
 import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
 
@@ -24,4 +25,5 @@ describe('Replacer', () => {
     describe('when "function-declaration" rule', functionDeclarationRuleTestSuite);
     describe('when "class-declaration" rule', classDeclarationRuleTestSuite);
     describe('when "class-property-declaration" rule', classPropertyDeclarationRuleTestSuite);
+    describe('when "method-or-accessor-declaration" rule', methodOrAccessorDeclarationRuleTestSuite);
 });

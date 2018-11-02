@@ -23,9 +23,11 @@ export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {
     const noBlanksAround = createMultilineString(
        // FILL IN MANUALLY
     );
-    const blanksAround = noBlanksAround.replace(/(\\/\\/ non-blank line)/g, '\\n$1\\n').slice(1, -1);
-    const blanksOnlyAfter = noBlanksAround.replace(/(\\/\\/ non-blank line)/g, '\\n$1').slice(1);
-    const blanksOnlyBefore = noBlanksAround.replace(/(\\/\\/ non-blank line)/g, '$1\\n').slice(0, -1);
+    const blanksAround = noBlanksAround
+        .replace(/((?<!{\\n)  \\/\\/ non-blank line)/g, '\\n$1')
+        .replace(/(  \\/\\/ non-blank line(?!\\n}))/g, '$1\\n');
+    const blanksOnlyAfter = noBlanksAround.replace(/((?<!{\\n)  \\/\\/ non-blank line)/g, '\\n$1');
+    const blanksOnlyBefore = noBlanksAround.replace(/(  \\/\\/ non-blank line(?!\\n}))/g, '$1\\n');
 console.log(noBlanksAround);
 console.log(blanksAround);
     describe('is not specified', () => {
