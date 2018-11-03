@@ -14,6 +14,7 @@ import { multilineVariableDeclarationRuleTestSuite } from './tests/multiline-var
 import { propertyWithEffectDecoratorRuleTestSuite } from './tests/property-with-effect-decorator.spec';
 import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
 import { unitTestDescribeRuleTestSuite } from './tests/unit-test-describe-block.spec';
+import { unitTestHookStatementRuleTestSuite } from './tests/unit-test-hook-statement.spec';
 
 describe('Replacer', () => {
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
@@ -34,4 +35,5 @@ describe('Replacer', () => {
     describe('when indent is 2 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(2));
     describe('when indent is 5 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(5));
     describe('when indent is "tab" and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite('tab'));
+    describe('when "unit-test-hook-statement" rule', unitTestHookStatementRuleTestSuite);
 });

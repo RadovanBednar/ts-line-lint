@@ -64,10 +64,7 @@
                 "unit-test-describe-block": {
                     "$ref": "#/definitions/rule_options"
                 },
-                "unit-test-single-line-hook-statement": {
-                    "$ref": "#/definitions/rule_options"
-                },
-                "unit-test-hook-statement-block": {
+               "unit-test-hook-statement": {
                     "$ref": "#/definitions/rule_options"
                 },
                 "unit-test-it-statement": {
