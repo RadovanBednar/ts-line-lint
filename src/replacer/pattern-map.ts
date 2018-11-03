@@ -19,7 +19,7 @@ export const patternMap: Dictionary<RegExp> = {
     'property-with-effect-decorator': /(^([ \t]+)@Effect\([^)]*\)(?:\n\2| ).*\n(?:.*\n)*?\2\S.*\n)/mg,
     'unit-test-describe-block': /(^(%INDENT%)describe\(.*{\n(?:.*\n)*?\2}\);\n)/mg,
     'unit-test-hook-statement': /(^([ \t]*)(?:after|before)(?:Each|All)?\(.*(?:;|\n(?:\2[ \t]+.*\n)+\2\S+;)\n)/mg,
-    // 'unit-test-it-statement': //mg,
+    'unit-test-it-statement': /(^([ \t]*)it\(.*\n(?:.*\n)*?\2\S.*;\n)/mg,
 
     'tslint-disable-next-line-comment': /(^[ \t]*\/(?:\/|\*) tslint:disable-next-line.*\n)\n+/mg,
     'leading-blank': /^\n+/g,

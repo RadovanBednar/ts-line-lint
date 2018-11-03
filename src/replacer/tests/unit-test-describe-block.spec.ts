@@ -155,6 +155,8 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
             '%BLANK_BEFORE%',
             ind + ind + ind + 'describe("third level nested test suite", () => {',
             ind + ind + ind + ind + '// tests',
+            ind + ind + ind + ind + '',
+            ind + ind + ind + ind + '// more tests',
             ind + ind + ind + '});',
             '%BLANK_AFTER%',
             ind + ind + '});',
