@@ -1,5 +1,7 @@
+export type IndentType = 'tab' | number;
+
 export interface LineLintConfig {
-    indent: number;
+    indent: IndentType;
     rules: LineLintRules;
 }
 

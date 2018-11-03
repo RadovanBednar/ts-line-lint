@@ -17,7 +17,7 @@ export const patternMap: Dictionary<RegExp> = {
         /(^([ \t]+)(?:@.*\n\2)?(?:public |protected |private |get |set |constructor\().*[{,]\n(?:(?!\2};).*\n)*?\2}\n)/mg,
     'abstract-method-or-accessor': /(^([ \t]*)(?:public |protected |private )?(?:async )?abstract [^(\n]*\([^;]*;\n)/mg,
     'property-with-effect-decorator': /(^([ \t]+)@Effect\([^)]*\)(?:\n\2| ).*\n(?:.*\n)*?\2\S.*\n)/mg,
-    // 'unit-test-describe': //mg,
+    'unit-test-describe-block': /(^(%INDENT%)describe\(.*{\n(?:.*\n)*?\2}\);\n)/mg,
     // 'unit-test-single-line-hook-statement': //mg,
     // 'unit-test-hook-statement-block': //mg,
     // 'unit-test-it-statement': //mg,

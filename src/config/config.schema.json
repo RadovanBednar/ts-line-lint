@@ -61,7 +61,7 @@
                 "property-with-effect-decorator": {
                     "$ref": "#/definitions/rule_options"
                 },
-                "unit-test-describe": {
+                "unit-test-describe-block": {
                     "$ref": "#/definitions/rule_options"
                 },
                 "unit-test-single-line-hook-statement": {

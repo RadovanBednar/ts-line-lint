@@ -12,6 +12,14 @@
             ["it", "only"]
         ],
         "interface-name": [true, "never-prefix"],
+        "max-line-length": [
+            true,
+            {
+                "limit": 120,
+                "ignore-pattern": "^import "
+            }
+        ],
+        "object-literal-shorthand": false,
         "object-literal-sort-keys": false,
         "quotemark": [true, "single", "avoid-template"],
         "typedef": [true, "call-signature", "parameter", "member-variable-declaration"]

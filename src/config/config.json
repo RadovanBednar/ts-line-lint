@@ -40,7 +40,7 @@
         "property-with-effect-decorator": {
             "insert": "both"
         },
-        "unit-test-describe": {
+        "unit-test-describe-block": {
             "insert": "both"
         },
         "unit-test-block-within-describe": {

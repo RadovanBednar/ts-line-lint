@@ -8,14 +8,14 @@ export function expectReplacerWithConfig(config: LineLintConfig) {
 
     return {
         // tslint:disable-next-line:typedef
-        toConvert(snippet: string) {
+        toConvert: function(snippet: string) {
             return {
-                to(output: string): void {
+                to: function(output: string): void {
                     expect(replacer.fix(snippet)).to.equal(output);
                 },
             };
         },
-        toOnlyApplyCleanupReplacementsTo(snippet: string): void {
+        toOnlyApplyCleanupReplacementsTo: function(snippet: string): void {
             const cleanupOnlyReplacer = new Replacer(EMPTY_RULES_CONFIG);
             expect(replacer.fix(snippet)).to.equal(cleanupOnlyReplacer.fix(snippet));
         },

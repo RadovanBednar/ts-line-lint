@@ -15,7 +15,7 @@ if (!snippetDesc) {
 const ruleCamel = rule[0] + rule.split('-').map((word) => word[0].toUpperCase() + word.slice(1)).join('').slice(1);
 const specTemplate = `import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
-import { createMockConfig } from './create-mock-config';
+import { createMockConfig } from './replacer-test-utils';
 import { expectReplacerWithConfig } from './replacer-expects';
 
 export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {

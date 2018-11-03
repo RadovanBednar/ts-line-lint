@@ -13,6 +13,7 @@ import { methodOrAccessorDeclarationRuleTestSuite } from './tests/method-or-acce
 import { multilineVariableDeclarationRuleTestSuite } from './tests/multiline-variable-declaration.spec';
 import { propertyWithEffectDecoratorRuleTestSuite } from './tests/property-with-effect-decorator.spec';
 import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
+import { unitTestDescribeRuleTestSuite } from './tests/unit-test-describe-block.spec';
 
 describe('Replacer', () => {
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
@@ -30,4 +31,7 @@ describe('Replacer', () => {
     describe('when "method-or-accessor-declaration" rule', methodOrAccessorDeclarationRuleTestSuite);
     describe('when "abstract-method-or-accessor" rule', abstractMethodOrAccessorRuleTestSuite);
     describe('when "property-with-effect-decorator" rule', propertyWithEffectDecoratorRuleTestSuite);
+    describe('when indent is 2 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(2));
+    describe('when indent is 5 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(5));
+    describe('when indent is "tab" and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite('tab'));
 });

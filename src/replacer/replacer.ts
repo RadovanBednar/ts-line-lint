@@ -1,14 +1,16 @@
-import { LineLintConfig, LineLintRules } from '../config/line-lint-config';
-import { concatRegExp } from '../utils/text-utils';
+import { IndentType, LineLintConfig, LineLintRules } from '../config/line-lint-config';
+import { appendBlankLines, prependBlankLines, surroundWithBlankLines } from '../utils/text-utils';
 import { patternMap } from './pattern-map';
 
 type ReplacementStep = [RegExp, string];
 type ReplacementPipeline = Array<ReplacementStep>;
 
 export class Replacer {
+    private indent: IndentType;
     private replacementPipeline: ReplacementPipeline;
 
     constructor(config: LineLintConfig) {
+        this.indent = config.indent;
         this.replacementPipeline = this.prepareReplacementPipeline(config);
     }
 
@@ -59,18 +61,48 @@ export class Replacer {
             if (removeOption && removeOption !== 'none') {
                 switch (removeOption) {
                     case 'before':
-                        removalPipeline.push([concatRegExp(/^\n*/, patternMap[ruleName]), '$1']);
+                        this.addRemoveBeforeStep(removalPipeline, ruleName);
                         break;
                     case 'after':
-                        removalPipeline.push([concatRegExp(patternMap[ruleName], /(\n*)/), '$1']);
+                        this.addRemoveAfterStep(removalPipeline, ruleName);
                         break;
                     case 'both':
-                        removalPipeline.push([concatRegExp(/^\n*/, patternMap[ruleName], /(\n*)/), '$1']);
+                        this.addRemoveBothStep(removalPipeline, ruleName);
                 }
             }
         }
 
         return removalPipeline;
+    }
+
+    private addRemoveBeforeStep(pipeline: ReplacementPipeline, rule: keyof typeof patternMap): void {
+        if (patternMap[rule].source.includes('%INDENT%')) {
+            this.makeIndentSpecificPatterns(patternMap[rule]).forEach((pattern) => {
+                pipeline.push([prependBlankLines(pattern), '$1']);
+            });
+        } else {
+            pipeline.push([prependBlankLines(patternMap[rule]), '$1']);
+        }
+    }
+
+    private addRemoveAfterStep(pipeline: ReplacementPipeline, rule: keyof typeof patternMap): void {
+        if (patternMap[rule].source.includes('%INDENT%')) {
+            this.makeIndentSpecificPatterns(patternMap[rule]).forEach((pattern) => {
+                pipeline.push([appendBlankLines(pattern), '$1']);
+            });
+        } else {
+            pipeline.push([appendBlankLines(patternMap[rule]), '$1']);
+        }
+    }
+
+    private addRemoveBothStep(pipeline: ReplacementPipeline, rule: keyof typeof patternMap): void {
+        if (patternMap[rule].source.includes('%INDENT%')) {
+            this.makeIndentSpecificPatterns(patternMap[rule]).forEach((pattern) => {
+                pipeline.push([surroundWithBlankLines(pattern), '$1']);
+            });
+        } else {
+            pipeline.push([surroundWithBlankLines(patternMap[rule]), '$1']);
+        }
     }
 
     private prepareInsertionPipeline(rules: LineLintRules): ReplacementPipeline {
@@ -82,18 +114,60 @@ export class Replacer {
             if (insertOption && insertOption !== 'none') {
                 switch (insertOption) {
                     case 'before':
-                        insertionPipeline.push([patternMap[ruleName], '\n$1']);
+                        this.addInsertBeforeStep(insertionPipeline, ruleName);
+                        // insertionPipeline.push([patternMap[ruleName], '\n$1']);
                         break;
                     case 'after':
-                        insertionPipeline.push([patternMap[ruleName], '$1\n']);
+                        this.addInsertAfterStep(insertionPipeline, ruleName);
+                        // insertionPipeline.push([patternMap[ruleName], '$1\n']);
                         break;
                     case 'both':
-                        insertionPipeline.push([patternMap[ruleName], '\n$1\n']);
+                        this.addInsertBothStep(insertionPipeline, ruleName);
+                    // insertionPipeline.push([patternMap[ruleName], '\n$1\n']);
                 }
             }
         }
 
         return insertionPipeline;
+    }
+
+    private addInsertBeforeStep(pipeline: ReplacementPipeline, rule: keyof typeof patternMap): void {
+        if (patternMap[rule].source.includes('%INDENT%')) {
+            this.makeIndentSpecificPatterns(patternMap[rule]).forEach((pattern) => {
+                pipeline.push([pattern, '\n$1']);
+            });
+        } else {
+            pipeline.push([patternMap[rule], '\n$1']);
+        }
+    }
+
+    private addInsertAfterStep(pipeline: ReplacementPipeline, rule: keyof typeof patternMap): void {
+        if (patternMap[rule].source.includes('%INDENT%')) {
+            this.makeIndentSpecificPatterns(patternMap[rule]).forEach((pattern) => {
+                pipeline.push([pattern, '$1\n']);
+            });
+        } else {
+            pipeline.push([patternMap[rule], '$1\n']);
+        }
+    }
+
+    private addInsertBothStep(pipeline: ReplacementPipeline, rule: keyof typeof patternMap): void {
+        if (patternMap[rule].source.includes('%INDENT%')) {
+            this.makeIndentSpecificPatterns(patternMap[rule]).forEach((pattern) => {
+                pipeline.push([pattern, '\n$1\n']);
+            });
+        } else {
+            pipeline.push([patternMap[rule], '\n$1\n']);
+        }
+    }
+
+    private makeIndentSpecificPatterns(basePattern: RegExp): Array<RegExp> {
+        const specificPatterns = [];
+        for (let indentLevel = 0; indentLevel <= 4; indentLevel++) {
+            const indentPattern = this.indent === 'tab' ? `\\t{${indentLevel}}` : ` {${this.indent * indentLevel}}`;
+            specificPatterns.push(new RegExp(basePattern.source.replace('%INDENT%', indentPattern), basePattern.flags));
+        }
+        return specificPatterns;
     }
 
     private prepareCleanupPipeline(): ReplacementPipeline {

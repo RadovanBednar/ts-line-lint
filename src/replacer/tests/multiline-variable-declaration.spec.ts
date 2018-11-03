@@ -1,7 +1,7 @@
 import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
-import { createMockConfig } from './create-mock-config';
 import { expectReplacerWithConfig } from './replacer-expects';
+import { createMockConfig } from './replacer-test-utils';
 
 export function multilineVariableDeclarationRuleTestSuite(): void {
     let config: LineLintConfig;
