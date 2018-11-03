@@ -27,3 +27,5 @@ export const patternMap: Dictionary<RegExp> = {
     'duplicate-blanks': /(?<=\n)(\n+)/g,
     'excess-trailing-blanks': /(?<=\n)(\n+)$/g,
 };
+
+export type RuleName = keyof typeof patternMap;

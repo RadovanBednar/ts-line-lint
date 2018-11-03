@@ -1,3 +1,5 @@
+import { RuleName } from '../replacer/pattern-map';
+
 export type IndentType = 'tab' | number;
 
 export interface LineLintConfig {
@@ -5,14 +7,15 @@ export interface LineLintConfig {
     rules: LineLintRules;
 }
 
-export interface LineLintRules {
-    [key: string]: LineLintRuleOptions;
-}
+export type LineLintRules = {
+    [P in RuleName]: LineLintRuleOptions;
+};
 
-export interface LineLintRuleOptions {
-    remove?: LineLintModificationOption;
-    insert?: LineLintModificationOption;
-}
+export type LineLintRuleOption = 'remove' | 'insert';
+
+export type LineLintRuleOptions = {
+    [P in LineLintRuleOption]?: LineLintModificationOption;
+};
 
 export type LineLintModificationOption = 'before' | 'after' | 'both' | 'none';
 
