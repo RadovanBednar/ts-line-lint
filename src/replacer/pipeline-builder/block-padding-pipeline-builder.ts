@@ -1,6 +1,6 @@
 import { LineLintConfig } from '../../config/line-lint-config';
-import { appendBlankLines } from '../../utils/text-utils';
 import { ReplacementPipeline } from './../replacer';
+import { appendBlankLines } from './pipeline-builder-utils';
 
 export class BlockPaddingPipelineBuilder {
 

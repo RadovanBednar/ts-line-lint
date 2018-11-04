@@ -1,8 +1,7 @@
 import { IndentType, LineLintConfig } from '../../config/line-lint-config';
-import { appendBlankLines, prependBlankLines, surroundWithBlankLines } from '../../utils/text-utils';
 import { RuleName } from '../pattern-maps/rule-pattern-map';
 import { ReplacementPipeline, ReplacementStep } from './../replacer';
-import { filterRulesConfiguredFor, preparePatterns } from './pipeline-builder-utils';
+import { appendBlankLines, filterRulesConfiguredFor, preparePatterns, prependBlankLines, surroundWithBlankLines } from './pipeline-builder-utils';
 
 export class RemovalPipelineBuilder {
 
