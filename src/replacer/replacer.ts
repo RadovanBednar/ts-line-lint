@@ -20,10 +20,10 @@ export class Replacer {
 
     private prepareReplacementPipeline(): ReplacementPipeline {
         return [
-            ...new BlockPaddingPipelineBuilder(this.config).get(),
-            ...new RemovalPipelineBuilder(this.config).get(),
-            ...new InsertionPipelineBuilder(this.config).get(),
-            ...new CleanupPipelineBuilder(this.config).get(),
+            ...BlockPaddingPipelineBuilder.build(this.config),
+            ...RemovalPipelineBuilder.build(this.config),
+            ...InsertionPipelineBuilder.build(this.config),
+            ...CleanupPipelineBuilder.build(),
         ];
     }
 

@@ -1,46 +1,40 @@
-import { LineLintConfig } from '../../config/line-lint-config';
+import { IndentType, LineLintConfig } from '../../config/line-lint-config';
 import { appendBlankLines, prependBlankLines, surroundWithBlankLines } from '../../utils/text-utils';
-import { RuleName } from './../pattern-map';
+import { RuleName } from '../pattern-maps/rule-pattern-map';
 import { ReplacementPipeline, ReplacementStep } from './../replacer';
-import { PipelineBuilder } from './pipeline-builder';
+import { filterRulesConfiguredFor, preparePatterns } from './pipeline-builder-utils';
 
-export class RemovalPipelineBuilder extends PipelineBuilder {
+export class RemovalPipelineBuilder {
 
-    constructor(config: LineLintConfig) {
-        super(config);
-    }
-
-    public get(): ReplacementPipeline {
-        return this.pipeline;
-    }
-
-    protected build(): void {
-        for (const rule of this.filterRulesConfiguredFor('remove')) {
-            switch (this.rules[rule].remove) {
+    public static build(config: LineLintConfig): ReplacementPipeline {
+        const removalPipeline = [];
+        for (const rule of filterRulesConfiguredFor('remove', config.rules)) {
+            switch (config.rules[rule].remove) {
                 case 'before':
-                    this.pipeline.push(...this.createRemoveBeforeSteps(rule));
+                    removalPipeline.push(...RemovalPipelineBuilder.createRemoveBeforeSteps(rule, config.indent));
                     break;
                 case 'after':
-                    this.pipeline.push(...this.createRemoveAfterSteps(rule));
+                    removalPipeline.push(...RemovalPipelineBuilder.createRemoveAfterSteps(rule, config.indent));
                     break;
                 case 'both':
-                    this.pipeline.push(...this.createRemoveBothSteps(rule));
+                    removalPipeline.push(...RemovalPipelineBuilder.createRemoveBothSteps(rule, config.indent));
             }
         }
+        return removalPipeline;
     }
 
-    private createRemoveBeforeSteps(rule: RuleName): ReplacementPipeline {
-        return this.preparePatterns(rule)
+    private static createRemoveBeforeSteps(rule: RuleName, indent: IndentType): ReplacementPipeline {
+        return preparePatterns(rule, indent)
             .map((pattern): ReplacementStep => [prependBlankLines(pattern), '$1']);
     }
 
-    private createRemoveAfterSteps(rule: RuleName): ReplacementPipeline {
-        return this.preparePatterns(rule)
+    private static createRemoveAfterSteps(rule: RuleName, indent: IndentType): ReplacementPipeline {
+        return preparePatterns(rule, indent)
             .map((pattern): ReplacementStep => [appendBlankLines(pattern), '$1']);
     }
 
-    private createRemoveBothSteps(rule: RuleName): ReplacementPipeline {
-        return this.preparePatterns(rule)
+    private static createRemoveBothSteps(rule: RuleName, indent: IndentType): ReplacementPipeline {
+        return preparePatterns(rule, indent)
             .map((pattern): ReplacementStep => [surroundWithBlankLines(pattern), '$1']);
     }
 

@@ -1,45 +1,39 @@
-import { LineLintConfig } from '../../config/line-lint-config';
-import { RuleName } from './../pattern-map';
+import { IndentType, LineLintConfig } from '../../config/line-lint-config';
+import { RuleName } from '../pattern-maps/rule-pattern-map';
 import { ReplacementPipeline, ReplacementStep } from './../replacer';
-import { PipelineBuilder } from './pipeline-builder';
+import { filterRulesConfiguredFor, preparePatterns } from './pipeline-builder-utils';
 
-export class InsertionPipelineBuilder extends PipelineBuilder {
+export class InsertionPipelineBuilder {
 
-    constructor(config: LineLintConfig) {
-        super(config);
-    }
-
-    public get(): ReplacementPipeline {
-        return this.pipeline;
-    }
-
-    protected build(): void {
-        for (const rule of this.filterRulesConfiguredFor('insert')) {
-            switch (this.rules[rule].insert) {
+    public static build(config: LineLintConfig): ReplacementPipeline {
+        const insertionPipeline = [];
+        for (const rule of filterRulesConfiguredFor('insert', config.rules)) {
+            switch (config.rules[rule].insert) {
                 case 'before':
-                    this.pipeline.push(...this.createInsertBeforeSteps(rule));
+                    insertionPipeline.push(...InsertionPipelineBuilder.createInsertBeforeSteps(rule, config.indent));
                     break;
                 case 'after':
-                    this.pipeline.push(...this.createInsertAfterSteps(rule));
+                    insertionPipeline.push(...InsertionPipelineBuilder.createInsertAfterSteps(rule, config.indent));
                     break;
                 case 'both':
-                    this.pipeline.push(...this.createInsertBothSteps(rule));
+                    insertionPipeline.push(...InsertionPipelineBuilder.createInsertBothSteps(rule, config.indent));
             }
         }
+        return insertionPipeline;
     }
 
-    private createInsertBeforeSteps(rule: RuleName): ReplacementPipeline {
-        return this.preparePatterns(rule)
+    private static createInsertBeforeSteps(rule: RuleName, indent: IndentType): ReplacementPipeline {
+        return preparePatterns(rule, indent)
             .map((pattern): ReplacementStep => [pattern, '\n$1']);
     }
 
-    private createInsertAfterSteps(rule: RuleName): ReplacementPipeline {
-        return this.preparePatterns(rule)
+    private static createInsertAfterSteps(rule: RuleName, indent: IndentType): ReplacementPipeline {
+        return preparePatterns(rule, indent)
             .map((pattern): ReplacementStep => [pattern, '$1\n']);
     }
 
-    private createInsertBothSteps(rule: RuleName): ReplacementPipeline {
-        return this.preparePatterns(rule)
+    private static createInsertBothSteps(rule: RuleName, indent: IndentType): ReplacementPipeline {
+        return preparePatterns(rule, indent)
             .map((pattern): ReplacementStep => [pattern, '\n$1\n']);
     }
 

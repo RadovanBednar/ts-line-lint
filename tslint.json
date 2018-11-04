@@ -19,6 +19,27 @@
                 "ignore-pattern": "^import "
             }
         ],
+        "member-ordering": [
+            true,
+            {
+                "order": [
+                    "private-static-field",
+                    "protected-static-field",
+                    "public-static-field",
+                    "private-instance-field",
+                    "protected-instance-field",
+                    "public-instance-field",
+                    "private-constructor",
+                    "public-constructor",
+                    "public-instance-method",
+                    "protected-instance-method",
+                    "private-instance-method",
+                    "public-static-method",
+                    "protected-static-method",
+                    "private-static-method"
+                ]
+            }
+        ],
         "object-literal-shorthand": false,
         "object-literal-sort-keys": false,
         "quotemark": [true, "single", "avoid-template"],
