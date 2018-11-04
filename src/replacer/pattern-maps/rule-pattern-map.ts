@@ -1,6 +1,8 @@
-import { Dictionary } from '../utils/types';
+import { Dictionary } from '../../utils/types';
 
-export const patternMap: Dictionary<RegExp> = {
+export type RuleName = keyof typeof rulePatternMap;
+
+export const rulePatternMap: Readonly<Dictionary<RegExp>> = {
     'individual-import': /(^import {(.*|(?:\n(?:[ \t]*.*,?\n)+?))} from .*\n)/mg,
     'consecutive-imports': /((?:^import {(?:.*|(?:\n(?:[ \t]*.*,?\n)+?))} from .*\n)+)/mg,
     'individual-multiline-type-alias': /(^([ \t]*)(?:export )?type .*\n(?:[ \t]+.*\n)+?\2[^;]*;\n)/mg,
@@ -20,11 +22,4 @@ export const patternMap: Dictionary<RegExp> = {
     'unit-test-describe-block': /(^(%INDENT%)describe\(.*{\n(?:.*\n)*?\2}\);\n)/mg,
     'unit-test-hook-statement': /(^([ \t]*)(?:after|before)(?:Each|All)?\(.*(?:;|\n(?:\2[ \t]+.*\n)+\2\S+;)\n)/mg,
     'unit-test-it-statement': /(^([ \t]*)it\(.*\n(?:.*\n)*?\2\S.*;\n)/mg,
-
-    'tslint-disable-next-line-comment': /(^[ \t]*\/(?:\/|\*) tslint:disable-next-line.*\n)\n+/mg,
-    'leading-blank': /^\n+/g,
-    'duplicate-blanks': /(?<=\n)(\n+)/g,
-    'excess-trailing-blanks': /(?<=\n)(\n+)$/g,
 };
-
-export type RuleName = keyof typeof patternMap;

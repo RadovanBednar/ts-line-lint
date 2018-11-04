@@ -1,5 +1,5 @@
 import { IndentType, LineLintConfig, LineLintRuleOption, LineLintRules } from '../../config/line-lint-config';
-import { patternMap, RuleName } from './../pattern-map';
+import { RuleName, rulePatternMap } from '../pattern-maps/rule-pattern-map';
 import { ReplacementPipeline } from './../replacer';
 
 export abstract class PipelineBuilder {
@@ -18,13 +18,13 @@ export abstract class PipelineBuilder {
     protected abstract build(): void;
 
     protected filterRulesConfiguredFor(option: LineLintRuleOption): Array<RuleName> {
-        return Object.keys(patternMap).filter(
+        return Object.keys(rulePatternMap).filter(
             (rule) => this.isRuleSpecified(rule) && this.isOptionSpecified(rule, option),
         );
     }
 
     protected preparePatterns(rule: RuleName): Array<RegExp> {
-        const pattern = patternMap[rule];
+        const pattern = rulePatternMap[rule];
         if (pattern.source.includes('%INDENT%')) {
             return this.makeIndentSpecificPatterns(pattern);
         } else {
