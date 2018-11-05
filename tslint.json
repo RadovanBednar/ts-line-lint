@@ -11,7 +11,7 @@
             ["describe", "only"],
             ["it", "only"]
         ],
-        "interface-name": [true, "never-prefix"],
+        "interface-name": false,
         "max-line-length": [
             true,
             {
@@ -43,6 +43,13 @@
         "object-literal-shorthand": false,
         "object-literal-sort-keys": false,
         "quotemark": [true, "single", "avoid-template"],
-        "typedef": [true, "call-signature", "parameter", "member-variable-declaration"]
+        "typedef": [
+            true,
+            "array-destructuring",
+            "call-signature",
+            "object-destructuring",
+            "parameter",
+            "property-declaration"
+        ]
     }
 }
