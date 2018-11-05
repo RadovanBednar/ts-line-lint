@@ -52,7 +52,7 @@
                 "class-property-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
-                "class-method-or-accessor-declaration": {
+                "method-or-accessor-declaration": {
                     "$ref": "#/definitions/rule_options"
                 },
                 "abstract-method-or-accessor": {

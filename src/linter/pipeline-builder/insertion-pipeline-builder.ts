@@ -1,6 +1,6 @@
 import { IndentType, LineLintConfig } from '../../config/line-lint-config';
 import { RuleName } from '../pattern-maps/rule-pattern-map';
-import { ReplacementPipeline, ReplacementStep } from './../replacer';
+import { ReplacementPipeline, ReplacementStep } from './../linter';
 import { filterRulesConfiguredFor, preparePatterns } from './pipeline-builder-utils';
 
 export class InsertionPipelineBuilder {

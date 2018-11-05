@@ -1,7 +1,7 @@
 import { IndentType, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
-import { expectReplacerWithConfig } from './replacer-expects';
-import { createEmptyMockConfig, createIndentString, createMockConfig } from './replacer-test-utils';
+import { expectLinterWithConfig } from './linter-expects';
+import { createEmptyMockConfig, createIndentString, createMockConfig } from './linter-test-utils';
 
 export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
     let config: LineLintConfig;
@@ -17,8 +17,8 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -30,8 +30,8 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -43,7 +43,7 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should remove blank lines before each describe block', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -55,7 +55,7 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should remove blank lines after each describe block', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -67,7 +67,7 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should remove blank lines both before and after each describe block', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
         });
 
     });
@@ -79,8 +79,8 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -92,7 +92,7 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should insert a blank line before each describe block', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -104,7 +104,7 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should insert a blank line after each describe block', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -116,7 +116,7 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should insert blank lines both before and after each describe block', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
         });
 
     });
@@ -131,7 +131,7 @@ export function unitTestDescribeRuleTestSuite(indent: IndentType): void {
         });
 
         it('should first apply the removal and then the insertion', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });

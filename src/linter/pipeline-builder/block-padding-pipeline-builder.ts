@@ -1,5 +1,5 @@
 import { LineLintConfig } from '../../config/line-lint-config';
-import { ReplacementPipeline } from './../replacer';
+import { ReplacementPipeline } from './../linter';
 import { appendBlankLines } from './pipeline-builder-utils';
 
 export class BlockPaddingPipelineBuilder {

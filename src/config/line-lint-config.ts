@@ -1,4 +1,4 @@
-import { RuleName } from '../replacer/pattern-maps/rule-pattern-map';
+import { RuleName } from '../linter/pattern-maps/rule-pattern-map';
 
 export type IndentType = 'tab' | number;
 

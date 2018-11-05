@@ -17,7 +17,7 @@ import { unitTestDescribeRuleTestSuite } from './tests/unit-test-describe-block.
 import { unitTestHookStatementRuleTestSuite } from './tests/unit-test-hook-statement.spec';
 import { unitTestItStatementRuleTestSuite } from './tests/unit-test-it-statement.spec';
 
-describe('Replacer', () => {
+describe('Linter', () => {
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
     describe('when "block-padding" rule', blockPaddingRuleTestSuite);
     describe('when "individual-import" rule', individualImportRuleTestSuite);

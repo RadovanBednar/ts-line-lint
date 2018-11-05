@@ -1,7 +1,7 @@
 import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
-import { expectReplacerWithConfig } from './replacer-expects';
-import { createMockConfig } from './replacer-test-utils';
+import { expectLinterWithConfig } from './linter-expects';
+import { createMockConfig } from './linter-test-utils';
 
 export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     let config: LineLintConfig;
@@ -20,8 +20,8 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
     describe('is not specified', () => {
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -33,8 +33,8 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -46,7 +46,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should remove blank lines before each group of consecutive single line type aliases', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -58,7 +58,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should remove blank lines after each group of consecutive single line type aliases', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -70,7 +70,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should remove blank lines both before and after each group of consecutive single line type aliases', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
         });
 
     });
@@ -82,8 +82,8 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -95,7 +95,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should insert a blank line before each group of consecutive single line type aliases', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -107,7 +107,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should insert a blank line after each group of consecutive single line type aliases', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -119,7 +119,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should insert blank lines both before and after each group of consecutive single line type aliases', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
         });
 
     });
@@ -134,7 +134,7 @@ export function consecutiveSingleLineTypeAliasesRuleTestSuite(): void {
         });
 
         it('should first apply the removal and then the insertion', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });

@@ -1,5 +1,5 @@
 import { createMultilineString } from '../../utils/text-utils';
-import { expectReplacerToConvert } from './replacer-expects';
+import { expectLinterToConvert } from './linter-expects';
 
 export function cleanupTestSuite(): void {
     let inputSnippet: string;
@@ -33,7 +33,7 @@ export function cleanupTestSuite(): void {
             '',
         );
 
-        expectReplacerToConvert(inputSnippet).to(expectedOutput);
+        expectLinterToConvert(inputSnippet).to(expectedOutput);
     });
 
     it('should remove empty lines from the beginning of a file', () => {
@@ -50,7 +50,7 @@ export function cleanupTestSuite(): void {
             '',
         );
 
-        expectReplacerToConvert(inputSnippet).to(expectedOutput);
+        expectLinterToConvert(inputSnippet).to(expectedOutput);
     });
 
     it('should replace multiple consecutive blank lines with a single one', () => {
@@ -77,7 +77,7 @@ export function cleanupTestSuite(): void {
             '',
         );
 
-        expectReplacerToConvert(inputSnippet).to(expectedOutput);
+        expectLinterToConvert(inputSnippet).to(expectedOutput);
     });
 
     it('should replace multiple trailing blank lines with a single one', () => {
@@ -93,7 +93,7 @@ export function cleanupTestSuite(): void {
             '',
         );
 
-        expectReplacerToConvert(inputSnippet).to(expectedOutput);
+        expectLinterToConvert(inputSnippet).to(expectedOutput);
     });
 
 }

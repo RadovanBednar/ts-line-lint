@@ -1,7 +1,7 @@
 import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
-import { expectReplacerWithConfig } from './replacer-expects';
-import { createMockConfig } from './replacer-test-utils';
+import { expectLinterWithConfig } from './linter-expects';
+import { createMockConfig } from './linter-test-utils';
 
 export function blockPaddingRuleTestSuite(): void {
     const inputSnippetWithBlanks = createMultilineString(
@@ -40,8 +40,8 @@ export function blockPaddingRuleTestSuite(): void {
     describe('is not specified', () => {
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
         });
 
     });
@@ -53,8 +53,8 @@ export function blockPaddingRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
         });
 
     });
@@ -82,7 +82,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '',
             );
 
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
         });
 
     });
@@ -110,7 +110,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '',
             );
 
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
         });
 
     });
@@ -122,7 +122,7 @@ export function blockPaddingRuleTestSuite(): void {
         });
 
         it('should remove blank lines both at the beginning and at the end of each block', () => {
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(inputSnippetWithoutBlanks);
+            expectLinterWithConfig(config).toConvert(inputSnippetWithBlanks).to(inputSnippetWithoutBlanks);
         });
 
     });
@@ -134,8 +134,8 @@ export function blockPaddingRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithBlanks);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippetWithoutBlanks);
         });
 
     });
@@ -163,7 +163,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '',
             );
 
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
         });
 
     });
@@ -191,7 +191,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '',
             );
 
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
         });
 
     });
@@ -205,7 +205,7 @@ export function blockPaddingRuleTestSuite(): void {
         it('should insert blank lines both to the beginning and to the end of each block', () => {
             expectedOutput = inputSnippetWithBlanks;
 
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
         });
 
     });
@@ -236,7 +236,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '',
             );
 
-            expectReplacerWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
         });
 
     });

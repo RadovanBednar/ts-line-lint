@@ -1,5 +1,5 @@
 import { cleanupPatternMap } from '../pattern-maps/cleanup-pattern-map';
-import { ReplacementPipeline } from './../replacer';
+import { ReplacementPipeline } from './../linter';
 
 export class CleanupPipelineBuilder {
 

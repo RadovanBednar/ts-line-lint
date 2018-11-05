@@ -15,8 +15,8 @@ if (!snippetDesc) {
 const ruleCamel = rule[0] + rule.split('-').map((word) => word[0].toUpperCase() + word.slice(1)).join('').slice(1);
 const specTemplate = `import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
-import { createMockConfig } from './replacer-test-utils';
-import { expectReplacerWithConfig } from './replacer-expects';
+import { createMockConfig } from './linter-test-utils';
+import { expectLinterWithConfig } from './linter-expects';
 
 export function %RULE_NAME_CAMEL_CASE%RuleTestSuite(): void {
     let config: LineLintConfig;
@@ -33,8 +33,8 @@ console.log(blanksAround);
     describe('is not specified', () => {
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -46,8 +46,8 @@ console.log(blanksAround);
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -59,7 +59,7 @@ console.log(blanksAround);
         });
 
         it('should remove blank lines before each %SNIPPET_DESC%', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -71,7 +71,7 @@ console.log(blanksAround);
         });
 
         it('should remove blank lines after each %SNIPPET_DESC%', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -83,7 +83,7 @@ console.log(blanksAround);
         });
 
         it('should remove blank lines both before and after each %SNIPPET_DESC%', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
         });
 
     });
@@ -95,8 +95,8 @@ console.log(blanksAround);
         });
 
         it('should only apply cleanup replacements', () => {
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
-            expectReplacerWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -108,7 +108,7 @@ console.log(blanksAround);
         });
 
         it('should insert a blank line before each %SNIPPET_DESC%', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -120,7 +120,7 @@ console.log(blanksAround);
         });
 
         it('should insert a blank line after each %SNIPPET_DESC%', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -132,7 +132,7 @@ console.log(blanksAround);
         });
 
         it('should insert blank lines both before and after each %SNIPPET_DESC%', () => {
-            expectReplacerWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
         });
 
     });
@@ -147,7 +147,7 @@ console.log(blanksAround);
         });
 
         it('should first apply the removal and then the insertion', () => {
-            expectReplacerWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -157,5 +157,5 @@ console.log(blanksAround);
 .replace(/%RULE_NAME_CAMEL_CASE%/g, ruleCamel)
 .replace(/%SNIPPET_DESC%/g, snippetDesc);
 
-fs.writeFileSync(`src/replacer/tests/${rule}.spec.ts`, specTemplate, 'utf-8')
+fs.writeFileSync(`src/linter/tests/${rule}.spec.ts`, specTemplate, 'utf-8')
 process.exit(0);

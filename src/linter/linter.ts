@@ -7,14 +7,18 @@ import { RemovalPipelineBuilder } from './pipeline-builder/removal-pipeline-buil
 export type ReplacementStep = [RegExp, string];
 export type ReplacementPipeline = Array<ReplacementStep>;
 
-export class Replacer {
+export interface ILinter {
+    lint(code: string): string;
+}
+
+export class Linter implements ILinter {
     private readonly replacementPipeline: ReplacementPipeline;
 
     constructor(private config: LineLintConfig) {
         this.replacementPipeline = this.prepareReplacementPipeline();
     }
 
-    public fix(code: string): string {
+    public lint(code: string): string {
         return this.applyReplacements(code, this.replacementPipeline);
     }
 
