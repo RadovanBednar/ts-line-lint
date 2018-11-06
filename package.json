@@ -1,6 +1,6 @@
 {
     "name": "ts-line-lint",
-    "version": "1.4.2",
+    "version": "1.4.3",
     "description": "enforce consistent use of blank lines in TypeScript files",
     "keywords": [
         "lint",
