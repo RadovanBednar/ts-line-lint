@@ -805,6 +805,66 @@ describe('fixLines function', () => {
 
         });
 
+        it('should add blank lines around any class method declaration with an explicit access modifier and a multiline parameter list', () => {
+            for (const modifier of accessModifiers) {
+                const indent = ' '.repeat(`${modifier}foo`.length);
+
+                inputSnippet = createMultilineString([
+                    'class Foo {',
+                    `  ${modifier}foo(private firstParam: VeryLongTypeName,`,
+                    indent + 'private secondParam: EvenLongerTypeName,',
+                    indent + 'private thirdParam: SomeMonstrouslyLongTypeName): bar {',
+                    '    // implementation',
+                    '',
+                    '    // return statement',
+                    '  }',
+                    '}',
+                    '',
+                    'class Bar {',
+                    `  ${modifier}veryLongMethodName<MonstrouslyLongType<WithSomeEvenLongerGenericType>>(`,
+                    'private firstParam: VeryLongTypeName,',
+                    indent + 'private secondParam: EvenLongerTypeName,',
+                    indent + 'private thirdParam: SomeMonstrouslyLongTypeName): bar {',
+                    '    // implementation',
+                    '',
+                    '    // return statement',
+                    '  }',
+                    '}',
+                    '',
+                ]);
+                expectedOutput = createMultilineString([
+                    'class Foo {',
+                    '',
+                    `  ${modifier}foo(private firstParam: VeryLongTypeName,`,
+                    indent + 'private secondParam: EvenLongerTypeName,',
+                    indent + 'private thirdParam: SomeMonstrouslyLongTypeName): bar {',
+                    '    // implementation',
+                    '',
+                    '    // return statement',
+                    '  }',
+                    '',
+                    '}',
+                    '',
+                    'class Bar {',
+                    '',
+                    `  ${modifier}veryLongMethodName<MonstrouslyLongType<WithSomeEvenLongerGenericType>>(`,
+                    'private firstParam: VeryLongTypeName,',
+                    indent + 'private secondParam: EvenLongerTypeName,',
+                    indent + 'private thirdParam: SomeMonstrouslyLongTypeName): bar {',
+                    '    // implementation',
+                    '',
+                    '    // return statement',
+                    '  }',
+                    '',
+                    '}',
+                    '',
+                ]);
+
+                expectSnippet(inputSnippet).toConvertTo(expectedOutput);
+            }
+
+        });
+
         it('should add blank lines around abstract methods', () => {
             for (const modifier of accessModifiers) {
                 inputSnippet = createMultilineString([
