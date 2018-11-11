@@ -1,44 +1,56 @@
-import { expect, use as chaiUse } from 'chai';
+import {expect, use as chaiUse} from 'chai';
 import * as mockfs from 'mock-fs';
+import {Config} from 'mock-fs';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
-import { log } from '../logger';
-import { FileFinder } from './file-finder';
+import {log} from '../logger';
+import {FileFinder} from './file-finder';
 
 chaiUse(sinonChai);
 
 describe('FileFinder.find method', () => {
-    // beforeEach(setMockFileStructure);
+    let logWarningStub: sinon.SinonStub;
 
-    afterEach(mockfs.restore);
+    beforeEach(() => {
+        logWarningStub = sinon.stub(log, 'warning').callsFake(() => null);
+    });
+
+    afterEach(() => {
+        mockfs.restore();
+        logWarningStub.restore();
+    });
 
     describe('when the "dirs" parameter', () => {
 
         describe('contains a non-existent directory name', () => {
-            const dirName = 'nonexistent';
+            const realDir = 'dir';
+            const madeUpDir = 'nonexistent';
 
             beforeEach(() => {
-                mockfs({ src: { 'some-file.ts': '' } });
+                mockfs({
+                    [realDir]: withFiles('some-file.ts'),
+                });
             });
 
             it('should throw error', () => {
-                whenCalledWith(['src', dirName]).expectError(`Couldn't find directory "${dirName}".`);
+                whenCalledWith([realDir, madeUpDir]).expectError(`Couldn't find directory "${madeUpDir}".`);
             });
 
         });
 
         describe('contains a name of a non-directory file', () => {
-            const fileName = 'not-dir.json';
+            const dir = 'dir';
+            const file = 'not-dir.json';
 
             beforeEach(() => {
                 mockfs({
-                    src: { 'some-file.ts': '' },
-                    [fileName]: '',
+                    [dir]: withFiles('some-file.ts'),
+                    ...withFiles(file),
                 });
             });
 
             it('should throw error', () => {
-                whenCalledWith(['src', fileName]).expectError(`File "${fileName}" is not a directory.`);
+                whenCalledWith([dir, file]).expectError(`File "${file}" is not a directory.`);
             });
 
         });
@@ -63,12 +75,9 @@ describe('FileFinder.find method', () => {
 
             beforeEach(() => {
                 mockfs({
-                    [dir]: {
-                        [tsFile1]: '',
-                        [tsFile2]: '',
-                        'non-ts.json': '',
-                    },
+                    [dir]: withFiles(tsFile1, tsFile2, 'non-ts.json'),
                 });
+
             });
 
             it('should return an array of all the paths to *.ts files in this directory', () => {
@@ -90,15 +99,8 @@ describe('FileFinder.find method', () => {
 
             beforeEach(() => {
                 mockfs({
-                    [dir1]: {
-                        [dir1tsFile1]: '',
-                        [dir1tsFile2]: '',
-                        'non-ts.json': '',
-                    },
-                    [dir2]: {
-                        [dir2tsFile]: '',
-                        'non-ts.css': '',
-                    },
+                    [dir1]: withFiles(dir1tsFile1, dir1tsFile2, 'non-ts.json'),
+                    [dir2]: withFiles(dir2tsFile, 'non-ts.css'),
                 });
             });
 
@@ -126,18 +128,9 @@ describe('FileFinder.find method', () => {
             beforeEach(() => {
                 mockfs({
                     [dir1]: {
-                        [dir1subdir1]: {
-                            [dir1subdir1tsFile1]: '',
-                            'non-ts.css': '',
-                            [dir1subdir1tsFile2]: '',
-                        },
-                        [dir1subdir2]: {
-                            'non-ts.html': '',
-                            [dir1subdir2tsFile]: '',
-                        },
-                        [dir1tsFile1]: '',
-                        [dir1tsFile2]: '',
-                        'non-ts.json': '',
+                        [dir1subdir1]: withFiles(dir1subdir1tsFile1, 'non-ts.css', dir1subdir1tsFile2),
+                        [dir1subdir2]: withFiles('non-ts.html', dir1subdir2tsFile),
+                        ...withFiles(dir1tsFile1, dir1tsFile2, 'non-ts.json'),
                     },
                 });
             });
@@ -160,7 +153,9 @@ describe('FileFinder.find method', () => {
             const weirdlyNamedSubdir = 'weirdly-named-subdir.ts';
 
             beforeEach(() => {
-                mockfs({ [dir]: { [weirdlyNamedSubdir]: {} } });
+                mockfs({
+                    [dir]: { [weirdlyNamedSubdir]: {} },
+                });
             });
 
             it('should return an empty array', () => {
@@ -173,26 +168,16 @@ describe('FileFinder.find method', () => {
             const dir1 = 'dir1';
             const dir1tsFile1 = 'file1.ts';
             const dir1tsFile2 = 'file2.ts';
-            let foundFiles: Array<string>;
-            let logStub: sinon.SinonStub;
 
             beforeEach(() => {
                 mockfs({
-                    node_modules: { 'node-modules-file.ts': '' },
-                    [dir1]: {
-                        [dir1tsFile1]: '',
-                        [dir1tsFile2]: '',
-                    },
+                    [dir1]: withFiles(dir1tsFile1, dir1tsFile2),
+                    node_modules: withFiles('node-modules-file.ts'),
                 });
-                logStub = sinon.stub(log, 'warning').callsFake(() => null);
-                foundFiles = FileFinder.find([dir1, 'node_modules']);
-            });
-
-            afterEach(() => {
-                logStub.restore();
             });
 
             it('should log a warning', () => {
+                FileFinder.find([dir1, 'node_modules']);
                 expect(log.warning).to.have.been.calledOnceWith('Skipping excluded directory "node_modules".');
             });
 
@@ -201,7 +186,7 @@ describe('FileFinder.find method', () => {
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
                 ];
-                expect(foundFiles).to.deep.equal(expectedFilePaths);
+                whenCalledWith([dir1, 'node_modules']).expectResult(expectedFilePaths);
             });
 
         });
@@ -212,35 +197,25 @@ describe('FileFinder.find method', () => {
             const dir1tsFile2 = 'file2.ts';
             const hiddenDir = `.${generateRandomString(5)}`;
             const hiddenDirTsFile1 = 'hidden-file.ts';
-            let foundFiles: Array<string>;
-            let logStub: sinon.SinonStub;
 
             beforeEach(() => {
                 mockfs({
-                    [hiddenDir]: { [hiddenDirTsFile1]: '' },
-                    [dir1]: {
-                        [dir1tsFile1]: '',
-                        [dir1tsFile2]: '',
-                    },
+                    [hiddenDir]: withFiles(hiddenDirTsFile1),
+                    [dir1]: withFiles(dir1tsFile1, dir1tsFile2),
                 });
-                logStub = sinon.stub(log, 'warning').callsFake(() => null);
-                foundFiles = FileFinder.find([dir1, hiddenDir]);
-            });
-
-            afterEach(() => {
-                logStub.restore();
             });
 
             it('should log a warning', () => {
+                FileFinder.find([dir1, hiddenDir]);
                 expect(log.warning).to.have.been.calledOnceWith(`Skipping hidden directory "${hiddenDir}".`);
             });
 
-            it('shshould not return any paths from the hidden directory', () => {
+            it('should not return any paths from the hidden directory', () => {
                 const expectedFilePaths = [
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
                 ];
-                expect(foundFiles).to.deep.equal(expectedFilePaths);
+                whenCalledWith([dir1, hiddenDir]).expectResult(expectedFilePaths);
             });
 
         });
@@ -256,15 +231,9 @@ describe('FileFinder.find method', () => {
 
             beforeEach(() => {
                 mockfs({
-                    [dir1]: {
-                        [dir1tsFile1]: '',
-                        [dir1tsFile2]: '',
-                    },
-                    [dir2]: {
-                        [dir2tsFile]: '',
-                    },
-                    [rootTsFile1]: '',
-                    [rootTsFile2]: '',
+                    [dir1]: withFiles(dir1tsFile1, dir1tsFile2),
+                    [dir2]: withFiles(dir2tsFile),
+                    ...withFiles(rootTsFile1, rootTsFile2),
                 });
             });
 
@@ -355,6 +324,14 @@ describe('FileFinder.find method', () => {
     //     });
 
 });
+
+function withFiles(...fileNames: Array<string>): Config {
+    let mockDir: Config = {};
+    fileNames.forEach((file) => {
+        mockDir[file] = '';
+    });
+    return mockDir;
+}
 
 // tslint:disable-next-line:typedef
 function whenCalledWith(dirNames: Array<string>) {
