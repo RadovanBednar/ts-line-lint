@@ -5,39 +5,52 @@ import { log } from '../logger';
 export class FileFinder {
     private static readonly pattern = /\.ts$/;
     private static readonly hiddenDirectoryPattern = /(^|\/)\.[^\/.]+\/?$/;
+    private static ignorePatterns: Array<string> | undefined;
 
-    public static find(dirs: Array<string>, ignore?: Array<string>): Array<string> {
+    public static find(dirs: Array<string>, ignorePatterns?: Array<string>): Array<string> {
+        FileFinder.ignorePatterns = ignorePatterns;
         const files: Array<string> = [];
 
-        dirs.forEach((dir) => {
-            if (!fs.existsSync(dir)) {
-                throw Error(`Couldn't find directory "${dir}".`);
-            }
-            if (!fs.lstatSync(dir).isDirectory()) {
-                throw Error(`File "${dir}" is not a directory.`);
-            }
+        for (const dir of dirs) {
+            FileFinder.assertDirectoryExists(dir);
+
             if (dir === 'node_modules') {
                 log.warning('Skipping excluded directory "node_modules".');
-                return;
+                continue;
             }
-            if (FileFinder.hiddenDirectoryPattern.test(dir)) {
+            if (FileFinder.isHiddenDirectory(dir)) {
                 log.warning(`Skipping hidden directory "${dir}".`);
-                return;
+                continue;
             }
 
             for (const file of fs.readdirSync(dir)) {
-                const filename = path.join(dir, file);
+                const fileName = path.join(dir, file);
 
-                if (fs.lstatSync(filename).isDirectory()) {
-                    files.push(...FileFinder.find([filename], ignore));
-                }
-                if (FileFinder.pattern.test(filename) && !fs.lstatSync(filename).isDirectory()) {
-                    files.push(filename);
+                if (fs.lstatSync(fileName).isDirectory()) {
+                    files.push(...FileFinder.find([fileName], ignorePatterns));
+                } else if (FileFinder.pattern.test(fileName) && !FileFinder.isIgnored(fileName)) {
+                    files.push(fileName);
                 }
             }
-        });
+        }
 
         return files;
+    }
+
+    private static assertDirectoryExists(dir: string): void {
+        if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
+            throw Error(`Couldn't find directory "${dir}".`);
+        }
+    }
+
+    private static isHiddenDirectory(dir: string): boolean {
+        return FileFinder.hiddenDirectoryPattern.test(dir);
+    }
+
+    private static isIgnored(fileName: string): boolean {
+        return FileFinder.ignorePatterns
+            ? FileFinder.ignorePatterns.some((pattern) => fileName.indexOf(pattern) === 0)
+            : false;
     }
 
 }

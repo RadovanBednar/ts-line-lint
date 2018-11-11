@@ -1,14 +1,15 @@
-import {expect, use as chaiUse} from 'chai';
+import { expect, use as chaiUse } from 'chai';
 import * as mockfs from 'mock-fs';
-import {Config} from 'mock-fs';
+import { Config } from 'mock-fs';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
-import {log} from '../logger';
-import {FileFinder} from './file-finder';
+import { log } from '../logger';
+import { generateRandomString } from '../utils/text-utils';
+import { FileFinder } from './file-finder';
 
 chaiUse(sinonChai);
 
-describe('FileFinder.find method', () => {
+describe.only('FileFinder.find method', () => {
     let logWarningStub: sinon.SinonStub;
 
     beforeEach(() => {
@@ -50,12 +51,12 @@ describe('FileFinder.find method', () => {
             });
 
             it('should throw error', () => {
-                whenCalledWith([dir, file]).expectError(`File "${file}" is not a directory.`);
+                whenCalledWith([dir, file]).expectError(`Couldn't find directory "${file}".`);
             });
 
         });
 
-        describe('contains just an empty directory', () => {
+        describe('contains a single directory which is empty', () => {
             const dirName = 'empty';
 
             beforeEach(() => {
@@ -104,7 +105,7 @@ describe('FileFinder.find method', () => {
                 });
             });
 
-            it('should return an array of all the paths to *.ts files in both these directories', () => {
+            it('should return an array of all the paths to *.ts files in these directories', () => {
                 const expectedFilePaths = [
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
@@ -115,7 +116,7 @@ describe('FileFinder.find method', () => {
 
         });
 
-        describe('contains a directory with some files and subdirectories with their own files', () => {
+        describe('contains a single directory with some files and subdirectories with their own files', () => {
             const dir1 = 'dir1';
             const dir1tsFile1 = 'file1.ts';
             const dir1tsFile2 = 'file2.ts';
@@ -135,7 +136,7 @@ describe('FileFinder.find method', () => {
                 });
             });
 
-            it('should return an array of all the paths to *.ts files in both these directories', () => {
+            it('should return an array of all the paths to *.ts files in this directory and its subdirectories', () => {
                 const expectedFilePaths = [
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
@@ -181,7 +182,7 @@ describe('FileFinder.find method', () => {
                 expect(log.warning).to.have.been.calledOnceWith('Skipping excluded directory "node_modules".');
             });
 
-            it('should not return any paths from "node_modules"', () => {
+            it('should not have any paths from "node_modules" in the result', () => {
                 const expectedFilePaths = [
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
@@ -210,7 +211,7 @@ describe('FileFinder.find method', () => {
                 expect(log.warning).to.have.been.calledOnceWith(`Skipping hidden directory "${hiddenDir}".`);
             });
 
-            it('should not return any paths from the hidden directory', () => {
+            it('should not have any paths from the hidden directory in the result', () => {
                 const expectedFilePaths = [
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
@@ -233,11 +234,13 @@ describe('FileFinder.find method', () => {
                 mockfs({
                     [dir1]: withFiles(dir1tsFile1, dir1tsFile2),
                     [dir2]: withFiles(dir2tsFile),
+                    'node_modules': withFiles('this-will-be-skipped.ts'),
+                    '.hidden': withFiles('this-will-also-be-skipped.ts'),
                     ...withFiles(rootTsFile1, rootTsFile2),
                 });
             });
 
-            it('should return an array of all the paths to *.ts files in the root directory and all subdirectories', () => {
+            it('should return paths to *.ts files in the root directory and all non-excluded subdirectories', () => {
                 const expectedFilePaths = [
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
@@ -251,82 +254,113 @@ describe('FileFinder.find method', () => {
         });
 
     });
-    //
-    // describe('when the "ignore" parameter', () => {
-    //     const someFolderTsFiles = [
-    //         'src/some-folder/first-file.ts',
-    //         'src/some-folder/second-file.ts',
-    //         'src/some-folder/third-file.ts',
-    //     ];
-    //     const someOtherFolderTsFiles = [
-    //         'src/some-other-folder/some-file.ts',
-    //         'src/some-other-folder/some-other-file.ts',
-    //         'src/some-other-folder/yet-another-file.ts',
-    //     ];
-    //     const thirdFolderTsFile = 'src/third-folder/lonely-file.ts';
-    //     const allSrcTsFiles = [...someFolderTsFiles, ...someOtherFolderTsFiles, thirdFolderTsFile];
-    //
-    //     describe('is not specified', () => {
-    //
-    //         it('should return an array of all the *.ts files', () => {
-    //             expect(FileFinder.find(['src'])).to.deep.equal(allSrcTsFiles);
-    //         });
-    //
-    //     });
-    //
-    //     describe('is an empty array', () => {
-    //
-    //         it('should return an array of all the *.ts files', () => {
-    //             expect(FileFinder.find(['src'], [])).to.deep.equal(allSrcTsFiles);
-    //         });
-    //
-    //     });
-    //
-    //     describe('is an array containing a file path', () => {
-    //         const ignoredFile = 'src/some-folder/second-file.ts';
-    //         const expectedArray = allSrcTsFiles.filter((file) => file !== ignoredFile);
-    //
-    //         it('should return an array of all the *.ts files except for the ignored one', () => {
-    //             expect(FileFinder.find(['src'], [ignoredFile])).to.deep.equal(expectedArray);
-    //         });
-    //
-    //     });
-    //
-    //     describe('is an array containing two file paths', () => {
-    //         const ignoredFile1 = 'src/some-folder/second-file.ts';
-    //         const ignoredFile2 = 'src/some-folder/second-file.ts';
-    //         const expectedArray = allSrcTsFiles.filter((file) => file !== ignoredFile1 && file !== ignoredFile2);
-    //
-    //         it('should return an array of all the *.ts files except for the two ignored ones', () => {
-    //             expect(FileFinder.find(['src'], [ignoredFile1, ignoredFile2])).to.deep.equal(expectedArray);
-    //         });
-    //
-    //     });
-    //
-    //     describe('is an array containing a directory path', () => {
-    //         const ignoredDir = 'src/some-other-folder';
-    //         const expectedArray = [...someFolderTsFiles, thirdFolderTsFile];
-    //
-    //         it('should return an array of all the *.ts files except for those from the ignored directory', () => {
-    //             expect(FileFinder.find(['src'], [ignoredDir])).to.deep.equal(expectedArray);
-    //         });
-    //
-    //     });
-    //
-    //     describe('is an array containing a file path and a directory path', () => {
-    //         const ignoredDir = 'src/some-other-folder';
-    //
-    //         it('should return an array of all the *.ts files except for the ignored file \
-    //         and all those from the ignored directory', () => {
-    //                 expect(FileFinder.find(['src'], [thirdFolderTsFile, ignoredDir])).to.deep.equal(someFolderTsFiles);
-    //             });
-    //
-    //     });
+
+    describe('when the "ignorePatterns" parameter', () => {
+        const srcDir = 'src';
+        const srcSubdirsContent = {
+            'some-folder': ['first-file.ts', 'second-file.ts', 'style.css', 'third-file.ts'],
+            'some-other-folder': ['some-file.ts', 'some-other-file.ts', 'yet-another-file.ts'],
+            'third-folder': ['lonely-file.ts'],
+        };
+        const rootFolderFiles = ['app.ts', 'index.ts', 'tsconfig.json'];
+        const rootFolderTsFiles = rootFolderFiles.filter((file) => file.endsWith('.ts'));
+        const allTsFilePaths = [
+            ...rootFolderTsFiles,
+            ...getSrcSubdirsTsFilePaths('some-folder'),
+            ...getSrcSubdirsTsFilePaths('some-other-folder'),
+            ...getSrcSubdirsTsFilePaths('third-folder'),
+        ];
+
+        beforeEach(() => {
+            mockfs({
+                '.git': {},
+                'node_modules': {},
+                [srcDir]: {
+                    'some-folder': withFiles(...srcSubdirsContent['some-folder']),
+                    'some-other-folder': withFiles(...srcSubdirsContent['some-other-folder']),
+                    'third-folder': withFiles(...srcSubdirsContent['third-folder']),
+                },
+                ...withFiles(...rootFolderFiles),
+            });
+        });
+
+        describe('is not specified', () => {
+
+            it('should return paths to all the *.ts files in specified directories', () => {
+                whenCalledWith(['.']).expectResult(allTsFilePaths);
+            });
+
+        });
+
+        describe('is an empty array', () => {
+
+            it('should return paths to all the *.ts files in specified dirs', () => {
+                whenCalledWith(['.'], []).expectResult(allTsFilePaths);
+            });
+
+        });
+
+        describe('is an array containing a file path', () => {
+            const ignoredFile = 'src/some-folder/second-file.ts';
+            const expectedResult = allTsFilePaths.filter((file) => file !== ignoredFile);
+
+            it('should return paths to all the *.ts files in specified dirs except the ignored one', () => {
+                whenCalledWith(['.'], [ignoredFile]).expectResult(expectedResult);
+            });
+
+        });
+
+        describe('is an array containing two file paths', () => {
+            const ignoredFile1 = 'src/some-folder/second-file.ts';
+            const ignoredFile2 = 'src/some-folder/second-file.ts';
+            const expectedResult = allTsFilePaths
+                .filter((file) => file !== ignoredFile1 && file !== ignoredFile2);
+
+            it('should return paths to all the *.ts files in specified dirs except the ignored ones', () => {
+                whenCalledWith(['.'], [ignoredFile1, ignoredFile2]).expectResult(expectedResult);
+            });
+
+        });
+
+        describe('is an array containing a directory path', () => {
+            const ignoredDir = 'src/some-other-folder';
+
+            it('should return paths to all the *.ts files in specified dirs except those from the ignored dir', () => {
+                whenCalledWith(['.'], [ignoredDir]).expectResult([
+                    ...rootFolderTsFiles,
+                    ...getSrcSubdirsTsFilePaths('some-folder'),
+                    ...getSrcSubdirsTsFilePaths('third-folder'),
+                ]);
+            });
+
+        });
+
+        describe('is an array containing a file path and a directory path', () => {
+            const ignoredFile = 'src/third-folder/lonely-file.ts';
+            const ignoredDir = 'src/some-other-folder';
+
+            it('should return paths to all the *.ts files in specified dirs except the ignored file \
+and all files from the ignored dir', () => {
+                    whenCalledWith(['.'], [ignoredFile, ignoredDir]).expectResult([
+                        ...rootFolderTsFiles,
+                        ...getSrcSubdirsTsFilePaths('some-folder'),
+                    ]);
+                });
+
+        });
+
+        function getSrcSubdirsTsFilePaths(subdir: keyof typeof srcSubdirsContent): Array<string> {
+            return srcSubdirsContent[subdir]
+                .filter((file) => file.endsWith('.ts'))
+                .map((file) => `${srcDir}/${subdir}/${file}`);
+        }
+
+    });
 
 });
 
 function withFiles(...fileNames: Array<string>): Config {
-    let mockDir: Config = {};
+    const mockDir: Config = {};
     fileNames.forEach((file) => {
         mockDir[file] = '';
     });
@@ -334,46 +368,16 @@ function withFiles(...fileNames: Array<string>): Config {
 }
 
 // tslint:disable-next-line:typedef
-function whenCalledWith(dirNames: Array<string>) {
+function whenCalledWith(dirNames: Array<string>, ignorePatterns?: Array<string>) {
     return {
         expectEmptyResult(): void {
-            expect(FileFinder.find(dirNames)).to.deep.equal([]);
+            expect(FileFinder.find(dirNames, ignorePatterns)).to.deep.equal([]);
         },
         expectResult(filePaths: Array<string>): void {
-            expect(FileFinder.find(dirNames)).to.deep.equal(filePaths);
+            expect(FileFinder.find(dirNames, ignorePatterns)).to.deep.equal(filePaths);
         },
         expectError(message: string): void {
-            expect(() => FileFinder.find(dirNames)).to.throw(message);
+            expect(() => FileFinder.find(dirNames, ignorePatterns)).to.throw(message);
         },
     };
-}
-
-function generateRandomString(length: number): string {
-    return (+new Date() * Math.random()).toString(36).substring(0, length);
-}
-
-function setMockFileStructure(): void {
-    mockfs({
-        '.git': {},
-        'e2e': { 'e2e-test.spec.ts': '' },
-        'node_modules': {},
-        'src': {
-            'some-folder': {
-                'first-file.ts': 'import {...} ...',
-                'second-file.ts': 'import {...} ...',
-                'style.css': 'div {...}',
-                'third-file.ts': 'import {...} ...',
-            },
-            'some-other-folder': {
-                'some-file.ts': 'import {...} ...',
-                'some-other-file.ts': 'import {...} ...',
-                'yet-another-file.ts': 'import {...} ...',
-            },
-            'third-folder': {
-                'lonely-file.ts': 'import {...} ...',
-            },
-        },
-        'index.ts': 'import {...} ...',
-        'tsconfig.json': '...',
-    });
 }
