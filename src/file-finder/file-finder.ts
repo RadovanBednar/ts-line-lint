@@ -14,24 +14,20 @@ export class FileFinder {
         for (const dir of dirs) {
             FileFinder.assertDirectoryExists(dir);
 
-            if (dir === 'node_modules') {
-                log.warning('Skipping excluded directory "node_modules".');
-                continue;
-            }
-            if (FileFinder.isHiddenDirectory(dir)) {
-                log.warning(`Skipping hidden directory "${dir}".`);
-                continue;
-            }
+            if (FileFinder.isSkipped(dir)) {
+                FileFinder.logWarning(dir);
+            } else {
+                for (const file of fs.readdirSync(dir)) {
+                    const fileName = path.join(dir, file);
 
-            for (const file of fs.readdirSync(dir)) {
-                const fileName = path.join(dir, file);
-
-                if (fs.lstatSync(fileName).isDirectory()) {
-                    files.push(...FileFinder.find([fileName], ignorePatterns));
-                } else if (FileFinder.pattern.test(fileName) && !FileFinder.isIgnored(fileName)) {
-                    files.push(fileName);
+                    if (fs.lstatSync(fileName).isDirectory()) {
+                        files.push(...FileFinder.find([fileName], ignorePatterns));
+                    } else if (FileFinder.pattern.test(fileName) && !FileFinder.isIgnored(fileName)) {
+                        files.push(fileName);
+                    }
                 }
             }
+
         }
 
         return files;
@@ -45,6 +41,18 @@ export class FileFinder {
 
     private static isHiddenDirectory(dir: string): boolean {
         return FileFinder.hiddenDirectoryPattern.test(dir);
+    }
+
+    private static isSkipped(dir: string): boolean {
+        return dir === 'node_modules' || FileFinder.isHiddenDirectory(dir);
+    }
+
+    private static logWarning(dir: string): void {
+        if (dir === 'node_modules') {
+            log.warning('Skipping excluded directory "node_modules".');
+        } else {
+            log.warning(`Skipping hidden directory "${dir}".`);
+        }
     }
 
     private static isIgnored(fileName: string): boolean {
