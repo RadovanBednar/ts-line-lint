@@ -9,7 +9,7 @@ import { FileFinder } from './file-finder';
 
 chaiUse(sinonChai);
 
-describe.only('FileFinder.find method', () => {
+describe('FileFinder.find method', () => {
     let logWarningStub: sinon.SinonStub;
 
     beforeEach(() => {
