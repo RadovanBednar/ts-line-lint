@@ -34,7 +34,7 @@ describe.only('FileFinder.find method', () => {
             });
 
             it('should throw error', () => {
-                whenCalledWith([realDir, madeUpDir]).expectError(`Couldn't find directory "${madeUpDir}".`);
+                whenCreatedWith([realDir, madeUpDir]).expectError(`Couldn't find directory "${madeUpDir}".`);
             });
 
         });
@@ -51,7 +51,7 @@ describe.only('FileFinder.find method', () => {
             });
 
             it('should throw error', () => {
-                whenCalledWith([dir, file]).expectError(`Couldn't find directory "${file}".`);
+                whenCreatedWith([dir, file]).expectError(`Couldn't find directory "${file}".`);
             });
 
         });
@@ -64,7 +64,7 @@ describe.only('FileFinder.find method', () => {
             });
 
             it('should return an empty array', () => {
-                whenCalledWith([dirName]).expectEmptyResult();
+                whenCreatedWith([dirName]).expectEmptyGetFilesResult();
             });
 
         });
@@ -86,7 +86,7 @@ describe.only('FileFinder.find method', () => {
                     `${dir}/${tsFile1}`,
                     `${dir}/${tsFile2}`,
                 ];
-                whenCalledWith([dir]).expectResult(expectedFilePaths);
+                whenCreatedWith([dir]).expectGetFilesResult(expectedFilePaths);
             });
 
         });
@@ -111,7 +111,7 @@ describe.only('FileFinder.find method', () => {
                     `${dir1}/${dir1tsFile2}`,
                     `${dir2}/${dir2tsFile}`,
                 ];
-                whenCalledWith([dir1, dir2]).expectResult(expectedFilePaths);
+                whenCreatedWith([dir1, dir2]).expectGetFilesResult(expectedFilePaths);
             });
 
         });
@@ -144,7 +144,7 @@ describe.only('FileFinder.find method', () => {
                     `${dir1}/${dir1subdir1}/${dir1subdir1tsFile2}`,
                     `${dir1}/${dir1subdir2}/${dir1subdir2tsFile}`,
                 ];
-                whenCalledWith([dir1]).expectResult(expectedFilePaths);
+                whenCreatedWith([dir1]).expectGetFilesResult(expectedFilePaths);
             });
 
         });
@@ -160,7 +160,7 @@ describe.only('FileFinder.find method', () => {
             });
 
             it('should return an empty array', () => {
-                whenCalledWith([dir]).expectEmptyResult();
+                whenCreatedWith([dir]).expectEmptyGetFilesResult();
             });
 
         });
@@ -178,8 +178,7 @@ describe.only('FileFinder.find method', () => {
             });
 
             it('should log a warning', () => {
-                FileFinder.find([dir1, 'node_modules']);
-                expect(log.warning).to.have.been.calledOnceWith('Skipping excluded directory "node_modules".');
+                whenCreatedWith([dir1, 'node_modules']).expectWarning('Skipping excluded directory "node_modules".');
             });
 
             it('should not have any paths from "node_modules" in the result', () => {
@@ -187,7 +186,7 @@ describe.only('FileFinder.find method', () => {
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
                 ];
-                whenCalledWith([dir1, 'node_modules']).expectResult(expectedFilePaths);
+                whenCreatedWith([dir1, 'node_modules']).expectGetFilesResult(expectedFilePaths);
             });
 
         });
@@ -207,8 +206,7 @@ describe.only('FileFinder.find method', () => {
             });
 
             it('should log a warning', () => {
-                FileFinder.find([dir1, hiddenDir]);
-                expect(log.warning).to.have.been.calledOnceWith(`Skipping hidden directory "${hiddenDir}".`);
+                whenCreatedWith([dir1, hiddenDir]).expectWarning(`Skipping hidden directory "${hiddenDir}".`);
             });
 
             it('should not have any paths from the hidden directory in the result', () => {
@@ -216,7 +214,7 @@ describe.only('FileFinder.find method', () => {
                     `${dir1}/${dir1tsFile1}`,
                     `${dir1}/${dir1tsFile2}`,
                 ];
-                whenCalledWith([dir1, hiddenDir]).expectResult(expectedFilePaths);
+                whenCreatedWith([dir1, hiddenDir]).expectGetFilesResult(expectedFilePaths);
             });
 
         });
@@ -248,7 +246,7 @@ describe.only('FileFinder.find method', () => {
                     `${rootTsFile1}`,
                     `${rootTsFile2}`,
                 ];
-                whenCalledWith(['.']).expectResult(expectedFilePaths);
+                whenCreatedWith(['.']).expectGetFilesResult(expectedFilePaths);
             });
 
         });
@@ -287,7 +285,7 @@ describe.only('FileFinder.find method', () => {
         describe('is not specified', () => {
 
             it('should return paths to all the *.ts files in specified directories', () => {
-                whenCalledWith(['.']).expectResult(allTsFilePaths);
+                whenCreatedWith(['.']).expectGetFilesResult(allTsFilePaths);
             });
 
         });
@@ -295,7 +293,7 @@ describe.only('FileFinder.find method', () => {
         describe('is an empty array', () => {
 
             it('should return paths to all the *.ts files in specified dirs', () => {
-                whenCalledWith(['.'], []).expectResult(allTsFilePaths);
+                whenCreatedWith(['.'], []).expectGetFilesResult(allTsFilePaths);
             });
 
         });
@@ -305,7 +303,7 @@ describe.only('FileFinder.find method', () => {
             const expectedResult = allTsFilePaths.filter((file) => file !== ignoredFile);
 
             it('should return paths to all the *.ts files in specified dirs except the ignored one', () => {
-                whenCalledWith(['.'], [ignoredFile]).expectResult(expectedResult);
+                whenCreatedWith(['.'], [ignoredFile]).expectGetFilesResult(expectedResult);
             });
 
         });
@@ -317,7 +315,7 @@ describe.only('FileFinder.find method', () => {
                 .filter((file) => file !== ignoredFile1 && file !== ignoredFile2);
 
             it('should return paths to all the *.ts files in specified dirs except the ignored ones', () => {
-                whenCalledWith(['.'], [ignoredFile1, ignoredFile2]).expectResult(expectedResult);
+                whenCreatedWith(['.'], [ignoredFile1, ignoredFile2]).expectGetFilesResult(expectedResult);
             });
 
         });
@@ -326,7 +324,7 @@ describe.only('FileFinder.find method', () => {
             const ignoredDir = 'src/some-other-folder';
 
             it('should return paths to all the *.ts files in specified dirs except those from the ignored dir', () => {
-                whenCalledWith(['.'], [ignoredDir]).expectResult([
+                whenCreatedWith(['.'], [ignoredDir]).expectGetFilesResult([
                     ...rootFolderTsFiles,
                     ...getSrcSubdirsTsFilePaths('some-folder'),
                     ...getSrcSubdirsTsFilePaths('third-folder'),
@@ -341,7 +339,7 @@ describe.only('FileFinder.find method', () => {
 
             it('should return paths to all the *.ts files in specified dirs except the ignored file \
 and all files from the ignored dir', () => {
-                    whenCalledWith(['.'], [ignoredFile, ignoredDir]).expectResult([
+                    whenCreatedWith(['.'], [ignoredFile, ignoredDir]).expectGetFilesResult([
                         ...rootFolderTsFiles,
                         ...getSrcSubdirsTsFilePaths('some-folder'),
                     ]);
@@ -368,16 +366,20 @@ function withFiles(...fileNames: Array<string>): Config {
 }
 
 // tslint:disable-next-line:typedef
-function whenCalledWith(dirNames: Array<string>, ignorePatterns?: Array<string>) {
+function whenCreatedWith(dirNames: Array<string>, ignorePatterns?: Array<string>) {
     return {
-        expectEmptyResult(): void {
-            expect(FileFinder.find(dirNames, ignorePatterns)).to.deep.equal([]);
+        expectEmptyGetFilesResult(): void {
+            expect(new FileFinder(dirNames, ignorePatterns).getFiles()).to.deep.equal([]);
         },
-        expectResult(filePaths: Array<string>): void {
-            expect(FileFinder.find(dirNames, ignorePatterns)).to.deep.equal(filePaths);
+        expectGetFilesResult(filePaths: Array<string>): void {
+            expect(new FileFinder(dirNames, ignorePatterns).getFiles()).to.deep.equal(filePaths);
+        },
+        expectWarning(message: string): void {
+            const finder = new FileFinder(dirNames, ignorePatterns);
+            expect(log.warning).to.have.been.calledOnceWith(message);
         },
         expectError(message: string): void {
-            expect(() => FileFinder.find(dirNames, ignorePatterns)).to.throw(message);
+            expect(() => new FileFinder(dirNames, ignorePatterns)).to.throw(message);
         },
     };
 }
