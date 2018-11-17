@@ -3,7 +3,7 @@ import { Dictionary } from '../../utils/types';
 export type RuleName = keyof typeof rulePatternMap;
 
 export const rulePatternMap: Readonly<Dictionary<RegExp>> = {
-    'individual-import': /(^import {(.*|(?:\n(?:[ \t]*.*,?\n)+?))} from .*\n)/mg,
+    'individual-import': /(^import (?:\* as \w+|{(.*|(?:\n(?:[ \t]*.*,?\n)+?))}) from .*\n)/mg,
     'consecutive-imports': /((?:^import {(?:.*|(?:\n(?:[ \t]*.*,?\n)+?))} from .*\n)+)/mg,
     'individual-multiline-type-alias': /(^([ \t]*)(?:export )?type .*\n(?:[ \t]+.*\n)+?\2[^;]*;\n)/mg,
     'consecutive-single-line-type-aliases': /((?:^[ \t]*(?:export )?type .*;\n)+)/mg,

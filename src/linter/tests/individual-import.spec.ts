@@ -4,26 +4,32 @@ import { expectLinterWithConfig } from './linter-expects';
 import { createMockConfig } from './linter-test-utils';
 
 export function individualImportRuleTestSuite(): void {
-    const inputSnippet = createMultilineString(
+    let config: LineLintConfig;
+    const noBlanksAround = createMultilineString(
+        '// non-blank line',
         'import {SingleImportedItem} from "abc";',
-        '',
-        'import {AnotherSingleImportedItem} from "./def";',
-        'import {YetAnotherSingleImportedItem} from "./ghi";',
-        '',
+        '// non-blank line',
+        'import {ExportedItem as AliasedItem} from "def";',
+        '// non-blank line',
+        'import { FirstItem, SecondItem } from "ghi";',
+        '// non-blank line',
+        'import * as jkl from "mno";',
+        '// non-blank line',
         'import {',
-        '  FirstOfSeveralImportedItems,',
-        '  SecondOfSeveralImportedItems',
-        '} from "../jkl";',
-        '',
+        '  FirstOfSeveralLongNameImportedItems,',
+        '  SecondOfSeveralLongNameImportedItems',
+        '} from "../pqr";',
         '// non-blank line',
     );
-    let expectedOutput: string;
-    let config: LineLintConfig;
+    const blanksAround = noBlanksAround.replace(/(\/\/ non-blank line)/g, '\n$1\n').slice(1, -1);
+    const blanksOnlyAfter = noBlanksAround.replace(/(\/\/ non-blank line)/g, '\n$1').slice(1);
+    const blanksOnlyBefore = noBlanksAround.replace(/(\/\/ non-blank line)/g, '$1\n').slice(0, -1);
 
     describe('is not specified', () => {
 
         it('should only apply cleanup replacements', () => {
-            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(inputSnippet);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(EMPTY_RULES_CONFIG).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -35,7 +41,8 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippet);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -47,19 +54,7 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should remove blank lines before each individual import', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                'import {AnotherSingleImportedItem} from "./def";',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '',
-                '// non-blank line',
-            );
-
-            expectLinterWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -71,18 +66,7 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should remove blank lines after each individual import', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                'import {AnotherSingleImportedItem} from "./def";',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '// non-blank line',
-            );
-
-            expectLinterWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -94,18 +78,7 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should remove blank lines both before and after each individual import', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                'import {AnotherSingleImportedItem} from "./def";',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '// non-blank line',
-            );
-
-            expectLinterWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(noBlanksAround);
         });
 
     });
@@ -117,7 +90,8 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should only apply cleanup replacements', () => {
-            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(inputSnippet);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(blanksAround);
+            expectLinterWithConfig(config).toOnlyApplyCleanupReplacementsTo(noBlanksAround);
         });
 
     });
@@ -129,22 +103,7 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should insert a blank line before each individual import', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                '',
-                'import {AnotherSingleImportedItem} from "./def";',
-                '',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '',
-                '// non-blank line',
-            );
-
-            expectLinterWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyBefore);
         });
 
     });
@@ -156,22 +115,7 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should insert a blank line after each individual import', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                '',
-                'import {AnotherSingleImportedItem} from "./def";',
-                '',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '',
-                '// non-blank line',
-            );
-
-            expectLinterWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksOnlyAfter);
         });
 
     });
@@ -183,22 +127,7 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should insert blank lines both before and after each individual import', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                '',
-                'import {AnotherSingleImportedItem} from "./def";',
-                '',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '',
-                '// non-blank line',
-            );
-
-            expectLinterWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(noBlanksAround).to(blanksAround);
         });
 
     });
@@ -213,22 +142,7 @@ export function individualImportRuleTestSuite(): void {
         });
 
         it('should first apply the removal and then the insertion', () => {
-            expectedOutput = createMultilineString(
-                'import {SingleImportedItem} from "abc";',
-                '',
-                'import {AnotherSingleImportedItem} from "./def";',
-                '',
-                'import {YetAnotherSingleImportedItem} from "./ghi";',
-                '',
-                'import {',
-                '  FirstOfSeveralImportedItems,',
-                '  SecondOfSeveralImportedItems',
-                '} from "../jkl";',
-                '',
-                '// non-blank line',
-            );
-
-            expectLinterWithConfig(config).toConvert(inputSnippet).to(expectedOutput);
+            expectLinterWithConfig(config).toConvert(blanksAround).to(blanksOnlyAfter);
         });
 
     });
