@@ -8,15 +8,15 @@
         "blank",
         "line"
     ],
-    "main": "build/index.js",
+    "main": "dist/index.js",
     "bin": {
-        "ts-line-lint": "./build/index.js"
+        "ts-line-lint": "./dist/index.js"
     },
     "scripts": {
-        "build": "rm -rf ./build/ && rm -rf ./tsDist/ && tsc && babel tsDist --out-dir build --ignore '**/*.spec.js'",
+        "build": "rm -rf ./dist/ && tsc",
         "prepublishOnly": "npm run build",
         "release": "np",
-        "start": "node build/index.js",
+        "start": "node dist/index.js",
         "test": "mocha -r ts-node/register src/*.spec.ts src/**/*.spec.ts",
         "new-rule": "node src/tools/rule-spec-generator.js \"$@\"",
         "lint": "tslint -p tsconfig.json -c ./tslint.json './**/*.ts' -e './**/node_modules/**' -e './**/dist/**'",
@@ -25,11 +25,6 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/RadovanBednar/ts-line-lint"
-    },
-    "babel": {
-        "presets": [
-            "latest"
-        ]
     },
     "author": "Radovan Bednár",
     "license": "ISC",
@@ -40,8 +35,6 @@
         "@types/node": "^10.12.0",
         "@types/sinon": "^5.0.5",
         "@types/sinon-chai": "^3.2.0",
-        "babel-cli": "^6.26.0",
-        "babel-preset-latest": "^6.24.1",
         "chai": "^4.1.2",
         "mocha": "^5.2.0",
         "mock-fs": "^4.7.0",
