@@ -1,5 +1,4 @@
-import { IndentType } from '../../config/line-lint-config';
-import { IndentSpecificRuleName, SimpleRuleName } from '../rules';
+import { SimpleRuleName } from '../rules';
 import { abstractMethodOrAccessorTestSnippet } from './snippets/abstract-method-or-accessor-test-snippet';
 import { classDeclarationTestSnippet } from './snippets/class-declaration-test-snippet';
 import { classPropertyDeclarationTestSnippet } from './snippets/class-property-declaration-test-snippet';
@@ -13,7 +12,6 @@ import { methodOrAccessorDeclarationTestSnippet } from './snippets/method-or-acc
 import { multilineVariableDeclarationTestSnippet } from './snippets/multiline-variable-declaration-test-snippet';
 import { propertyWithEffectDecoratorTestSnippet } from './snippets/property-with-effect-decorator-test-snippet';
 import { singleLineVariableDeclarationTestSnippet } from './snippets/single-line-variable-declaration-test-snippet';
-import { unitTestDescribeBlockTestSnippetPlaceholderFactory } from './snippets/unit-test-describe-block-test-snippet';
 import { unitTestHookStatementTestSnippet } from './snippets/unit-test-hook-statement-test-snippet';
 import { unitTestItStatementTestSnippet } from './snippets/unit-test-it-statement-test-snippet';
 
@@ -33,8 +31,4 @@ export const simpleTestSnippetMap: { [key in SimpleRuleName]: string } = {
     'property-with-effect-decorator': propertyWithEffectDecoratorTestSnippet,
     'unit-test-hook-statement': unitTestHookStatementTestSnippet,
     'unit-test-it-statement': unitTestItStatementTestSnippet,
-};
-
-export const indentSpecificTestSnippetMap: { [key in IndentSpecificRuleName]: (indent: IndentType) => string } = {
-    'unit-test-describe-block': unitTestDescribeBlockTestSnippetPlaceholderFactory,
 };

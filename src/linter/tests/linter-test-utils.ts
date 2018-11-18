@@ -22,11 +22,3 @@ export function createEmptyMockConfig(indent: 'tab' | number): LineLintConfig {
         rules: {},
     };
 }
-
-export function createIndentString(indent: IndentType): string {
-    if (indent === 'tab') {
-        return '\t';
-    } else {
-        return ' '.repeat(indent);
-    }
-}

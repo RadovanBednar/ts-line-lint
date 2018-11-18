@@ -2,14 +2,14 @@ import { IndentType, LineLintConfig } from '../../config/line-lint-config';
 import { IndentSpecificRuleName } from '../rules';
 import { expectLinterWithConfig } from './linter-expects';
 import { createEmptyMockConfig, createMockConfig, getPatternDescription } from './linter-test-utils';
-import { indentSpecificTestSnippetMap } from './test-snippet-map';
+import { IndentSpecificSnippetFactory } from './snippet-factory/indent-specific-snippet-factory';
 
 export function indentSpecificRuleTestSuite(ruleName: IndentSpecificRuleName, indent: IndentType): void {
-    const testSnippetPlaceholder = indentSpecificTestSnippetMap[ruleName](indent);
-    const noBlanksAround = createSnippetWithNoBlanksAround();
-    const blanksAround = createSnippetWithBlanksAround();
-    const blanksOnlyAfter = createSnippetWithBlanksOnlyAfter();
-    const blanksOnlyBefore = createSnippetWithBlanksOnlyBefore();
+    const snippetFactory = new IndentSpecificSnippetFactory(ruleName, indent);
+    const noBlanksAround = snippetFactory.createSnippetWithNoBlanksAround();
+    const blanksAround = snippetFactory.createSnippetWithBlanksAround();
+    const blanksOnlyAfter = snippetFactory.createSnippetWithBlanksOnlyAfter();
+    const blanksOnlyBefore = snippetFactory.createSnippetWithBlanksOnlyBefore();
     const patternDescription = getPatternDescription(ruleName);
     let config: LineLintConfig;
 
@@ -138,29 +138,5 @@ export function indentSpecificRuleTestSuite(ruleName: IndentSpecificRuleName, in
         });
 
     });
-
-    function createSnippetWithNoBlanksAround(): string {
-        return testSnippetPlaceholder
-            .replace(/%BLANK_BEFORE%\n/g, '')
-            .replace(/%BLANK_AFTER%\n/g, '');
-    }
-
-    function createSnippetWithBlanksAround(): string {
-        return testSnippetPlaceholder
-            .replace(/%BLANK_BEFORE%\n/g, '\n')
-            .replace(/%BLANK_AFTER%\n/g, '\n');
-    }
-
-    function createSnippetWithBlanksOnlyAfter(): string {
-        return testSnippetPlaceholder
-            .replace(/%BLANK_BEFORE%\n/g, '')
-            .replace(/%BLANK_AFTER%\n/g, '\n');
-    }
-
-    function createSnippetWithBlanksOnlyBefore(): string {
-        return testSnippetPlaceholder
-            .replace(/%BLANK_BEFORE%\n/g, '\n')
-            .replace(/%BLANK_AFTER%\n/g, '');
-    }
 
 }
