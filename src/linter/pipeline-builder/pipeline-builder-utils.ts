@@ -1,6 +1,5 @@
 import { IndentType, LineLintRuleOption, LineLintRules } from '../../config/line-lint-config';
-import { ruleApplicationOrder, rulePatternMap } from '../pattern-maps/rule-pattern-map';
-import { RuleName } from '../rules';
+import { ruleApplicationOrder, RuleName, rulePatternMap } from '../rules';
 
 export function filterRulesConfiguredFor(option: LineLintRuleOption, definedRules: LineLintRules): Array<RuleName> {
     return ruleApplicationOrder.filter(

@@ -1,7 +1,6 @@
 import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { SimpleRuleName } from '../rules';
-import { expectLinterWithConfig } from './linter-expects';
-import { createMockConfig, getPatternDescription } from './linter-test-utils';
+import { createMockConfig, expectLinterWithConfig, getPatternDescription } from './linter-test-utils';
 import { SimpleSnippetFactory } from './snippet-factory/simple-snippet-factory';
 
 export function simpleRuleTestSuite(ruleName: SimpleRuleName): void {

@@ -1,7 +1,6 @@
 import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
 import { createMultilineString } from '../../utils/text-utils';
-import { expectLinterWithConfig } from './linter-expects';
-import { createMockConfig } from './linter-test-utils';
+import { createMockConfig, expectLinterWithConfig } from './linter-test-utils';
 
 export function blockPaddingRuleTestSuite(): void {
     const inputSnippetWithBlanks = createMultilineString(

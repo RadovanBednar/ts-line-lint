@@ -1,7 +1,7 @@
-import { blockPaddingRuleTestSuite } from './tests/block-padding.spec';
-import { cleanupTestSuite } from './tests/cleanup.spec';
-import { indentSpecificRuleTestSuite } from './tests/indent-specific-rule.spec';
-import { simpleRuleTestSuite } from './tests/simple-rule.spec';
+import { blockPaddingRuleTestSuite } from './test/block-padding.spec';
+import { cleanupTestSuite } from './test/cleanup.spec';
+import { indentSpecificRuleTestSuite } from './test/indent-specific-rule.spec';
+import { simpleRuleTestSuite } from './test/simple-rule.spec';
 
 describe('Linter', () => {
 

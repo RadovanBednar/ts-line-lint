@@ -1,5 +1,5 @@
 import { createMultilineString } from '../../utils/text-utils';
-import { expectLinterToConvert } from './linter-expects';
+import { expectLinterToConvert } from './linter-test-utils';
 
 export function cleanupTestSuite(): void {
     let inputSnippet: string;

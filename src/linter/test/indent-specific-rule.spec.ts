@@ -1,7 +1,6 @@
 import { IndentType, LineLintConfig } from '../../config/line-lint-config';
 import { IndentSpecificRuleName } from '../rules';
-import { expectLinterWithConfig } from './linter-expects';
-import { createEmptyMockConfig, createMockConfig, getPatternDescription } from './linter-test-utils';
+import { createEmptyMockConfig, createMockConfig, expectLinterWithConfig, getPatternDescription } from './linter-test-utils';
 import { IndentSpecificSnippetFactory } from './snippet-factory/indent-specific-snippet-factory';
 
 export function indentSpecificRuleTestSuite(ruleName: IndentSpecificRuleName, indent: IndentType): void {
