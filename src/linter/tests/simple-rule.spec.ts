@@ -1,15 +1,15 @@
 import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-config';
-import { RuleName } from '../rules';
+import { SimpleRuleName } from '../rules';
 import { expectLinterWithConfig } from './linter-expects';
-import { createMockConfig } from './linter-test-utils';
-import { testSnippetMap } from './test-snippet-map';
+import { createMockConfig, getPatternDescription } from './linter-test-utils';
+import { simpleTestSnippetMap } from './test-snippet-map';
 
-export function simpleRuleTestSuite(ruleName: RuleName): void {
-    const noBlanksAround = testSnippetMap[ruleName];
+export function simpleRuleTestSuite(ruleName: SimpleRuleName): void {
+    const noBlanksAround = simpleTestSnippetMap[ruleName];
     const blanksAround = createSnippetWithBlanksAround();
     const blanksOnlyAfter = createSnippetWithBlanksOnlyAfter();
     const blanksOnlyBefore = createSnippetWithBlanksOnlyBefore();
-    const patternDescription = getPatternDescription();
+    const patternDescription = getPatternDescription(ruleName);
     let config: LineLintConfig;
 
     describe('is not specified', () => {
@@ -136,9 +136,9 @@ export function simpleRuleTestSuite(ruleName: RuleName): void {
 
     function createSnippetWithBlanksAround(): string {
         if (hasTopLevelPlaceholderLines()) {
-            return testSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '\n$1\n').slice(1, -1);
+            return simpleTestSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '\n$1\n').slice(1, -1);
         } else {
-            return testSnippetMap[ruleName]
+            return simpleTestSnippetMap[ruleName]
                 .replace(/((?<!{\n)  \/\/ non-blank line)/g, '\n$1')
                 .replace(/(  \/\/ non-blank line(?!\n}))/g, '$1\n');
         }
@@ -146,28 +146,23 @@ export function simpleRuleTestSuite(ruleName: RuleName): void {
 
     function createSnippetWithBlanksOnlyAfter(): string {
         if (hasTopLevelPlaceholderLines()) {
-            return testSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '\n$1').slice(1);
+            return simpleTestSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '\n$1').slice(1);
         } else {
-            return testSnippetMap[ruleName].replace(/((?<!{\n)  \/\/ non-blank line)/g, '\n$1');
+            return simpleTestSnippetMap[ruleName].replace(/((?<!{\n)  \/\/ non-blank line)/g, '\n$1');
 
         }
     }
 
     function createSnippetWithBlanksOnlyBefore(): string {
         if (hasTopLevelPlaceholderLines()) {
-            return testSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '$1\n').slice(0, -1);
+            return simpleTestSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '$1\n').slice(0, -1);
         } else {
-            return testSnippetMap[ruleName].replace(/(  \/\/ non-blank line(?!\n}))/g, '$1\n');
+            return simpleTestSnippetMap[ruleName].replace(/(  \/\/ non-blank line(?!\n}))/g, '$1\n');
         }
     }
 
     function hasTopLevelPlaceholderLines(): boolean {
-        return /^\/\/ non-blank line\n/.test(testSnippetMap[ruleName]);
-    }
-
-    function getPatternDescription(): string {
-        const description = ruleName.replace(/(?<!single)-/g, ' ');
-        return ruleName.startsWith('consecutive') ? 'group of ' + description : description;
+        return /^\/\/ non-blank line\n/.test(simpleTestSnippetMap[ruleName]);
     }
 
 }

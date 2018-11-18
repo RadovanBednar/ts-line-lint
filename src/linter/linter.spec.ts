@@ -1,7 +1,7 @@
 import { blockPaddingRuleTestSuite } from './tests/block-padding.spec';
 import { cleanupTestSuite } from './tests/cleanup.spec';
+import { indentSpecificRuleTestSuite } from './tests/indent-specific-rule.spec';
 import { simpleRuleTestSuite } from './tests/simple-rule.spec';
-import { unitTestDescribeRuleTestSuite } from './tests/unit-test-describe-block.spec';
 
 describe('Linter', () => {
 
@@ -38,11 +38,14 @@ describe('Linter', () => {
 
     describe('when "property-with-effect-decorator" rule', () => simpleRuleTestSuite('property-with-effect-decorator'));
 
-    describe('when indent is 2 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(2));
+    describe('when indent is 2 spaces and "unit-test-describe-block" rule',
+        () => indentSpecificRuleTestSuite('unit-test-describe-block', 2));
 
-    describe('when indent is 5 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(5));
+    describe('when indent is 5 spaces and "unit-test-describe-block" rule',
+        () => indentSpecificRuleTestSuite('unit-test-describe-block', 5));
 
-    describe('when indent is "tab" and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite('tab'));
+    describe('when indent is "tab" and "unit-test-describe-block" rule',
+        () => indentSpecificRuleTestSuite('unit-test-describe-block', 'tab'));
 
     describe('when "unit-test-hook-statement" rule', () => simpleRuleTestSuite('unit-test-hook-statement'));
 
