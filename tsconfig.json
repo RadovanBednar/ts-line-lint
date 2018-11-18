@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "outDir": "dist",
-    "module": "commonjs",
-    "target": "es6",
-    "strict": true
-  },
-  "include": ["src"],
-  "exclude": [
-    "src/tools"
-  ]
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "dist",
+        "strict": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "target": "es6"
+    },
+    "include": [
+        "src"
+    ]
 }

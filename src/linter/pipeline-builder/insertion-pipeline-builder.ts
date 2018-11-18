@@ -1,5 +1,5 @@
 import { IndentType, LineLintConfig } from '../../config/line-lint-config';
-import { RuleName } from '../pattern-maps/rule-pattern-map';
+import { RuleName } from '../rules';
 import { ReplacementPipeline, ReplacementStep } from './../linter';
 import { filterRulesConfiguredFor, preparePatterns } from './pipeline-builder-utils';
 
@@ -8,7 +8,7 @@ export class InsertionPipelineBuilder {
     public static build(config: LineLintConfig): ReplacementPipeline {
         const insertionPipeline = [];
         for (const rule of filterRulesConfiguredFor('insert', config.rules)) {
-            switch (config.rules[rule].insert) {
+            switch (config.rules[rule]!.insert) {
                 case 'before':
                     insertionPipeline.push(...InsertionPipelineBuilder.createInsertBeforeSteps(rule, config.indent));
                     break;

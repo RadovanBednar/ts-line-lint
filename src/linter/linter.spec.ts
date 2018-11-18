@@ -1,41 +1,51 @@
-import { abstractMethodOrAccessorRuleTestSuite } from './tests/abstract-method-or-accessor.spec';
 import { blockPaddingRuleTestSuite } from './tests/block-padding.spec';
-import { classDeclarationRuleTestSuite } from './tests/class-declaration.spec';
-import { classPropertyDeclarationRuleTestSuite } from './tests/class-property-declaration.spec';
 import { cleanupTestSuite } from './tests/cleanup.spec';
-import { consecutiveImportsRuleTestSuite } from './tests/consecutive-imports.spec';
-import { consecutiveSingleLineTypeAliasesRuleTestSuite } from './tests/consecutive-single-line-type-aliases.spec';
-import { functionDeclarationRuleTestSuite } from './tests/function-declaration.spec';
-import { individualImportRuleTestSuite } from './tests/individual-import.spec';
-import { individualMultilineTypeAliasRuleTestSuite } from './tests/individual-multiline-type-alias.spec';
-import { interfaceDeclarationRuleTestSuite } from './tests/interface-declaration.spec';
-import { methodOrAccessorDeclarationRuleTestSuite } from './tests/method-or-accessor-declaration.spec';
-import { multilineVariableDeclarationRuleTestSuite } from './tests/multiline-variable-declaration.spec';
-import { propertyWithEffectDecoratorRuleTestSuite } from './tests/property-with-effect-decorator.spec';
-import { singleLineVariableDeclarationRuleTestSuite } from './tests/single-line-variable-declaration.spec';
+import { simpleRuleTestSuite } from './tests/simple-rule.spec';
 import { unitTestDescribeRuleTestSuite } from './tests/unit-test-describe-block.spec';
-import { unitTestHookStatementRuleTestSuite } from './tests/unit-test-hook-statement.spec';
-import { unitTestItStatementRuleTestSuite } from './tests/unit-test-it-statement.spec';
 
 describe('Linter', () => {
+
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
+
     describe('when "block-padding" rule', blockPaddingRuleTestSuite);
-    describe('when "individual-import" rule', individualImportRuleTestSuite);
-    describe('when "consecutive-imports" rule', consecutiveImportsRuleTestSuite);
-    describe('when "individual-multiline-type-alias" rule', individualMultilineTypeAliasRuleTestSuite);
-    describe('when "consecutive-single-line-type-aliases" rule', consecutiveSingleLineTypeAliasesRuleTestSuite);
-    describe('when "interface-declaration" rule', interfaceDeclarationRuleTestSuite);
-    describe('when "single-line-variable-declaration" rule', singleLineVariableDeclarationRuleTestSuite);
-    describe('when "multi-line-variable-declaration" rule', multilineVariableDeclarationRuleTestSuite);
-    describe('when "function-declaration" rule', functionDeclarationRuleTestSuite);
-    describe('when "class-declaration" rule', classDeclarationRuleTestSuite);
-    describe('when "class-property-declaration" rule', classPropertyDeclarationRuleTestSuite);
-    describe('when "method-or-accessor-declaration" rule', methodOrAccessorDeclarationRuleTestSuite);
-    describe('when "abstract-method-or-accessor" rule', abstractMethodOrAccessorRuleTestSuite);
-    describe('when "property-with-effect-decorator" rule', propertyWithEffectDecoratorRuleTestSuite);
+
+    describe('when "individual-import" rule', () => simpleRuleTestSuite('individual-import'));
+
+    describe('when "consecutive-imports" rule', () => simpleRuleTestSuite('consecutive-imports'));
+
+    describe('when "individual-multiline-type-alias" rule',
+        () => simpleRuleTestSuite('individual-multiline-type-alias'));
+
+    describe('when "consecutive-single-line-type-aliases" rule',
+        () => simpleRuleTestSuite('consecutive-single-line-type-aliases'));
+
+    describe('when "interface-declaration" rule', () => simpleRuleTestSuite('interface-declaration'));
+
+    describe('when "single-line-variable-declaration" rule',
+        () => simpleRuleTestSuite('single-line-variable-declaration'));
+
+    describe('when "multiline-variable-declaration" rule', () => simpleRuleTestSuite('multiline-variable-declaration'));
+
+    describe('when "function-declaration" rule', () => simpleRuleTestSuite('function-declaration'));
+
+    describe('when "class-declaration" rule', () => simpleRuleTestSuite('class-declaration'));
+
+    describe('when "class-property-declaration" rule', () => simpleRuleTestSuite('class-property-declaration'));
+
+    describe('when "method-or-accessor-declaration" rule', () => simpleRuleTestSuite('method-or-accessor-declaration'));
+
+    describe('when "abstract-method-or-accessor" rule', () => simpleRuleTestSuite('abstract-method-or-accessor'));
+
+    describe('when "property-with-effect-decorator" rule', () => simpleRuleTestSuite('property-with-effect-decorator'));
+
     describe('when indent is 2 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(2));
+
     describe('when indent is 5 spaces and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite(5));
+
     describe('when indent is "tab" and "unit-test-describe-block" rule', () => unitTestDescribeRuleTestSuite('tab'));
-    describe('when "unit-test-hook-statement" rule', unitTestHookStatementRuleTestSuite);
-    describe('when "unit-test-it-statement" rule', unitTestItStatementRuleTestSuite);
+
+    describe('when "unit-test-hook-statement" rule', () => simpleRuleTestSuite('unit-test-hook-statement'));
+
+    describe('when "unit-test-it-statement" rule', () => simpleRuleTestSuite('unit-test-it-statement'));
+
 });

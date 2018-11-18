@@ -21,7 +21,10 @@ export const defaultConfig: LineLintConfig = {
         'interface-declaration': {
             insert: 'both',
         },
-        'variable-declaration': {
+        'single-line-variable-declaration': {
+            remove: 'none',
+        },
+        'multiline-variable-declaration': {
             remove: 'none',
         },
         'function-declaration': {

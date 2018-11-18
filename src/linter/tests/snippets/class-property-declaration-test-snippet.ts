@@ -1,0 +1,25 @@
+import { createMultilineString } from '../../../utils/text-utils';
+
+export const classPropertyDeclarationTestSnippet = createMultilineString(
+    'class Foo {',
+    '  // non-blank line',
+    '  private static foo = 123;',
+    '  // non-blank line',
+    '  protected static fooObject = {',
+    '    key1: "value1",',
+    '    key2: "value2",',
+    '  };',
+    '  // non-blank line',
+    '  public static fooArray = [',
+    '    "some very long array memeber",',
+    '    "some even longer array memeber",',
+    '  ];',
+    '  // non-blank line',
+    '  public abstract fooAbstract: string;',
+    '  // non-blank line',
+    '  @Input() public fooDecorated!: Foo;',
+    '  // non-blank line',
+    '  @Output() public bar = new EventEmitter<Bar>();',
+    '  // non-blank line',
+    '}',
+);

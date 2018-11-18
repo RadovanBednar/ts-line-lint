@@ -1,4 +1,4 @@
-import { RuleName } from '../linter/pattern-maps/rule-pattern-map';
+import { RuleName } from '../linter/rules';
 
 export type IndentType = 'tab' | number;
 
@@ -8,7 +8,7 @@ export interface LineLintConfig {
 }
 
 export type LineLintRules = {
-    [P in RuleName]: LineLintRuleOptions;
+    [P in RuleName]?: LineLintRuleOptions
 };
 
 export type LineLintRuleOption = 'remove' | 'insert';

@@ -1,0 +1,25 @@
+import { createMultilineString } from '../../../utils/text-utils';
+
+export const abstractMethodOrAccessorTestSnippet = createMultilineString(
+    'class Foo {',
+    '  // non-blank line',
+    '  public abstract getBar(): Bar;',
+    '  // non-blank line',
+    '  protected abstract setBar(bar: Bar): void;',
+    '  // non-blank line',
+    '  protected abstract untyped();',
+    '  // non-blank line',
+    '  protected abstract baz(firstParam: VeryLongTypeName,',
+    '                         secondParam: EvenLongerTypeName,',
+    '                         thirdParam: SomeMonstrouslyLongTypeName): Baz;',
+    '  // non-blank line',
+    '  protected abstract get value();',
+    '  // non-blank line',
+    '  public abstract set value(v: number);',
+    '  // non-blank line',
+    '  public async abstract getBar(): Promise<Bar>;',
+    '  // non-blank line',
+    '  protected abstract async setBar(bar: Bar): Promise<void>;',
+    '  // non-blank line',
+    '}',
+);

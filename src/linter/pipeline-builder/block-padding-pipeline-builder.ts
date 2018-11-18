@@ -7,10 +7,11 @@ export class BlockPaddingPipelineBuilder {
     public static build(config: LineLintConfig): ReplacementPipeline {
         const startOfBlockPattern: RegExp = /({\n)/mg;
         const blockPaddingPipeline: ReplacementPipeline = [];
+        const blockPaddingRuleConfig = config.rules['block-padding'];
 
-        if (config.rules['block-padding']) {
-            const removeOption = config.rules['block-padding'].remove;
-            const insertOption = config.rules['block-padding'].insert;
+        if (blockPaddingRuleConfig) {
+            const removeOption = blockPaddingRuleConfig.remove;
+            const insertOption = blockPaddingRuleConfig.insert;
 
             if (removeOption) {
                 if (removeOption === 'before' || removeOption === 'both') {

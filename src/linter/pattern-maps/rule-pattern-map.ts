@@ -1,6 +1,5 @@
 import { Dictionary } from '../../utils/types';
-
-export type RuleName = keyof typeof rulePatternMap;
+import { IndentSpecificRuleName, SimpleRuleName } from '../rules';
 
 export const rulePatternMap: Readonly<Dictionary<RegExp>> = {
     'individual-import': /(^import (?:\* as \w+|{(.*|(?:\n(?:[ \t]*.*,?\n)+?))}) from .*\n)/mg,
@@ -23,3 +22,22 @@ export const rulePatternMap: Readonly<Dictionary<RegExp>> = {
     'unit-test-hook-statement': /(^([ \t]*)(?:after|before)(?:Each|All)?\(.*(?:;|\n(?:\2[ \t]+.*\n)+\2\S+;)\n)/mg,
     'unit-test-it-statement': /(^([ \t]*)it\(.*\n(?:.*\n)*?\2\S.*;\n)/mg,
 };
+
+export const ruleApplicationOrder: ReadonlyArray<SimpleRuleName | IndentSpecificRuleName> = [
+    'individual-import',
+    'consecutive-imports',
+    'individual-multiline-type-alias',
+    'consecutive-single-line-type-aliases',
+    'interface-declaration',
+    'single-line-variable-declaration',
+    'multiline-variable-declaration',
+    'function-declaration',
+    'class-declaration',
+    'class-property-declaration',
+    'method-or-accessor-declaration',
+    'abstract-method-or-accessor',
+    'property-with-effect-decorator',
+    'unit-test-describe-block',
+    'unit-test-hook-statement',
+    'unit-test-it-statement',
+];

@@ -1,5 +1,5 @@
 import { IndentType, LineLintConfig } from '../../config/line-lint-config';
-import { RuleName } from '../pattern-maps/rule-pattern-map';
+import { RuleName } from '../rules';
 import { ReplacementPipeline, ReplacementStep } from './../linter';
 import { appendBlankLines, filterRulesConfiguredFor, preparePatterns, prependBlankLines, surroundWithBlankLines } from './pipeline-builder-utils';
 
@@ -8,7 +8,7 @@ export class RemovalPipelineBuilder {
     public static build(config: LineLintConfig): ReplacementPipeline {
         const removalPipeline = [];
         for (const rule of filterRulesConfiguredFor('remove', config.rules)) {
-            switch (config.rules[rule].remove) {
+            switch (config.rules[rule]!.remove) {
                 case 'before':
                     removalPipeline.push(...RemovalPipelineBuilder.createRemoveBeforeSteps(rule, config.indent));
                     break;

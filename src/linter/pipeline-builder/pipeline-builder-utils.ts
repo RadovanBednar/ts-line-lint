@@ -1,9 +1,13 @@
 import { IndentType, LineLintRuleOption, LineLintRules } from '../../config/line-lint-config';
-import { RuleName, rulePatternMap } from '../pattern-maps/rule-pattern-map';
+import { ruleApplicationOrder, rulePatternMap } from '../pattern-maps/rule-pattern-map';
+import { RuleName } from '../rules';
 
-export function filterRulesConfiguredFor(option: LineLintRuleOption, rules: LineLintRules): Array<RuleName> {
-    return Object.keys(rulePatternMap).filter(
-        (rule) => rules[rule] && rules[rule][option],
+export function filterRulesConfiguredFor(option: LineLintRuleOption, definedRules: LineLintRules): Array<RuleName> {
+    return ruleApplicationOrder.filter(
+        (ruleName) => {
+            const rule = definedRules[ruleName];
+            return rule && rule[option];
+        },
     );
 }
 
