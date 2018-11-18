@@ -1,20 +1,28 @@
-import { createMultilineString } from '../../../utils/text-utils';
+import { createMultilineString } from '../../../../utils/text-utils';
 
-export const consecutiveImportsTestSnippet = createMultilineString(
+export const individualImportSnippet = createMultilineString(
     '// non-blank line',
+    '%BLANK_BEFORE%',
     'import {SingleImportedItem} from "abc";',
+    '%BLANK_AFTER%',
+    '// non-blank line',
+    '%BLANK_BEFORE%',
     'import {ExportedItem as AliasedItem} from "def";',
+    '%BLANK_AFTER%',
     '// non-blank line',
+    '%BLANK_BEFORE%',
     'import { FirstItem, SecondItem } from "ghi";',
+    '%BLANK_AFTER%',
     '// non-blank line',
+    '%BLANK_BEFORE%',
     'import * as jkl from "mno";',
+    '%BLANK_AFTER%',
+    '// non-blank line',
+    '%BLANK_BEFORE%',
     'import {',
     '  FirstOfSeveralLongNameImportedItems,',
     '  SecondOfSeveralLongNameImportedItems',
     '} from "../pqr";',
-    'import {',
-    '  AnotherLongNameImportedItems,',
-    '  YetAnotherLongNameImportedItems',
-    '} from "../pqr";',
+    '%BLANK_AFTER%',
     '// non-blank line',
 );

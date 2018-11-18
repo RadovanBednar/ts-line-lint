@@ -1,4 +1,4 @@
-import { IndentType, LineLintConfig, LineLintModificationOption, LineLintRuleOptions } from '../../config/line-lint-config';
+import { LineLintConfig, LineLintModificationOption, LineLintRuleOptions } from '../../config/line-lint-config';
 import { RuleName } from '../rules';
 
 export function getPatternDescription(ruleName: RuleName): string {

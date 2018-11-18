@@ -2,13 +2,14 @@ import { EMPTY_RULES_CONFIG, LineLintConfig } from '../../config/line-lint-confi
 import { SimpleRuleName } from '../rules';
 import { expectLinterWithConfig } from './linter-expects';
 import { createMockConfig, getPatternDescription } from './linter-test-utils';
-import { simpleTestSnippetMap } from './test-snippet-map';
+import { SimpleSnippetFactory } from './snippet-factory/simple-snippet-factory';
 
 export function simpleRuleTestSuite(ruleName: SimpleRuleName): void {
-    const noBlanksAround = simpleTestSnippetMap[ruleName];
-    const blanksAround = createSnippetWithBlanksAround();
-    const blanksOnlyAfter = createSnippetWithBlanksOnlyAfter();
-    const blanksOnlyBefore = createSnippetWithBlanksOnlyBefore();
+    const SnippetFactory = new SimpleSnippetFactory(ruleName);
+    const noBlanksAround = SnippetFactory.createSnippetWithNoBlanksAround();
+    const blanksAround = SnippetFactory.createSnippetWithBlanksAround();
+    const blanksOnlyAfter = SnippetFactory.createSnippetWithBlanksOnlyAfter();
+    const blanksOnlyBefore = SnippetFactory.createSnippetWithBlanksOnlyBefore();
     const patternDescription = getPatternDescription(ruleName);
     let config: LineLintConfig;
 
@@ -133,36 +134,5 @@ export function simpleRuleTestSuite(ruleName: SimpleRuleName): void {
         });
 
     });
-
-    function createSnippetWithBlanksAround(): string {
-        if (hasTopLevelPlaceholderLines()) {
-            return simpleTestSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '\n$1\n').slice(1, -1);
-        } else {
-            return simpleTestSnippetMap[ruleName]
-                .replace(/((?<!{\n)  \/\/ non-blank line)/g, '\n$1')
-                .replace(/(  \/\/ non-blank line(?!\n}))/g, '$1\n');
-        }
-    }
-
-    function createSnippetWithBlanksOnlyAfter(): string {
-        if (hasTopLevelPlaceholderLines()) {
-            return simpleTestSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '\n$1').slice(1);
-        } else {
-            return simpleTestSnippetMap[ruleName].replace(/((?<!{\n)  \/\/ non-blank line)/g, '\n$1');
-
-        }
-    }
-
-    function createSnippetWithBlanksOnlyBefore(): string {
-        if (hasTopLevelPlaceholderLines()) {
-            return simpleTestSnippetMap[ruleName].replace(/(\/\/ non-blank line)/g, '$1\n').slice(0, -1);
-        } else {
-            return simpleTestSnippetMap[ruleName].replace(/(  \/\/ non-blank line(?!\n}))/g, '$1\n');
-        }
-    }
-
-    function hasTopLevelPlaceholderLines(): boolean {
-        return /^\/\/ non-blank line\n/.test(simpleTestSnippetMap[ruleName]);
-    }
 
 }
