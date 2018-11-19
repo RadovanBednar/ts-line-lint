@@ -17,7 +17,7 @@
         "prepublishOnly": "npm run build",
         "release": "np",
         "start": "node dist/index.js",
-        "test": "mocha -r ts-node/register src/*.spec.ts src/**/*.spec.ts",
+        "test": "mocha -r ts-node/register src/**/*.spec.ts",
         "new-rule": "node src/tools/rule-spec-generator.js \"$@\"",
         "lint": "tslint -p tsconfig.json -c ./tslint.json './**/*.ts' -e './**/node_modules/**' -e './**/dist/**'",
         "lint:fix": "tslint -p tsconfig.json -c ./tslint.json './**/*.ts' -e './**/node_modules/**' -e './**/dist/**' --fix"

@@ -3,7 +3,7 @@ import * as mockfs from 'mock-fs';
 import { Config } from 'mock-fs';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
-import { log } from '../logger';
+import { log } from '../console-output/logger';
 import { generateRandomString } from '../utils/text-utils';
 import { FileFinder } from './file-finder';
 
@@ -375,7 +375,7 @@ function whenCreatedWith(dirNames: Array<string>, ignorePatterns?: Array<string>
             expect(new FileFinder(dirNames, ignorePatterns).getFiles()).to.deep.equal(filePaths);
         },
         expectWarning(message: string): void {
-            const finder = new FileFinder(dirNames, ignorePatterns);
+            new FileFinder(dirNames, ignorePatterns).getFiles();
             expect(log.warning).to.have.been.calledOnceWith(message);
         },
         expectError(message: string): void {

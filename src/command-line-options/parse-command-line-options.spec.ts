@@ -1,17 +1,35 @@
-import { expect } from 'chai';
-import { CommandLineOptions, parseProcessArgv } from './parse-process-argv';
+import { expect, use as chaiUse } from 'chai';
+import * as sinon from 'sinon';
+import * as sinonChai from 'sinon-chai';
+import { log } from '../console-output/logger';
+import { CommandLineOptions } from './command-line-options';
+import { parseCommandLineOptions } from './parse-command-line-options';
 
-process.env.NODE_ENV = 'test';
+chaiUse(sinonChai);
 
-describe('parseProcessArgv function', () => {
+describe('parseCommandLineOptions function', () => {
+    let logWarningStub: sinon.SinonStub;
+
+    beforeEach(() => {
+        logWarningStub = sinon.stub(log, 'warning').callsFake(() => null);
+    });
+
+    afterEach(() => {
+        logWarningStub.restore();
+    });
 
     describe('directories array', () => {
+        const fallbackWarningMessage = 'No directory specified, using "." as fallback.';
         const onlyCurrentDirectory = ['.'];
 
         describe('when there were no args specified', () => {
 
             it('should contain only the current directory', () => {
                 whenCalledWith([]).expect('directories').toEqual(onlyCurrentDirectory);
+            });
+
+            it('should log a fallback warning', () => {
+                whenCalledWith([]).expectWarning(fallbackWarningMessage);
             });
 
         });
@@ -21,6 +39,10 @@ describe('parseProcessArgv function', () => {
 
             it('should contain only the current directory', () => {
                 whenCalledWith(flagAtTheBeginning).expect('directories').toEqual(onlyCurrentDirectory);
+            });
+
+            it('should log a fallback warning', () => {
+                whenCalledWith([]).expectWarning(fallbackWarningMessage);
             });
 
         });
@@ -184,18 +206,22 @@ function whenCalledWith(args: Array<string>) {
         expect(property: keyof CommandLineOptions) {
             return {
                 toEqual(value: Array<string>): void {
-                    expect(parseProcessArgv(args)[property]).to.deep.equal(value);
+                    expect(parseCommandLineOptions(args)[property]).to.deep.equal(value);
                 },
                 toBe(value: string): void {
-                    expect(parseProcessArgv(args)[property]).to.equal(value);
+                    expect(parseCommandLineOptions(args)[property]).to.equal(value);
                 },
                 toBeUndefined(): void {
-                    expect(parseProcessArgv(args)[property]).to.be.undefined;
+                    expect(parseCommandLineOptions(args)[property]).to.be.undefined;
                 },
             };
         },
+        expectWarning(message: string): void {
+            parseCommandLineOptions(args);
+            expect(log.warning).to.have.been.calledOnceWith(message);
+        },
         expectError(message: string): void {
-            expect(() => parseProcessArgv(args)).to.throw(message);
+            expect(() => parseCommandLineOptions(args)).to.throw(message);
         },
     };
 }

@@ -1,13 +1,13 @@
+import { parseCommandLineOptions } from './command-line-options/parse-command-line-options';
 import { defaultConfig } from './config/default-config';
 import { parseConfig } from './config/parse-config';
+import { log } from './console-output/logger';
 import { FileFinder } from './file-finder/file-finder';
 import { FileProcessor } from './file-processor/file-processor';
 import { Linter } from './linter/linter';
-import { log } from './logger';
-import { parseProcessArgv } from './parse-process-argv';
 
 try {
-    const argv = parseProcessArgv();
+    const argv = parseCommandLineOptions();
     const fileFinder = new FileFinder(argv.directories, argv.ignore);
     const filesToProcess = fileFinder.getFiles();
     const total = filesToProcess.length;

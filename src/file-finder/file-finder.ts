@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { log } from '../logger';
+import { log } from '../console-output/logger';
 
 export class FileFinder {
     private readonly pattern = /\.ts$/;
@@ -15,7 +15,7 @@ export class FileFinder {
         return this.files;
     }
 
-    public searchRecursively(dirs: Array<string>): void {
+    private searchRecursively(dirs: Array<string>): void {
         for (const dir of dirs) {
             this.assertDirectoryExists(dir);
 

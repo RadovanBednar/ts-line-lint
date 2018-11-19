@@ -1,12 +1,7 @@
-import { log } from './logger';
+import { log } from '../console-output/logger';
+import { CommandLineOptions } from './command-line-options';
 
-export interface CommandLineOptions {
-    directories: Array<string>;
-    ignore: Array<string>;
-    config?: string;
-}
-
-export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
+export function parseCommandLineOptions(testArgs?: Array<string>): CommandLineOptions {
     const args = testArgs || process.argv.slice(2);
 
     return {
@@ -22,9 +17,7 @@ export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
             assertOnlyRelativePathsToSubdirectoriesSpecified(dirs);
             return dirs;
         } else {
-            if (process.env.NODE_ENV !== 'test') {
-                log.warning('No directory specified, using "." as fallback.');
-            }
+            log.warning('No directory specified, using "." as fallback.');
             return ['.'];
         }
     }
