@@ -78,7 +78,6 @@ describe('FileFinder.find method', () => {
                 mockfs({
                     [dir]: withFiles(tsFile1, tsFile2, 'non-ts.json'),
                 });
-
             });
 
             it('should return an array of all the paths to *.ts files in this directory', () => {
@@ -344,7 +343,6 @@ and all files from the ignored dir', () => {
                         ...getSrcSubdirsTsFilePaths('some-folder'),
                     ]);
                 });
-
         });
 
         function getSrcSubdirsTsFilePaths(subdir: keyof typeof srcSubdirsContent): Array<string> {
@@ -370,6 +368,7 @@ function whenCreatedWith(dirNames: Array<string>, ignorePatterns?: Array<string>
     return {
         expectEmptyGetFilesResult(): void {
             expect(new FileFinder(dirNames, ignorePatterns).getFiles()).to.deep.equal([]);
+
         },
         expectGetFilesResult(filePaths: Array<string>): void {
             expect(new FileFinder(dirNames, ignorePatterns).getFiles()).to.deep.equal(filePaths);

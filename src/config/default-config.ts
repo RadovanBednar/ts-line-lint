@@ -1,7 +1,7 @@
 import { LineLintConfig } from './line-lint-config';
 
 export const defaultConfig: LineLintConfig = {
-    indent: 'tab',
+    indent: 4,
     rules: {
         'block-padding': {
             remove: 'both',

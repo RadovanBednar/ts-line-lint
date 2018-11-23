@@ -4,7 +4,6 @@ import { indentSpecificRuleTestSuite } from './test/indent-specific-rule.spec';
 import { simpleRuleTestSuite } from './test/simple-rule.spec';
 
 describe('Linter', () => {
-
     describe('always at the end of a replacement pipeline', cleanupTestSuite);
 
     describe('when "block-padding" rule', blockPaddingRuleTestSuite);
@@ -50,5 +49,4 @@ describe('Linter', () => {
     describe('when "unit-test-hook-statement" rule', () => simpleRuleTestSuite('unit-test-hook-statement'));
 
     describe('when "unit-test-it-statement" rule', () => simpleRuleTestSuite('unit-test-it-statement'));
-
 });

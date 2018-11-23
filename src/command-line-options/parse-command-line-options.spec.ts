@@ -183,6 +183,7 @@ describe('parseCommandLineOptions function', () => {
             it('should be the value of the arg', () => {
                 whenCalledWith(configWithArg).expect('config').toBe(configFile);
             });
+
         });
 
         describe('when there was a "--config" flag used with more than one arg', () => {
