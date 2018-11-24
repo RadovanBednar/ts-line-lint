@@ -28,7 +28,7 @@ class Logger {
     }
 
     public usage(): Logger {
-        process.stdout.write('Usage: ts-line-lint [DIR]... [--ignore PATH...]\n');
+        process.stdout.write('Usage: ts-line-lint [DIR]... [--ignore PATH...] [--config PATH]\n');
         return this;
     }
 
