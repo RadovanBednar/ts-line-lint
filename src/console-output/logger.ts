@@ -1,6 +1,6 @@
 class Logger {
 
-    public newline(n: number): Logger {
+    public newline(n: number = 1): Logger {
         for (let i = 0; i < n; i++) {
             process.stdout.write('\n');
         }
@@ -28,7 +28,7 @@ class Logger {
     }
 
     public usage(): Logger {
-        process.stdout.write('Usage: ts-line-lint [DIR]... [--ignore PATH...] [--config PATH]\n');
+        process.stdout.write('Usage:\n       ts-line-lint [DIR]... [--ignore PATH...] [--config PATH]\n');
         return this;
     }
 

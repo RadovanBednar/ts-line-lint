@@ -51,11 +51,11 @@ Warning: No directory specified, using "." as fallback.
 ```
 $ ts-line-lint node_modules
 Warning: Skipping excluded directory "node_modules".
-Found 0 files to process...
+There are no files to process.
 
 $ ts-line-lint .git
 Warning: Skipping hidden directory ".git".
-Found 0 files to process...
+There are no files to process.
 ```
 
 To prevent accidental changes in any files outside the project, only relative paths to the current project's subdirectories may be specified. Specifying a path starting with `..` or an absolute path will therefore raise an error and terminate the program before any file processing takes place:
@@ -76,16 +76,21 @@ $ ts-line-lint src --ignore src/index.ts src/util src/**/*.spec.ts
 The `--ignore` flag must be followed by at least one argument. There's no need to list `node_modules` or any hidden directories, as those are ignored by default.
 
 ## <a name="configurability"></a>Configurability
-The tool comes with a set of predefined rules based on the author's subjective preference. Should your blank line formatting preferences differ, you may specify your own set of rules in a configuration JSON file and then use a `--config` flag followed by a path to the file. Only rules specified in this config file will be then applied.
+The tool comes with a set of predefined rules based on the author's subjective preference. Should your blank line formatting preferences differ, you may specify your own set of rules in a configuration JSON file. Only rules specified in this config file will be then applied.
+
+There are two ways of supplying a config file:
+ 1) place a `.linelint` file to the root of your project and ts-line-lint will load it automatically,
+ 2) create a custom file, point ts-line-lint to its location with a `--config` flag followed by a path to the file and it will be loaded instead.
 ```
 $ ts-line-lint src
-# will apply the predefined set of rules
+# will apply rules defined in .linelint file if one is found
+# will apply the built-in predefined set of rules otherwise
 
 $ ts-line-lint src --config line-lint.json
 # will apply rules defined in the line-lint.json file
 ```
 
-The configuration file must be a valid JSON file containing on object with exactly two properties: `indent` and `rules`.
+The configuration file must be a valid JSON file containing on object with exactly two properties: `indent` and `rules`. If it is not valid JSON or does not conform to the validation schema (or is not found because the path supplied to `--config` flag is wrong), an error will be thrown and the program terminated before any file processing takes place.
 
 ### `indent` property
 The value of this property may be either a natural number representing the number of space characters your project uses for one level indentation, or the string "tab" if you indent with tab characters. This property is required, because some rules have to know the indentation style in advance to function properly. The default value is `indent: 4`.
@@ -94,7 +99,7 @@ The value of this property may be either a natural number representing the numbe
 [Rules](#rules) represent language constructs that can be matched via regular expressions in the source code, e.g. import statement, variable declaration, unit test hook etc. There are two options how to apply a rule: one may want to remove blank lines from around or to insert blank lines around the matched construct.
 
 That's why this property takes an object with rule names for properties. Each such property takes another object specifying options of given rule's application via their `remove` and/or `insert` properties. At least one of the options must be provided. If both are provided, the removal will be performed before the insertion.
-`remove` and `insert` properties may have one of these four string values:
+`remove` and `insert` properties must take one of these four string values:
 * **"before"** - blank lines will be removed/inserted only before each matched construct,
 * **"after"** - blank lines will be removed/inserted only after each matched construct,
 * **"both"** - blank lines will be removed/inserted both before and after each matched construct,
@@ -106,9 +111,9 @@ This `rules` object may be empty. In this case only the cleanup sequence will be
 There are currently 3 categories of rules supported in the application.
 
 ## <a name="block-padding-rule"></a>`block-padding` rule
-This rule makes up its own category, because unlike the rest of the rules, that operate on lines outside of the matched code, it manipulates blank lines inside an arbitrary block. It removes/inserts blank lines at the beginning and at the end of the **content** of a code block or a multiline object literal.
+This rule makes up its own category, because unlike the rest of the rules that operate on lines outside the matched code it manipulates blank lines inside an arbitrary block. It removes/inserts blank lines at the beginning and at the end of the **content** of a code block or a multiline object literal.
 
-This rule is always applied **at the beginning** of the replacement sequence. It can be [configured](#configurability) by the user with the same syntax as the rest of the rule. The default value is `{ "remove": "both" }`. If both `remove` and `insert` options are specified, the removal is performed first.
+This rule is always applied **at the beginning** of the replacement sequence. It can be [configured](#configurability) by the user with the same syntax as the rest of the rules. The default value is `{ "remove": "both" }`. If both `remove` and `insert` options are specified, the removal is performed first.
 
 <details><summary style="cursor: pointer">
 Example `{ "remove": "both" }`:
@@ -154,7 +159,7 @@ function foo() {
 </details>
 
 ## <a name="regular-rules"></a>Regular rules
-These rules search for specified language constructs and either remove or insert blank lines in their vicinity. They can be [configured](#configurability) by the user via a configuration file. Some of them are **indent-specific** (have to know the project's indentation style beforehand to work correctly), but the most is **simple** (work irrespective of the project's indentation style).
+These rules search for specified language constructs and either remove or insert blank lines in their vicinity. They can be [configured](#configurability) by the user via a configuration file. Some of them are **indent-specific** (they have to know the project's indentation style beforehand to work correctly), but the most is **simple** (they work irrespective of the project's indentation style).
 
 Regular rules are applied after the `block-padding` rule, if that is specified. First all the rules are read from the config object in a fixed order and if an individual rule is found and has the `remove` option set to something else than "none", the removal is applied. Then the rules are read once more it the same order and if an individual rule is found and has the `insert` option set to something else than "none", the insertion is applied.
 
@@ -242,7 +247,7 @@ The application currently recognizes these regular rules (in the order of applic
   let bar = 123;
   ```
   ```javascript
-  const baz = { foo, bar };
+  const baz = { foo: bar };
   ```
   The default value is `{ "remove": "none" }`.
 
@@ -330,7 +335,7 @@ The application currently recognizes these regular rules (in the order of applic
   ```javascript
     protected bar(protected firstParam: VeryLongTypeName,
                   protected secondParam: EvenLongerTypeName,
-                  protected thirdParam: SomeMonstrouslyLongTypeName): bar {
+                  protected thirdParam: SomeMonstrouslyLongTypeName): Bar {
       // implementation
 
       // return statement
@@ -424,7 +429,7 @@ These rules are supposed to remove unwanted artifacts possibly introduced by app
 * any number of blank lines following a `tslint:disable-next-line` comment is removed,
 * any number of blank lines at the beginning of a file is removed,
 * any number of consecutive blank lines is replaced by a single blank line,
-* any number of blank lines at the end of the file is replaced by a single blank line.
+* any number of blank lines at the end of a file is replaced by a single blank line.
 
 # <a name="contact"></a>Contact
-If there are any problems related to this tool (a rule does not match, what should be matched; a rule matches something, that should not be matched, the execution hangs), feel free to create an [issue at GitHub](https://github.com/RadovanBednar/ts-line-lint/issues) or send me an email. Don't forget to attach (a necessarily anonymized version of) the file or the relevant piece of code that causes the problem, so I can investigate properly.
+If there are any problems related to this tool (a rule does not match, what should be matched; a rule matches something, that should not be matched; the execution hangs), feel free to create an [issue at GitHub](https://github.com/RadovanBednar/ts-line-lint/issues) or send me an email. Don't forget to attach (a necessarily anonymized version of) the file or the relevant piece of code that causes the problem, so I can investigate properly.

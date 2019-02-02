@@ -1,20 +1,20 @@
 import { parseCommandLineOptions } from './command-line-options/parse-command-line-options';
-import { defaultConfig } from './config/default-config';
-import { parseConfig } from './config/parse-config';
 import { log } from './console-output/logger';
 import { FileFinder } from './file-system/file-finder';
 import { FileProcessor } from './file-system/file-processor';
 import { Linter } from './linter/linter';
+import { ConfigFileParser } from './config/config-file-parser';
 
 try {
     const argv = parseCommandLineOptions();
+    const config = new ConfigFileParser(argv.config).getConfig();
+
     const fileFinder = new FileFinder(argv.directories, argv.ignore);
     const filesToProcess = fileFinder.getFiles();
     const total = filesToProcess.length;
 
-    log.info(`Found ${total} files to process...`);
+    log.info(total ? `Found ${total} files to process...` : 'There are no files to process.');
 
-    const config = argv.config ? parseConfig(argv.config) : defaultConfig;
     const fileProcessor = new FileProcessor(new Linter(config));
 
     filesToProcess.forEach((file, index) => {
@@ -22,10 +22,13 @@ try {
         fileProcessor.process(file);
     });
 
-    log.newline(total ? 2 : 1);
-    log.info(`Line-linting complete, ${fileProcessor.getModified()} of ${total} files were modified.`);
+    log.rewriteLastLine('')
+        .newline()
+        .info(`Line-linting complete, ${fileProcessor.getModified()} of ${total} files were modified.`);
 } catch (e) {
-    log.error(e.message).usage();
+    log.error(e.message)
+        .newline()
+        .usage();
     process.exit(1);
 }
 

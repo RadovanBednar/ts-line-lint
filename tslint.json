@@ -4,12 +4,29 @@
         "tslint-no-unused-expression-chai"
     ],
     "rules": {
-        "array-type": [true, "generic"],
+        "array-type": [
+            true,
+            "generic"
+        ],
         "ban": [
             true,
             "eval",
-            ["describe", "only"],
-            ["it", "only"]
+            [
+                "describe",
+                "only"
+            ],
+            [
+                "describe",
+                "skip"
+            ],
+            [
+                "it",
+                "only"
+            ],
+            [
+                "it",
+                "skip"
+            ]
         ],
         "interface-name": false,
         "max-line-length": [
@@ -23,26 +40,31 @@
             true,
             {
                 "order": [
-                    "private-static-field",
-                    "protected-static-field",
                     "public-static-field",
-                    "private-instance-field",
-                    "protected-instance-field",
+                    "protected-static-field",
+                    "private-static-field",
                     "public-instance-field",
-                    "private-constructor",
-                    "public-constructor",
-                    "public-instance-method",
-                    "protected-instance-method",
-                    "private-instance-method",
+                    "protected-instance-field",
+                    "private-instance-field",
                     "public-static-method",
                     "protected-static-method",
-                    "private-static-method"
+                    "private-static-method",
+                    "public-constructor",
+                    "protected-constructor",
+                    "private-constructor",
+                    "public-instance-method",
+                    "protected-instance-method",
+                    "private-instance-method"
                 ]
             }
         ],
         "object-literal-shorthand": false,
         "object-literal-sort-keys": false,
-        "quotemark": [true, "single", "avoid-template"],
+        "quotemark": [
+            true,
+            "single",
+            "avoid-template"
+        ],
         "typedef": [
             true,
             "array-destructuring",
