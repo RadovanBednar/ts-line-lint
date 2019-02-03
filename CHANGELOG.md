@@ -1,5 +1,11 @@
-
 # Change log
+
+## 2.0.0
+* Allow users to configure rules
+* Treat uniline and multiline variable declarations by separate rules
+* Improve some regexps to cover more use cases
+* Keep property decorator position (on a separate line or in-line with declaration) intact 
+ 
 ## 1.4.0
 * Add uniline test hooks (before, beforeEach, ...) treatment
 
