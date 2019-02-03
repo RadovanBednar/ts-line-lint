@@ -76,7 +76,7 @@ $ ts-line-lint src --ignore src/index.ts src/util src/**/*.spec.ts
 The `--ignore` flag must be followed by at least one argument. There's no need to list `node_modules` or any hidden directories, as those are ignored by default.
 
 ## <a name="configurability"></a>Configurability
-The tool comes with a set of predefined rules based on the author's subjective preference. Should your blank line formatting preferences differ, you may specify your own set of rules in a configuration JSON file. Only rules specified in this config file will be then applied.
+The tool comes with a set of [predefined rules](https://github.com/RadovanBednar/ts-line-lint/blob/master/.linelint) based on the author's subjective preference. Should your blank line formatting preferences differ, you may specify your own set of rules in a configuration JSON file. Only rules specified in this config file will be then applied.
 
 There are two ways of supplying a config file:
  1) place a `.linelint` file to the root of your project and ts-line-lint will load it automatically,
@@ -273,7 +273,7 @@ The application currently recognizes these regular rules (in the order of applic
   Matches regular and async function declarations. Does not match function declarations nested in other function declarations.
   ```javascript
   function fooBar(foo: ExcruciatinglyLongTypeName,
-                        bar: AnotherExcruciatinglyLongTypeName) {
+                  bar: AnotherExcruciatinglyLongTypeName) {
     return 42;
   }
   ```
