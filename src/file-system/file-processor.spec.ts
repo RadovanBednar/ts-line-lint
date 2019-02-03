@@ -1,6 +1,6 @@
 import { expect, use as chaiUse } from 'chai';
-import * as fs from 'fs';
-import * as mockfs from 'mock-fs';
+import * as realFs from 'fs';
+import * as mockFs from 'mock-fs';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import { ILinter } from '../linter/linter';
@@ -32,8 +32,8 @@ describe('FileProcessor', () => {
         const originalMtime = new Date(1);
 
         beforeEach(() => {
-            mockfs({
-                [fileName1]: mockfs.file({
+            mockFs({
+                [fileName1]: mockFs.file({
                     content: originalFileContent,
                     mtime: originalMtime,
                 }),
@@ -41,7 +41,7 @@ describe('FileProcessor', () => {
             });
         });
 
-        afterEach(mockfs.restore);
+        afterEach(mockFs.restore);
 
         it('should call linter\'s lint method with the file\'s content', () => {
             fileProcessor.process(fileName1);
@@ -95,10 +95,10 @@ describe('FileProcessor', () => {
 function expectFile(fileName: string) {
     return {
         toHaveContent(content: string): void {
-            expect(fs.readFileSync(fileName, 'utf-8')).to.equal(content);
+            expect(realFs.readFileSync(fileName, 'utf-8')).to.equal(content);
         },
         toHaveModificationTime(mtime: Date): void {
-            expect(fs.statSync(fileName).mtime).to.deep.equal(mtime);
+            expect(realFs.statSync(fileName).mtime).to.deep.equal(mtime);
         },
     };
 }

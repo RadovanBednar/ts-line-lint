@@ -1,11 +1,11 @@
 import { expect, use as chaiUse } from 'chai';
-import * as fs from 'mock-fs';
+import * as mockFs from 'mock-fs';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import { log } from '../console-output/logger';
 import { createMultilineString } from '../utils/text-utils';
-import { defaultConfig } from './default-config';
 import { ConfigFileParser } from './config-file-parser';
+import { defaultConfig } from './default-config';
 
 chaiUse(sinonChai);
 
@@ -13,16 +13,19 @@ describe('ConfigFileParser', () => {
     let logInfoStub: sinon.SinonStub;
 
     beforeEach(() => {
-        logInfoStub = sinon.stub(log, 'info').callsFake(() => null);
+        logInfoStub = sinon.stub(log, 'info');
     });
 
     afterEach(() => {
         logInfoStub.restore();
+        mockFs.restore();
     });
 
-    afterEach(fs.restore);
-
     describe('when getting config from a non-existent file', () => {
+
+        beforeEach(() => {
+            mockFs();
+        });
 
         it('should throw a "Could not open config file" error', () => {
             whenCalledWith('non-existent.json').expectError('Could not open config file');
@@ -33,7 +36,7 @@ describe('ConfigFileParser', () => {
     describe('when getting config from a directory', () => {
 
         beforeEach(() => {
-            fs({ 'some-directory': {} });
+            mockFs({ 'some-directory': {} });
         });
 
         it('should throw a "Could not open config file" error', () => {
@@ -45,7 +48,7 @@ describe('ConfigFileParser', () => {
     describe('when getting config from a file that is not valid JSON', () => {
 
         beforeEach(() => {
-            fs({ 'not.json': 'some rubbish' });
+            mockFs({ 'not.json': 'some rubbish' });
         });
 
         it('should throw a "Could not parse config file" error', () => {
@@ -57,7 +60,7 @@ describe('ConfigFileParser', () => {
     describe('when getting config from a JSON file not valid according to the schema', () => {
 
         beforeEach(() => {
-            fs({ 'invalid-config.json': '{ "invalid-property": "invalid-value" }' });
+            mockFs({ 'invalid-config.json': '{ "invalid-property": "invalid-value" }' });
         });
 
         it('should throw an "Invalid config file" error', () => {
@@ -71,7 +74,7 @@ describe('ConfigFileParser', () => {
         const { fileContent, expectedConfig } = createValidTestData();
 
         beforeEach(() => {
-            fs({ [fileName]: fileContent });
+            mockFs({ [fileName]: fileContent });
         });
 
         it('should parse data correctly', () => {
@@ -90,20 +93,24 @@ describe('ConfigFileParser', () => {
             const { fileContent, expectedConfig } = createValidTestData();
 
             beforeEach(() => {
-                fs({ [ConfigFileParser.baseConfigFile]: fileContent });
+                mockFs({ [ConfigFileParser.baseConfigFile]: fileContent });
             });
 
             it('should parse the base file', () => {
                 whenCalledWith().expectResult(expectedConfig);
             });
 
-            it('should log info', () => {
+            it('should log info about using the base config file', () => {
                 whenCalledWith().expectInfo(`Parsing config file "${ConfigFileParser.baseConfigFile}"...`);
             });
 
         });
 
-        describe('and there is no default config file present', () => {
+        describe('and there is no base config file present', () => {
+
+            beforeEach(() => {
+                mockFs();
+            });
 
             it('should return the default config', () => {
                 whenCalledWith().expectResult(defaultConfig);

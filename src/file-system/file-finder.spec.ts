@@ -1,5 +1,5 @@
 import { expect, use as chaiUse } from 'chai';
-import * as mockfs from 'mock-fs';
+import * as mockFs from 'mock-fs';
 import { Config } from 'mock-fs';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
@@ -13,12 +13,12 @@ describe('FileFinder.find method', () => {
     let logWarningStub: sinon.SinonStub;
 
     beforeEach(() => {
-        logWarningStub = sinon.stub(log, 'warning').callsFake(() => null);
+        logWarningStub = sinon.stub(log, 'warning');
     });
 
     afterEach(() => {
-        mockfs.restore();
         logWarningStub.restore();
+        mockFs.restore();
     });
 
     describe('when the "dirs" parameter', () => {
@@ -28,7 +28,7 @@ describe('FileFinder.find method', () => {
             const madeUpDir = 'nonexistent';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [realDir]: withFiles('some-file.ts'),
                 });
             });
@@ -44,7 +44,7 @@ describe('FileFinder.find method', () => {
             const file = 'not-dir.json';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [dir]: withFiles('some-file.ts'),
                     ...withFiles(file),
                 });
@@ -60,7 +60,7 @@ describe('FileFinder.find method', () => {
             const dirName = 'empty';
 
             beforeEach(() => {
-                mockfs({ [dirName]: {} });
+                mockFs({ [dirName]: {} });
             });
 
             it('should return an empty array', () => {
@@ -75,7 +75,7 @@ describe('FileFinder.find method', () => {
             const tsFile2 = 'some-other-file.ts';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [dir]: withFiles(tsFile1, tsFile2, 'non-ts.json'),
                 });
             });
@@ -98,7 +98,7 @@ describe('FileFinder.find method', () => {
             const dir2tsFile = 'another-file.ts';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [dir1]: withFiles(dir1tsFile1, dir1tsFile2, 'non-ts.json'),
                     [dir2]: withFiles(dir2tsFile, 'non-ts.css'),
                 });
@@ -126,7 +126,7 @@ describe('FileFinder.find method', () => {
             const dir1subdir2tsFile = 'another-file.ts';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [dir1]: {
                         [dir1subdir1]: withFiles(dir1subdir1tsFile1, 'non-ts.css', dir1subdir1tsFile2),
                         [dir1subdir2]: withFiles('non-ts.html', dir1subdir2tsFile),
@@ -153,7 +153,7 @@ describe('FileFinder.find method', () => {
             const weirdlyNamedSubdir = 'weirdly-named-subdir.ts';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [dir]: { [weirdlyNamedSubdir]: {} },
                 });
             });
@@ -170,7 +170,7 @@ describe('FileFinder.find method', () => {
             const dir1tsFile2 = 'file2.ts';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [dir1]: withFiles(dir1tsFile1, dir1tsFile2),
                     node_modules: withFiles('node-modules-file.ts'),
                 });
@@ -198,7 +198,7 @@ describe('FileFinder.find method', () => {
             const hiddenDirTsFile1 = 'hidden-file.ts';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [hiddenDir]: withFiles(hiddenDirTsFile1),
                     [dir1]: withFiles(dir1tsFile1, dir1tsFile2),
                 });
@@ -228,7 +228,7 @@ describe('FileFinder.find method', () => {
             const dir2tsFile = 'another-file.ts';
 
             beforeEach(() => {
-                mockfs({
+                mockFs({
                     [dir1]: withFiles(dir1tsFile1, dir1tsFile2),
                     [dir2]: withFiles(dir2tsFile),
                     'node_modules': withFiles('this-will-be-skipped.ts'),
@@ -269,7 +269,7 @@ describe('FileFinder.find method', () => {
         ];
 
         beforeEach(() => {
-            mockfs({
+            mockFs({
                 '.git': {},
                 'node_modules': {},
                 [srcDir]: {
@@ -338,11 +338,12 @@ describe('FileFinder.find method', () => {
 
             it('should return paths to all the *.ts files in specified dirs except the ignored file \
 and all files from the ignored dir', () => {
-                    whenCreatedWith(['.'], [ignoredFile, ignoredDir]).expectGetFilesResult([
-                        ...rootFolderTsFiles,
-                        ...getSrcSubdirsTsFilePaths('some-folder'),
-                    ]);
-                });
+                whenCreatedWith(['.'], [ignoredFile, ignoredDir]).expectGetFilesResult([
+                    ...rootFolderTsFiles,
+                    ...getSrcSubdirsTsFilePaths('some-folder'),
+                ]);
+            });
+
         });
 
         function getSrcSubdirsTsFilePaths(subdir: keyof typeof srcSubdirsContent): Array<string> {
@@ -368,7 +369,6 @@ function whenCreatedWith(dirNames: Array<string>, ignorePatterns?: Array<string>
     return {
         expectEmptyGetFilesResult(): void {
             expect(new FileFinder(dirNames, ignorePatterns).getFiles()).to.deep.equal([]);
-
         },
         expectGetFilesResult(filePaths: Array<string>): void {
             expect(new FileFinder(dirNames, ignorePatterns).getFiles()).to.deep.equal(filePaths);

@@ -67,9 +67,7 @@
         ],
         "typedef": [
             true,
-            "array-destructuring",
             "call-signature",
-            "object-destructuring",
             "parameter",
             "property-declaration"
         ]

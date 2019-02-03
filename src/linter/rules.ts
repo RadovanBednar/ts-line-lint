@@ -40,7 +40,8 @@ export const rulePatternMap: Readonly<Dictionary<RegExp>> = {
     'abstract-method-or-accessor': /(^([ \t]*)(?:public |protected |private )?(?:async )?abstract [^(\n]*\([^;]*;\n)/mg,
     'property-with-effect-decorator': /(^([ \t]+)@Effect\([^)]*\)(?:\n\2| ).*\n(?:.*\n)*?\2\S.*\n)/mg,
     'unit-test-describe-block': /(^(%INDENT%)describe\(.*{\n(?:.*\n)*?\2}\);\n)/mg,
-    'unit-test-hook-statement': /(^([ \t]*)(?:after|before)(?:Each|All)?\(.*(?:;|\n(?:(?:\2[ \t]+.*\n)|\n)+\2\S+;)\n)/mg,
+    'unit-test-hook-statement':
+        /(^([ \t]*)(?:after|before)(?:Each|All)?\(.*(?:;|\n(?:(?:\2[ \t]+.*\n)|\n)+\2\S+;)\n)/mg,
     'unit-test-it-statement': /(^([ \t]*)it\(.*\n(?:.*\n)*?\2\S.*;\n)/mg,
 };
 

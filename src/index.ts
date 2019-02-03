@@ -1,9 +1,9 @@
 import { parseCommandLineOptions } from './command-line-options/parse-command-line-options';
+import { ConfigFileParser } from './config/config-file-parser';
 import { log } from './console-output/logger';
 import { FileFinder } from './file-system/file-finder';
 import { FileProcessor } from './file-system/file-processor';
 import { Linter } from './linter/linter';
-import { ConfigFileParser } from './config/config-file-parser';
 
 try {
     const argv = parseCommandLineOptions();

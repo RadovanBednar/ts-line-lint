@@ -33,8 +33,7 @@ export class Linter implements ILinter {
 
     private applyReplacements(code: string, pipeline: ReplacementPipeline): string {
         return pipeline.reduce((result, step) => {
-            const search = step[0];
-            const replace = step[1];
+            const [search, replace] = step;
             return String.prototype.replace.call(result, search, replace);
         }, code);
     }

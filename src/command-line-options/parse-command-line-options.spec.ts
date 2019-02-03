@@ -11,7 +11,7 @@ describe('parseCommandLineOptions function', () => {
     let logWarningStub: sinon.SinonStub;
 
     beforeEach(() => {
-        logWarningStub = sinon.stub(log, 'warning').callsFake(() => null);
+        logWarningStub = sinon.stub(log, 'warning');
     });
 
     afterEach(() => {
