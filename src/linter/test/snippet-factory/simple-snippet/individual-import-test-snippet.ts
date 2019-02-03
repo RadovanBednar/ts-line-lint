@@ -25,4 +25,8 @@ export const individualImportSnippet = createMultilineString(
     '} from "../pqr";',
     '%BLANK_AFTER%',
     '// non-blank line',
+    '%BLANK_BEFORE%',
+    'import Something = someNamespace.Something;',
+    '%BLANK_AFTER%',
+    '// non-blank line',
 );

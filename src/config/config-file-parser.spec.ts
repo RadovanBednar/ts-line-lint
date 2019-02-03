@@ -110,7 +110,7 @@ describe('ConfigFileParser', () => {
             });
 
             it('should log info about falling back to the default config', () => {
-                whenCalledWith().expectInfo('No config file provided, using default config...');
+                whenCalledWith().expectInfo('(No config file provided, the default config will be used.)');
             });
 
         });

@@ -13,6 +13,7 @@ export const consecutiveImportsSnippet = createMultilineString(
     '// non-blank line',
     '%BLANK_BEFORE%',
     'import * as jkl from "mno";',
+    'import Something = someNamespace.Something;',
     'import {',
     '  FirstOfSeveralLongNameImportedItems,',
     '  SecondOfSeveralLongNameImportedItems',
