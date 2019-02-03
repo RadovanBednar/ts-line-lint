@@ -1,27 +1,35 @@
 #!/usr/bin/env node
-import { findFiles } from './find-files';
-import { log } from './logger';
-import { parseProcessArgv } from './parse-process-argv';
-import { processFile } from './process-file';
+import { parseCommandLineOptions } from './command-line-options/parse-command-line-options';
+import { ConfigFileParser } from './config/config-file-parser';
+import { log } from './console-output/logger';
+import { FileFinder } from './file-system/file-finder';
+import { FileProcessor } from './file-system/file-processor';
+import { Linter } from './linter/linter';
 
 try {
-    const argv = parseProcessArgv();
-    const tsFileList = findFiles(argv.directories, argv.ignore);
-    const total = tsFileList.length;
-    let modified = 0;
+    const argv = parseCommandLineOptions();
+    const config = new ConfigFileParser(argv.config).getConfig();
 
-    log.info(`Found ${total} files to process...`);
+    const fileFinder = new FileFinder(argv.directories, argv.ignore);
+    const filesToProcess = fileFinder.getFiles();
+    const total = filesToProcess.length;
 
-    tsFileList.forEach((file, index) => {
+    log.info(total ? `Found ${total} files to process...` : 'There are no files to process.');
+
+    const fileProcessor = new FileProcessor(new Linter(config));
+
+    filesToProcess.forEach((file, index) => {
         log.rewriteLastLine(`Processing file "${file}" (${index + 1} of ${total})...`);
-        if (processFile(file)) {
-            modified++;
-        }
+        fileProcessor.process(file);
     });
 
-    log.newline(total ? 2 : 1).info(`Line-linting complete, ${modified} of ${total} files were modified.`);
+    log.rewriteLastLine('')
+        .newline()
+        .info(`Line-linting complete, ${fileProcessor.getModified()} of ${total} files were modified.`);
 } catch (e) {
-    log.error(e.message).usage();
+    log.error(e.message)
+        .newline()
+        .usage();
     process.exit(1);
 }
 

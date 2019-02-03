@@ -1,14 +1,11 @@
-import { log } from './logger';
+import { log } from '../console-output/logger';
+import { CommandLineOptions } from './command-line-options';
 
-export interface CommandLineOptions {
-    directories: Array<string>;
-    ignore: Array<string>;
-}
-
-export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
+export function parseCommandLineOptions(testArgs?: Array<string>): CommandLineOptions {
     const args = testArgs || process.argv.slice(2);
 
     return {
+        config: getConfig(),
         directories: getDirs(),
         ignore: getIgnored(),
     };
@@ -20,9 +17,7 @@ export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
             assertOnlyRelativePathsToSubdirectoriesSpecified(dirs);
             return dirs;
         } else {
-            if (process.env.NODE_ENV !== 'test') {
-                log.warning('No directory specified, using "." as fallback.');
-            }
+            log.warning('No directory specified, using "." as fallback.');
             return ['.'];
         }
     }
@@ -46,6 +41,17 @@ export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
         return [];
     }
 
+    function getConfig(): string | undefined {
+        const flag = '--config';
+
+        if (isFlagPresent(flag)) {
+            assertFlagHasArgs(flag);
+            assertFlagHasExactlyArgs(flag, 1);
+
+            return args[args.indexOf(flag) + 1];
+        }
+    }
+
     function isArgFlag(arg: string): boolean {
         return arg.indexOf('--') === 0;
     }
@@ -58,6 +64,13 @@ export function parseProcessArgv(testArgs?: Array<string>): CommandLineOptions {
         const nextArg = args[args.indexOf(flag) + 1];
         if (!nextArg || isArgFlag(nextArg)) {
             throw Error(`Missing arguments for "${flag}".`);
+        }
+    }
+
+    function assertFlagHasExactlyArgs(flag: string, n: number): void {
+        const argCount = getFlagArgs(flag).length;
+        if (argCount !== n) {
+            throw Error(`Wrong number of arguments for "${flag}": expected 1, got ${argCount}.`);
         }
     }
 
