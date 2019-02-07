@@ -1,64 +1,79 @@
 import { log } from '../console-output/logger';
+import { hasDuplicates } from '../utils/array-utils';
+
+type ValidFlag = '--ignore' | '--config';
 
 export class CommandLineOptionsParser {
-    private static ignoreFlag = '--ignore';
-    private static configFlag = '--config';
-
-    private readonly args: Array<string>;
+    private args: Array<string>;
+    private flags: Array<string>;
 
     constructor() {
         this.args = process.argv.slice(2);
+        this.flags = this.args.filter((value) => this.isFlag(value));
+        this.assertFlagsUnique();
     }
 
     public getDirectories(): Array<string> {
-        const dirs = this.args.some(this.isArgFlag) ? this.args.slice(0, this.args.findIndex(this.isArgFlag)) : this.args;
+        const dirArgs = this.args.slice(0, this.firstFlagIndex());
 
-        if (dirs.length) {
-            this.assertOnlyRelativePathsToSubdirectoriesSpecified(dirs);
-            return dirs;
-        } else {
-            log.warning('No directory specified, using "." as fallback.');
-            return ['.'];
+        if (dirArgs.length) {
+            this.assertOnlyRelativePathsToSubdirectoriesSpecified(dirArgs);
+            return dirArgs;
         }
+
+        log.warning('No directory specified, using "." as fallback.');
+        return ['.'];
     }
 
     public getIgnoredFiles(): Array<string> {
-        const flag = CommandLineOptionsParser.ignoreFlag;
+        const flag = '--ignore';
 
-        if (this.isFlagPresent(flag)) {
-            this.assertFlagHasArgs(flag);
-            return this.getFlagArgs(flag);
+        if (!this.isFlagPresent(flag)) {
+            return [];
         }
 
-        return [];
+        this.assertFlagHasArgs(flag);
+        return this.getFlagArgs(flag);
     }
 
     public getConfigPath(): string | undefined {
-        const flag = CommandLineOptionsParser.configFlag;
+        const flag = '--config';
 
-        if (this.isFlagPresent(flag)) {
-            this.assertFlagHasArgs(flag);
-            this.assertFlagHasExactlyArgs(flag, 1);
-
-            return this.args[this.args.indexOf(flag) + 1];
+        if (!this.isFlagPresent(flag)) {
+            return undefined;
         }
+
+        this.assertFlagHasArgs(flag);
+        this.assertFlagHasExactlyArgs(flag, 1);
+
+        return this.getFlagArgs(flag)[0];
     }
 
-    private isArgFlag(arg: string): boolean {
+    private isFlag(arg: string): boolean {
         return arg.indexOf('--') === 0;
     }
 
-    private isFlagPresent(flag: string): boolean {
-        return this.args.indexOf(flag) !== -1;
+    private firstFlagIndex(): number | undefined {
+        return this.flags.length ? this.args.indexOf(this.flags[0]) : undefined;
     }
 
-    private getFlagArgs(flag: string): Array<string> {
+    private isFlagPresent(flag: ValidFlag): boolean {
+        return this.flags.includes(flag);
+    }
+
+    private getFlagArgs(flag: ValidFlag): Array<string> {
         const flagArgs = this.args.slice(this.args.indexOf(flag) + 1);
 
-        if (flagArgs.some(this.isArgFlag)) {
-            return flagArgs.slice(0, flagArgs.findIndex(this.isArgFlag));
+        if (flagArgs.some(this.isFlag)) {
+            return flagArgs.slice(0, flagArgs.findIndex(this.isFlag));
         }
         return flagArgs;
+    }
+
+    private assertFlagsUnique(): void {
+        if (hasDuplicates(this.flags)) {
+            throw Error('Error while parsing command line options: no duplicate flags allowed');
+        }
     }
 
     private assertOnlyRelativePathsToSubdirectoriesSpecified(dirs: Array<string>): void {
@@ -69,17 +84,16 @@ export class CommandLineOptionsParser {
         });
     }
 
-    private assertFlagHasArgs(flag: string): void {
-        const nextArg = this.args[this.args.indexOf(flag) + 1];
-        if (!nextArg || this.isArgFlag(nextArg)) {
+    private assertFlagHasArgs(flag: ValidFlag): void {
+        if (this.getFlagArgs(flag).length === 0) {
             throw Error(`Missing arguments for "${flag}".`);
         }
     }
 
-    private assertFlagHasExactlyArgs(flag: string, n: number): void {
+    private assertFlagHasExactlyArgs(flag: ValidFlag, n: number): void {
         const argCount = this.getFlagArgs(flag).length;
         if (argCount !== n) {
-            throw Error(`Wrong number of arguments for "${flag}": expected 1, got ${argCount}.`);
+            throw Error(`Wrong number of arguments for "${flag}": expected ${n}, got ${argCount}.`);
         }
     }
 

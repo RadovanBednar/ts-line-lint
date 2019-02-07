@@ -6,7 +6,7 @@ import { CommandLineOptionsParser } from './command-line-options-parser';
 
 chaiUse(sinonChai);
 
-describe.only('CommandLineOptionsParser', () => {
+describe('CommandLineOptionsParser', () => {
     let processArgvStub: sinon.SinonStub;
     let logWarningStub: sinon.SinonStub;
     let parser: CommandLineOptionsParser;
@@ -20,6 +20,14 @@ describe.only('CommandLineOptionsParser', () => {
         processArgvStub.restore();
     });
 
+    describe('when the same flag was specified more than once', () => {
+
+        it('should throw an "Error while parsing" error', () => {
+            expect(() => initWithProcessArgs(['--flag', '--flag'])).to.throw('Error while parsing');
+        });
+
+    });
+
     describe('when getting directories', () => {
         const fallbackWarningMessage = 'No directory specified, using "." as fallback.';
         const onlyCurrentDirectory = ['.'];
@@ -31,11 +39,12 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return only the current directory', () => {
-                onCallToMethod('getDirectories').expectResult(onlyCurrentDirectory);
+                expect(parser.getDirectories()).to.deep.equal(onlyCurrentDirectory);
             });
 
             it('should log a fallback warning', () => {
-                onCallToMethod('getDirectories').expectWarning(fallbackWarningMessage);
+                parser.getDirectories();
+                expect(logWarningStub).to.have.been.calledOnceWith(fallbackWarningMessage);
             });
 
         });
@@ -48,11 +57,12 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return only the current directory', () => {
-                onCallToMethod('getDirectories').expectResult(onlyCurrentDirectory);
+                expect(parser.getDirectories()).to.deep.equal(onlyCurrentDirectory);
             });
 
             it('should log a fallback warning', () => {
-                onCallToMethod('getDirectories').expectWarning(fallbackWarningMessage);
+                parser.getDirectories();
+                expect(logWarningStub).to.have.been.calledOnceWith(fallbackWarningMessage);
             });
 
         });
@@ -65,7 +75,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return all specified dirs', () => {
-                onCallToMethod('getDirectories').expectResult(dirs);
+                expect(parser.getDirectories()).to.deep.equal(dirs);
             });
 
         });
@@ -78,7 +88,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return only the dirs', () => {
-                onCallToMethod('getDirectories').expectResult(dirs);
+                expect(parser.getDirectories()).to.deep.equal(dirs);
             });
 
         });
@@ -91,7 +101,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should throw an "Invalid directory" error', () => {
-                onCallToMethod('getDirectories').expectError('Invalid directory');
+                expect(() => parser.getDirectories()).to.throw('Invalid directory');
             });
 
         });
@@ -104,7 +114,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should throw an "Invalid directory" error', () => {
-                onCallToMethod('getDirectories').expectError('Invalid directory');
+                expect(() => parser.getDirectories()).to.throw('Invalid directory');
             });
 
         });
@@ -121,7 +131,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return an empty array', () => {
-                onCallToMethod('getIgnoredFiles').expectResult([]);
+                expect(parser.getIgnoredFiles()).to.deep.equal([]);
             });
 
         });
@@ -134,7 +144,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should throw a "Missing argument" error', () => {
-                onCallToMethod('getIgnoredFiles').expectError('Missing argument');
+                expect(() => parser.getIgnoredFiles()).to.throw('Missing argument');
             });
 
         });
@@ -147,7 +157,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should throw a "Missing argument" error', () => {
-                onCallToMethod('getIgnoredFiles').expectError('Missing argument');
+                expect(() => parser.getIgnoredFiles()).to.throw('Missing argument');
             });
 
         });
@@ -160,7 +170,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return the args', () => {
-                onCallToMethod('getIgnoredFiles').expectResult(ignoredPaths);
+                expect(parser.getIgnoredFiles()).to.deep.equal(ignoredPaths);
             });
 
         });
@@ -173,7 +183,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should only contain the non-flag args', () => {
-                onCallToMethod('getIgnoredFiles').expectResult(ignoredPaths);
+                expect(parser.getIgnoredFiles()).to.deep.equal(ignoredPaths);
             });
 
         });
@@ -190,7 +200,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return undefined', () => {
-                onCallToMethod('getConfigPath').expectResult(undefined);
+                expect(parser.getConfigPath()).to.equal(undefined);
             });
 
         });
@@ -203,7 +213,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should throw a "Missing argument" error', () => {
-                onCallToMethod('getConfigPath').expectError('Missing argument');
+                expect(() => parser.getConfigPath()).to.throw('Missing argument');
             });
 
         });
@@ -216,7 +226,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should throw a "Missing argument" error', () => {
-                onCallToMethod('getConfigPath').expectError('Missing argument');
+                expect(() => parser.getConfigPath()).to.throw('Missing argument');
             });
 
         });
@@ -229,7 +239,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return the value of the arg', () => {
-                onCallToMethod('getConfigPath').expectResult(configFile);
+                expect(parser.getConfigPath()).to.equal(configFile);
             });
 
         });
@@ -242,7 +252,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should return the value of the arg', () => {
-                onCallToMethod('getConfigPath').expectResult(configFile);
+                expect(parser.getConfigPath()).to.equal(configFile);
             });
 
         });
@@ -255,7 +265,7 @@ describe.only('CommandLineOptionsParser', () => {
             });
 
             it('should throw a "Wrong number of arguments" error', () => {
-                onCallToMethod('getConfigPath').expectError('Wrong number of arguments');
+                expect(() => parser.getConfigPath()).to.throw('Wrong number of arguments');
             });
 
         });
@@ -265,24 +275,6 @@ describe.only('CommandLineOptionsParser', () => {
     function initWithProcessArgs(args: Array<string>): void {
         processArgvStub = sinon.stub(process, 'argv').value(['node', 'path/to/script', ...args]);
         parser = new CommandLineOptionsParser();
-    }
-
-    // tslint:disable-next-line:typedef
-    function onCallToMethod(method: keyof CommandLineOptionsParser) {
-        const testedMethod = parser[method].bind(parser);
-
-        return {
-            expectResult(value: any): void {
-                expect(testedMethod()).to.deep.equal(value);
-            },
-            expectWarning(message: string): void {
-                testedMethod();
-                expect(log.warning).to.have.been.calledOnceWith(message);
-            },
-            expectError(message: string): void {
-                expect(() => testedMethod()).to.throw(message);
-            },
-        };
     }
 
 });
