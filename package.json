@@ -28,26 +28,26 @@
     },
     "author": "Radovan Bednár",
     "license": "ISC",
-    "devDependencies": {
-        "@types/chai": "^4.1.7",
-        "@types/json-schema": "^7.0.2",
-        "@types/mocha": "^5.2.5",
-        "@types/mock-fs": "^3.6.30",
-        "@types/node": "^10.12.21",
-        "@types/sinon": "^5.0.7",
-        "@types/sinon-chai": "^3.2.2",
-        "chai": "^4.2.0",
-        "mocha": "^5.2.0",
-        "mock-fs": "^4.8.0",
-        "np": "^3.1.0",
-        "sinon": "^7.2.3",
-        "sinon-chai": "^3.3.0",
-        "ts-node": "^7.0.1",
-        "tslint": "^5.12.1",
-        "tslint-no-unused-expression-chai": "^0.1.4",
-        "typescript": "^3.3.3"
-    },
     "dependencies": {
         "jsonschema": "^1.2.4"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.2.2",
+        "@types/json-schema": "^7.0.3",
+        "@types/mocha": "^5.2.7",
+        "@types/mock-fs": "^3.6.30",
+        "@types/node": "^12.7.5",
+        "@types/sinon": "^7.0.13",
+        "@types/sinon-chai": "^3.2.3",
+        "chai": "^4.2.0",
+        "mocha": "^6.2.0",
+        "mock-fs": "^4.10.1",
+        "np": "^5.1.0",
+        "sinon": "^7.4.2",
+        "sinon-chai": "^3.3.0",
+        "ts-node": "^8.3.0",
+        "tslint": "^5.20.0",
+        "tslint-no-unused-expression-chai": "^0.1.4",
+        "typescript": "^3.6.3"
     }
 }
