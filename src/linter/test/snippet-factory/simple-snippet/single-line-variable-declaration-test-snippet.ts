@@ -25,5 +25,5 @@ export const singleLineVariableDeclarationSnippet = createMultilineString(
     '%BLANK_BEFORE%',
     '  const indentedLevelConst = "bar";',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

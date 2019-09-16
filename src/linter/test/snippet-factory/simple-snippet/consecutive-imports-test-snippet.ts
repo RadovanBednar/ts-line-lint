@@ -23,5 +23,5 @@ export const consecutiveImportsSnippet = createMultilineString(
     '  YetAnotherLongNameImportedItems',
     '} from "../pqr";',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

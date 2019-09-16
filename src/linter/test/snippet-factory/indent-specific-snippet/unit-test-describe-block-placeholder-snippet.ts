@@ -33,5 +33,5 @@ export const unitTestDescribeBlockPlaceholderSnippet = createMultilineString(
     '%BLANK_AFTER%',
     '});',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

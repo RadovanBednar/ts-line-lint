@@ -23,5 +23,5 @@ export const interfaceDeclarationSnippet = createMultilineString(
     '  method2(param: type): type;',
     '}',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

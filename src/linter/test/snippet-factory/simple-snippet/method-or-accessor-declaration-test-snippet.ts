@@ -85,5 +85,5 @@ export const methodOrAccessorDeclarationSnippet = createMultilineString(
     '%BLANK_AFTER%',
     '  // non-blank line',
     '}',
-    '',
+    ''
 );

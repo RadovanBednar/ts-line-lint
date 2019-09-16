@@ -23,5 +23,5 @@ export const unitTestItStatementSnippet = createMultilineString(
     '  }));',
     '%BLANK_AFTER%',
     '  // non-blank line',
-    '});',
+    '});'
 );

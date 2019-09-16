@@ -6,7 +6,7 @@ export function filterRulesConfiguredFor(option: LineLintRuleOption, definedRule
         (ruleName) => {
             const rule = definedRules[ruleName];
             return rule && rule[option];
-        },
+        }
     );
 }
 

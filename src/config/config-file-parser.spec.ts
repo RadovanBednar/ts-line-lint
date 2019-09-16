@@ -146,7 +146,7 @@ function createValidTestData(): { fileContent: string, expectedConfig: object } 
             '      "insert": "none"',
             '    }',
             '  }',
-            '}',
+            '}'
         ),
         expectedConfig: {
             indent: 'tab',

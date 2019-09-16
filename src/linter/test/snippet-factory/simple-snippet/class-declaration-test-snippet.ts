@@ -52,5 +52,5 @@ export const classDeclarationSnippet = createMultilineString(
     '  // implementation',
     '}',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

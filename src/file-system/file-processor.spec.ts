@@ -29,14 +29,10 @@ describe('FileProcessor', () => {
         const fileName1 = 'some-file.ts';
         const fileName2 = 'some-otherfile.ts';
         const originalFileContent = 'original file content';
-        const originalMtime = new Date(1);
 
         beforeEach(() => {
             mockFs({
-                [fileName1]: mockFs.file({
-                    content: originalFileContent,
-                    mtime: originalMtime,
-                }),
+                [fileName1]: mockFs.file({ content: originalFileContent }),
                 [fileName2]: 'irrelevant file content',
             });
         });
@@ -50,8 +46,10 @@ describe('FileProcessor', () => {
         });
 
         describe('and linter returns the same content', () => {
+            let originalMtime: Date;
 
             beforeEach(() => {
+                originalMtime = realFs.statSync(fileName1).mtime;
                 lintMethodStub.returns(originalFileContent);
                 fileProcessor.process(fileName1);
             });

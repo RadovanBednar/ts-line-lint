@@ -37,5 +37,5 @@ export const abstractMethodOrAccessorSnippet = createMultilineString(
     '  protected abstract async setBar(bar: Bar): Promise<void>;',
     '%BLANK_AFTER%',
     '  // non-blank line',
-    '}',
+    '}'
 );

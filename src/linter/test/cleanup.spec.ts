@@ -18,7 +18,7 @@ export function cleanupTestSuite(): void {
             '  public someUntypeableNestedMethod(params: any) {',
             '    // implementation',
             '  }',
-            '',
+            ''
         );
         expectedOutput = createMultilineString(
             '// tslint:disable-next-line:typedef',
@@ -30,7 +30,7 @@ export function cleanupTestSuite(): void {
             '  public someUntypeableNestedMethod(params: any) {',
             '    // implementation',
             '  }',
-            '',
+            ''
         );
 
         expectLinterToConvert(inputSnippet).to(expectedOutput);
@@ -42,12 +42,12 @@ export function cleanupTestSuite(): void {
             '',
             'function bar() {',
             '}',
-            '',
+            ''
         );
         expectedOutput = createMultilineString(
             'function bar() {',
             '}',
-            '',
+            ''
         );
 
         expectLinterToConvert(inputSnippet).to(expectedOutput);
@@ -64,7 +64,7 @@ export function cleanupTestSuite(): void {
             '',
             'function baz(param: type): type {',
             '}',
-            '',
+            ''
         );
         expectedOutput = createMultilineString(
             'const foo = 666;',
@@ -74,7 +74,7 @@ export function cleanupTestSuite(): void {
             '',
             'function baz(param: type): type {',
             '}',
-            '',
+            ''
         );
 
         expectLinterToConvert(inputSnippet).to(expectedOutput);
@@ -85,12 +85,12 @@ export function cleanupTestSuite(): void {
             'function baz(param: type): type {',
             '}',
             '',
-            '',
+            ''
         );
         expectedOutput = createMultilineString(
             'function baz(param: type): type {',
             '}',
-            '',
+            ''
         );
 
         expectLinterToConvert(inputSnippet).to(expectedOutput);

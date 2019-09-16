@@ -13,5 +13,5 @@ export const individualMultilineTypeAliasSnippet = createMultilineString(
     '  SomeType |',
     '  AnotherType;',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

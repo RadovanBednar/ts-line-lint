@@ -22,5 +22,5 @@ export const multilineVariableDeclarationSnippet = createMultilineString(
     '    key2: "value2",',
     '  };',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

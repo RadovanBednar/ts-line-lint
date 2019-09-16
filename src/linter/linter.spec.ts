@@ -12,16 +12,13 @@ describe('Linter', () => {
 
     describe('when "consecutive-imports" rule', () => simpleRuleTestSuite('consecutive-imports'));
 
-    describe('when "individual-multiline-type-alias" rule',
-        () => simpleRuleTestSuite('individual-multiline-type-alias'));
+    describe('when "individual-multiline-type-alias" rule', () => simpleRuleTestSuite('individual-multiline-type-alias'));
 
-    describe('when "consecutive-single-line-type-aliases" rule',
-        () => simpleRuleTestSuite('consecutive-single-line-type-aliases'));
+    describe('when "consecutive-single-line-type-aliases" rule', () => simpleRuleTestSuite('consecutive-single-line-type-aliases'));
 
     describe('when "interface-declaration" rule', () => simpleRuleTestSuite('interface-declaration'));
 
-    describe('when "single-line-variable-declaration" rule',
-        () => simpleRuleTestSuite('single-line-variable-declaration'));
+    describe('when "single-line-variable-declaration" rule', () => simpleRuleTestSuite('single-line-variable-declaration'));
 
     describe('when "multiline-variable-declaration" rule', () => simpleRuleTestSuite('multiline-variable-declaration'));
 

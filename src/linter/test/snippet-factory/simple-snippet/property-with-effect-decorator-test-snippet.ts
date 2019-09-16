@@ -17,5 +17,5 @@ export const propertyWithEffectDecoratorSnippet = createMultilineString(
     '%BLANK_AFTER%',
     '  // non-blank line',
     '}',
-    '',
+    ''
 );

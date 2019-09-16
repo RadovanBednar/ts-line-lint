@@ -18,7 +18,7 @@ export function blockPaddingRuleTestSuite(): void {
         '    return foo + "bar";',
         '',
         '  }',
-        '',
+        ''
     );
     const inputSnippetWithoutBlanks = createMultilineString(
         'const objectLiteral = {',
@@ -31,7 +31,7 @@ export function blockPaddingRuleTestSuite(): void {
         '',
         '    return foo + "bar";',
         '  }',
-        '',
+        ''
     );
     let expectedOutput: string;
     let config: LineLintConfig;
@@ -78,7 +78,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '    return foo + "bar";',
                 '',
                 '  }',
-                '',
+                ''
             );
 
             expectLinterWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -106,7 +106,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '',
                 '    return foo + "bar";',
                 '  }',
-                '',
+                ''
             );
 
             expectLinterWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);
@@ -159,7 +159,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '',
                 '    return foo + "bar";',
                 '  }',
-                '',
+                ''
             );
 
             expectLinterWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -187,7 +187,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '    return foo + "bar";',
                 '',
                 '  }',
-                '',
+                ''
             );
 
             expectLinterWithConfig(config).toConvert(inputSnippetWithoutBlanks).to(expectedOutput);
@@ -232,7 +232,7 @@ export function blockPaddingRuleTestSuite(): void {
                 '    return foo + "bar";',
                 '',
                 '  }',
-                '',
+                ''
             );
 
             expectLinterWithConfig(config).toConvert(inputSnippetWithBlanks).to(expectedOutput);

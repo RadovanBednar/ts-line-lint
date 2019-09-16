@@ -10,5 +10,5 @@ export const consecutiveSingleLineTypeAliasesSnippet = createMultilineString(
     '%BLANK_BEFORE%',
     '    type IndentedAlias = type3;',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

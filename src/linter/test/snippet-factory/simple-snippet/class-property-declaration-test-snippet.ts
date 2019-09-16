@@ -33,5 +33,5 @@ export const classPropertyDeclarationSnippet = createMultilineString(
     '  @Output() public bar = new EventEmitter<Bar>();',
     '%BLANK_AFTER%',
     '  // non-blank line',
-    '}',
+    '}'
 );

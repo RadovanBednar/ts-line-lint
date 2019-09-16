@@ -20,5 +20,5 @@ export const functionDeclarationSnippet = createMultilineString(
     '  await foo();',
     '}',
     '%BLANK_AFTER%',
-    '// non-blank line',
+    '// non-blank line'
 );

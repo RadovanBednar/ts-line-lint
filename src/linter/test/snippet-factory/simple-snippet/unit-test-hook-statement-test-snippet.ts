@@ -63,5 +63,5 @@ export const unitTestHookStatementSnippet = createMultilineString(
     '  });',
     '%BLANK_AFTER%',
     '  // non-blank line',
-    '});',
+    '});'
 );

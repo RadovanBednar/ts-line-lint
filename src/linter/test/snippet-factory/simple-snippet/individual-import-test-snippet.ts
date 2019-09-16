@@ -26,7 +26,11 @@ export const individualImportSnippet = createMultilineString(
     '%BLANK_AFTER%',
     '// non-blank line',
     '%BLANK_BEFORE%',
-    'import Something = someNamespace.Something;',
+    'import DefaultImport from "stu";',
     '%BLANK_AFTER%',
     '// non-blank line',
+    '%BLANK_BEFORE%',
+    'import Something = someNamespace.Something;',
+    '%BLANK_AFTER%',
+    '// non-blank line'
 );
