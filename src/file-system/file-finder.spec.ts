@@ -1,19 +1,19 @@
-import { expect, use as chaiUse } from 'chai';
+import { expect, use } from 'chai';
 import * as mockFs from 'mock-fs';
 import { Config } from 'mock-fs';
-import * as sinon from 'sinon';
+import { stub } from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import { log } from '../console-output/logger';
 import { generateRandomString } from '../utils/text-utils';
 import { FileFinder } from './file-finder';
 
-chaiUse(sinonChai);
+use(sinonChai);
 
 describe('FileFinder.find method', () => {
     let logWarningStub: sinon.SinonStub;
 
     beforeEach(() => {
-        logWarningStub = sinon.stub(log, 'warning');
+        logWarningStub = stub(log, 'warning');
     });
 
     afterEach(() => {

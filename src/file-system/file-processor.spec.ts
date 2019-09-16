@@ -1,15 +1,15 @@
-import { expect, use as chaiUse } from 'chai';
+import { expect, use } from 'chai';
 import * as realFs from 'fs';
 import * as mockFs from 'mock-fs';
-import * as sinon from 'sinon';
+import { stub } from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import { ILinter } from '../linter/linter';
 import { FileProcessor } from './file-processor';
 
-chaiUse(sinonChai);
+use(sinonChai);
 
 describe('FileProcessor', () => {
-    const lintMethodStub = sinon.stub();
+    const lintMethodStub = stub();
     const mockLinter: ILinter = { lint: lintMethodStub };
     let fileProcessor: FileProcessor;
 

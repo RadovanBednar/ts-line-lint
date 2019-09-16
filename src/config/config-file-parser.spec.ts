@@ -1,19 +1,19 @@
-import { expect, use as chaiUse } from 'chai';
+import { expect, use } from 'chai';
 import * as mockFs from 'mock-fs';
-import * as sinon from 'sinon';
+import { stub } from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import { log } from '../console-output/logger';
 import { createMultilineString } from '../utils/text-utils';
 import { ConfigFileParser } from './config-file-parser';
 import { defaultConfig } from './default-config';
 
-chaiUse(sinonChai);
+use(sinonChai);
 
 describe('ConfigFileParser', () => {
     let logInfoStub: sinon.SinonStub;
 
     beforeEach(() => {
-        logInfoStub = sinon.stub(log, 'info');
+        logInfoStub = stub(log, 'info');
     });
 
     afterEach(() => {

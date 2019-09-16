@@ -1,10 +1,10 @@
-import { expect, use as chaiUse } from 'chai';
-import * as sinon from 'sinon';
+import { expect, use } from 'chai';
+import { stub } from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import { log } from '../console-output/logger';
 import { CommandLineOptionsParser } from './command-line-options-parser';
 
-chaiUse(sinonChai);
+use(sinonChai);
 
 describe('CommandLineOptionsParser', () => {
     let processArgvStub: sinon.SinonStub;
@@ -12,7 +12,7 @@ describe('CommandLineOptionsParser', () => {
     let parser: CommandLineOptionsParser;
 
     beforeEach(() => {
-        logWarningStub = sinon.stub(log, 'warning');
+        logWarningStub = stub(log, 'warning');
     });
 
     afterEach(() => {
@@ -273,7 +273,7 @@ describe('CommandLineOptionsParser', () => {
     });
 
     function initWithProcessArgs(args: Array<string>): void {
-        processArgvStub = sinon.stub(process, 'argv').value(['node', 'path/to/script', ...args]);
+        processArgvStub = stub(process, 'argv').value(['node', 'path/to/script', ...args]);
         parser = new CommandLineOptionsParser();
     }
 
