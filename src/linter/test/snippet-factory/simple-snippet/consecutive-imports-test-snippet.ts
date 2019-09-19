@@ -21,7 +21,17 @@ export const consecutiveImportsSnippet = createMultilineString(
     'import {',
     '  AnotherLongNameImportedItems,',
     '  YetAnotherLongNameImportedItems',
-    '} from "../pqr";',
+    '} from "../stu";',
+    '%BLANK_AFTER%',
+    '// non-blank line',
+    '%BLANK_BEFORE%',
+    'import {SingleImportedItem} from "vwx";',
+    'import DefaultImport from "yza";',
+    'import {',
+    '  FirstOfSeveralLongNameImportedItems,',
+    '  SecondOfSeveralLongNameImportedItems',
+    '} from "bcd";',
     '%BLANK_AFTER%',
     '// non-blank line'
+
 );
