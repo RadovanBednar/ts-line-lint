@@ -7,7 +7,7 @@ export const individualImportSnippet = createMultilineString(
     '%BLANK_AFTER%',
     '// non-blank line',
     '%BLANK_BEFORE%',
-    'import {ExportedItem as AliasedItem} from "def";',
+    'import {ExportedItem as AliasedItem, AnotherItem} from "def";',
     '%BLANK_AFTER%',
     '// non-blank line',
     '%BLANK_BEFORE%',
